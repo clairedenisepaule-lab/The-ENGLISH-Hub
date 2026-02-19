@@ -302,6 +302,47 @@
 
   .mag-ws-name { font-size: 13px; font-weight: 700; flex: 1; }
 
+
+  /* BADGE NOUVEAU */
+  .new-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #FF6B6B, #FFB347);
+    color: white;
+    margin-left: 8px;
+    animation: pulse-new 2s ease-in-out infinite;
+    vertical-align: middle;
+  }
+
+  @keyframes pulse-new {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,107,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(255,107,107,0); }
+  }
+
+  .mag-new-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #FF6B6B, #FFB347);
+    color: white;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    animation: pulse-new 2s ease-in-out infinite;
+    z-index: 2;
+  }
+
+  .seq-magazine-item { position: relative; }
   @media (max-width: 640px) {
     .classes { grid-template-columns: 1fr; }
     .hero h1 { font-size: 3rem; }
@@ -501,7 +542,8 @@
           title: "UNIT 1 — Schools Around the World",
           desc: "Découvrir et comparer les systèmes scolaires à travers le monde et comprendre les enjeux liés à l'accès à l'éducation.",
           img: "https://nuage08.apps.education.fr/index.php/s/bDp6mT9LaPPq7Cd/preview",
-          emoji: "🏫"
+          emoji: "🏫",
+          date: "2026-02-19"
         },
         {
           num: "S2",
@@ -512,21 +554,24 @@
           worksheets: [
             { name: "Worksheet 1", url: "https://nuage08.apps.education.fr/index.php/s/B5tLrDz6j3bZMxB" }
           ],
-          canva: "https://www.canva.com/design/DAG2mL2zBvw/lEcdkTGOLXhEM9A8xX7kUw/view?embed"
+          canva: "https://www.canva.com/design/DAG2mL2zBvw/lEcdkTGOLXhEM9A8xX7kUw/view?embed",
+          date: "2026-02-19"
         },
         {
           num: "S3",
           title: "UNIT 3 — My Internship",
           desc: "Apprendre à raconter son stage de façon claire, structurée et professionnelle à l'oral.",
           img: "https://nuage08.apps.education.fr/index.php/s/e53ZAT6LEL5okNf/preview",
-          emoji: "💼"
+          emoji: "💼",
+          date: "2026-02-19"
         },
         {
           num: "S4",
           title: "UNIT 4 — Make It Public!",
           desc: "Rédiger un post professionnel clair et adapté à une organisation.",
           img: "https://nuage08.apps.education.fr/index.php/s/7SNEK6YRSiLFZWw/preview",
-          emoji: "📢"
+          emoji: "📢",
+          date: "2026-02-19"
         },
         {
           num: "S5",
@@ -534,6 +579,7 @@
           desc: "Comprendre comment la street food reflète l'histoire, la culture et l'économie d'un pays afin de réinvestir ces connaissances dans la création d'un projet de food truck inspiré de différentes traditions.",
           img: "https://nuage08.apps.education.fr/index.php/s/kwQbZ3dX5T46fQH/preview",
           emoji: "🍜",
+          date: "2026-02-19",
           worksheets: [
             { name: "Worksheet 1", url: "https://nuage08.apps.education.fr/index.php/s/QRmtRnKS5fwmWtg" },
             { name: "Worksheet 2", url: "https://nuage08.apps.education.fr/index.php/s/pSrXAdiGy7WwSdZ" },
@@ -556,6 +602,16 @@
     }
   };
 
+
+  // Badge NOUVEAU — apparaît 7 jours après la date d'ajout
+  function isNew(dateStr) {
+    if (!dateStr) return false;
+    const added = new Date(dateStr);
+    const now = new Date();
+    const diff = (now - added) / (1000 * 60 * 60 * 24);
+    return diff <= 7;
+  }
+
   // ---- STANDARD MODE ----
   function renderStandard(d) {
     return d.sequences.map(function(s) {
@@ -574,7 +630,7 @@
       return '<div class="seq-full-item">' +
         '<div class="seq-full-header">' +
         '<div class="seq-full-num" style="background:' + d.color + '">' + s.num + '</div>' +
-        '<div class="seq-full-title">' + s.title + '</div>' +
+        '<div class="seq-full-title">' + s.title + (isNew(s.date) ? ' <span class="new-badge">🆕 Nouveau</span>' : '') + '</div>' +
         (!hasWs ? '<span class="coming-soon">À venir</span>' : '') +
         '</div>' +
         '<div class="seq-full-desc">' + s.desc + '</div>' +
@@ -592,6 +648,7 @@
             '<div class="mag-img-placeholder" style="display:none">' + s.emoji + '</div>'
           : '<div class="mag-img-placeholder">' + s.emoji + '</div>';
         return '<div class="seq-magazine-item" onclick="openMagDetail(\'' + d.title.replace(/'/g,"\\'") + '\',' + i + ')">' +
+          (isNew(s.date) ? '<div class="mag-new-badge">🆕 Nouveau</div>' : '') +
           imgHtml +
           '<div class="mag-body">' +
           '<div class="mag-badge">' + s.num + '</div>' +
