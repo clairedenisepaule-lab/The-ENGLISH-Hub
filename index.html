@@ -385,10 +385,65 @@
   }
 
   .seq-magazine-item { position: relative; }
+
+  /* MOBILE NAV */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: rgba(13,13,26,0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 8px 4px 16px;
+  }
+
+  .mobile-nav-inner {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: background 0.2s, transform 0.2s;
+    flex: 1;
+  }
+
+  .mobile-nav-item:active { transform: scale(0.92); }
+
+  .mobile-nav-item .nav-emoji { font-size: 1.4rem; }
+
+  .mobile-nav-item .nav-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.2s;
+  }
+
+  .mobile-nav-item.active .nav-label { color: white; }
+  .mobile-nav-item.active { background: rgba(255,255,255,0.07); }
+
   @media (max-width: 640px) {
+    .mobile-nav { display: block; }
+    body { padding-bottom: 80px; }
     .classes { grid-template-columns: 1fr; }
     .hero h1 { font-size: 3rem; }
   }
+
+
 </style>
 </head>
 <body>
@@ -775,12 +830,47 @@
     document.body.style.overflow = '';
   }
 
+
+  function setActiveNav(el) {
+    document.querySelectorAll('.mobile-nav-item').forEach(function(btn) {
+      btn.classList.remove('active');
+    });
+    el.classList.add('active');
+  }
+
   function closeModalOutside(e) {
     if (e.target === document.getElementById('modal-overlay')) closeModal();
   }
 
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
 </script>
+
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mobile-nav-item" onclick="openModal('cap'); setActiveNav(this)">
+      <span class="nav-emoji">🛍️</span>
+      <span class="nav-label">CAP</span>
+    </button>
+    <button class="mobile-nav-item" onclick="openModal('mbbe'); setActiveNav(this)">
+      <span class="nav-emoji">🧴</span>
+      <span class="nav-label">MBBE</span>
+    </button>
+    <button class="mobile-nav-item" onclick="openModal('mrc'); setActiveNav(this)">
+      <span class="nav-emoji">🛒</span>
+      <span class="nav-label">MRC</span>
+    </button>
+    <button class="mobile-nav-item" onclick="openModal('agora'); setActiveNav(this)">
+      <span class="nav-emoji">🎙️</span>
+      <span class="nav-label">AGORA</span>
+    </button>
+    <button class="mobile-nav-item" onclick="openModal('bts'); setActiveNav(this)">
+      <span class="nav-emoji">🎓</span>
+      <span class="nav-label">BTS</span>
+    </button>
+  </div>
+</nav>
 
 </body>
 </html>
