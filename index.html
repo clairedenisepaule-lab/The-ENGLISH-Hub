@@ -303,6 +303,48 @@
   .mag-ws-name { font-size: 13px; font-weight: 700; flex: 1; }
 
 
+
+  /* WELCOME BOX */
+  .welcome-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 16px 24px;
+    max-width: 500px;
+    margin: 0 auto 48px;
+    animation: fadeDown 0.8s ease 0.3s both;
+    backdrop-filter: blur(10px);
+  }
+
+  .welcome-wave {
+    font-size: 1.8rem;
+    animation: wave 2s ease-in-out infinite;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  @keyframes wave {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(20deg); }
+    75% { transform: rotate(-10deg); }
+  }
+
+  .welcome-box p {
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    text-align: left;
+    opacity: 0.85;
+  }
+
+  .welcome-box strong {
+    color: white;
+    opacity: 1;
+  }
+
   /* BADGE NOUVEAU */
   .new-badge {
     display: inline-flex;
@@ -365,7 +407,10 @@
     <span class="english">English</span>
     <span class="hub">Hub</span>
   </h1>
-  <p class="hero-sub">Retrouve ici tous tes cours d'anglais. Clique sur ta classe pour accéder à tes séquences. 🚀</p>
+  <div class="welcome-box">
+    <span class="welcome-wave">👋</span>
+    <p>Hey ! Tout ce dont tu as besoin pour ton anglais est ici. Clique sur ta classe et <strong>let's go !</strong> 🚀</p>
+  </div>
 </div>
 
 <div class="classes">
