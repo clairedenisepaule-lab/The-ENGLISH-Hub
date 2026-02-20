@@ -316,6 +316,33 @@
     .classes { grid-template-columns: 1fr; }
     .hero h1 { font-size: 3rem; }
   }
+
+  /* RESOURCES BUTTON */
+  .resources-link { position: relative; z-index: 1; text-align: center; margin-bottom: 48px; }
+  .resources-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 14px;
+    padding: 12px 28px;
+    color: var(--text) !important;
+    text-decoration: none !important;
+    font-weight: 700;
+    font-size: 15px;
+    transition: background 0.2s, transform 0.2s, border-color 0.2s;
+    backdrop-filter: blur(10px);
+  }
+  .resources-btn:hover {
+    background: rgba(255,255,255,0.13);
+    border-color: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+    color: white !important;
+    text-decoration: none !important;
+  }
+  .resources-btn span { font-size: 1.2rem; }
+
 </style>
 </head>
 <body>
