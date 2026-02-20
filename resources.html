@@ -96,10 +96,17 @@
   }
 
   .hero h1 span {
-    background: linear-gradient(135deg, #4ECDC4, #A78BFA, #34D399);
+    background: linear-gradient(135deg, #4ECDC4 0%, #A78BFA 25%, #34D399 50%, #FFB347 75%, #FF6B6B 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    background-size: 300%;
+    animation: shimmer 5s linear infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
   }
 
   .hero-sub {
@@ -165,8 +172,14 @@
 
   .resource-card:hover {
     transform: translateY(-5px);
-    border-color: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.2);
   }
+
+  .resource-card.glow-red:hover   { box-shadow: 0 8px 30px rgba(255,107,107,0.2); border-color: rgba(255,107,107,0.4); }
+  .resource-card.glow-orange:hover { box-shadow: 0 8px 30px rgba(255,179,71,0.2); border-color: rgba(255,179,71,0.4); }
+  .resource-card.glow-teal:hover  { box-shadow: 0 8px 30px rgba(78,205,196,0.2); border-color: rgba(78,205,196,0.4); }
+  .resource-card.glow-green:hover { box-shadow: 0 8px 30px rgba(52,211,153,0.2); border-color: rgba(52,211,153,0.4); }
+  .resource-card.glow-purple:hover { box-shadow: 0 8px 30px rgba(167,139,250,0.2); border-color: rgba(167,139,250,0.4); }
 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
@@ -290,7 +303,7 @@
   <div class="section-title">🗞️ Sites d'actualités en anglais</div>
   <div class="resources-grid">
 
-    <a href="https://www.newsinlevels.com" target="_blank" class="resource-card">
+    <a href="https://www.newsinlevels.com" target="_blank" class="resource-card glow-red">
       <div class="resource-top">
         <div class="resource-icon" style="background:rgba(255,107,107,0.15)">📰</div>
         <div>
@@ -307,7 +320,7 @@
       <span class="resource-btn" style="background:#FF6B6B">Visiter le site →</span>
     </a>
 
-    <a href="https://www.bbc.co.uk/learningenglish" target="_blank" class="resource-card">
+    <a href="https://www.bbc.co.uk/learningenglish" target="_blank" class="resource-card glow-orange">
       <div class="resource-top">
         <div class="resource-icon" style="background:rgba(255,179,71,0.15)">🎙️</div>
         <div>
@@ -324,7 +337,7 @@
       <span class="resource-btn" style="background:#FFB347">Visiter le site →</span>
     </a>
 
-    <a href="https://learningenglish.voanews.com" target="_blank" class="resource-card">
+    <a href="https://learningenglish.voanews.com" target="_blank" class="resource-card glow-teal">
       <div class="resource-top">
         <div class="resource-icon" style="background:rgba(78,205,196,0.15)">🌍</div>
         <div>
@@ -340,7 +353,7 @@
       <span class="resource-btn" style="background:#4ECDC4">Visiter le site →</span>
     </a>
 
-    <a href="https://www.theguardian.com" target="_blank" class="resource-card">
+    <a href="https://www.theguardian.com" target="_blank" class="resource-card glow-green">
       <div class="resource-top">
         <div class="resource-icon" style="background:rgba(52,211,153,0.15)">📱</div>
         <div>
@@ -362,7 +375,7 @@
   <div class="section-title">🛠️ Outils pratiques</div>
   <div class="resources-grid">
 
-    <a href="https://www.wordreference.com/enfr" target="_blank" class="resource-card">
+    <a href="https://www.wordreference.com/enfr" target="_blank" class="resource-card glow-purple">
       <div class="resource-top">
         <div class="resource-icon" style="background:rgba(167,139,250,0.15)">📖</div>
         <div>
@@ -374,7 +387,7 @@
       <span class="resource-btn" style="background:#A78BFA">Visiter le site →</span>
     </a>
 
-    <a href="https://www.deepl.com" target="_blank" class="resource-card">
+    <a href="https://www.deepl.com" target="_blank" class="resource-card glow-red">
       <div class="resource-top">
         <div class="resource-icon" style="background:rgba(255,107,107,0.15)">🤖</div>
         <div>
@@ -386,7 +399,7 @@
       <span class="resource-btn" style="background:#FF6B6B">Visiter le site →</span>
     </a>
 
-    <a href="https://www.linguee.fr" target="_blank" class="resource-card">
+    <a href="https://www.linguee.fr" target="_blank" class="resource-card glow-orange">
       <div class="resource-top">
         <div class="resource-icon" style="background:rgba(255,179,71,0.15)">🔍</div>
         <div>
@@ -398,7 +411,7 @@
       <span class="resource-btn" style="background:#FFB347">Visiter le site →</span>
     </a>
 
-    <a href="https://www.ef.com/wwen/english-resources/english-grammar" target="_blank" class="resource-card">
+    <a href="https://www.ef.com/wwen/english-resources/english-grammar" target="_blank" class="resource-card glow-teal">
       <div class="resource-top">
         <div class="resource-icon" style="background:rgba(78,205,196,0.15)">✏️</div>
         <div>
