@@ -30,14 +30,18 @@
 
   .bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
   .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.12; animation: drift 12s ease-in-out infinite; }
-  .orb1 { width: 600px; height: 600px; background: var(--cap); top: -200px; left: -200px; }
-  .orb2 { width: 500px; height: 500px; background: var(--mrc); top: 30%; right: -150px; animation-delay: -4s; }
-  .orb3 { width: 400px; height: 400px; background: var(--agora); bottom: -100px; left: 30%; animation-delay: -8s; }
+  .orb1 { width: 700px; height: 700px; background: var(--cap); top: -250px; left: -250px; opacity:0.18; }
+  .orb2 { width: 600px; height: 600px; background: var(--mrc); top: 25%; right: -200px; opacity:0.15; animation-delay: -4s; }
+  .orb3 { width: 500px; height: 500px; background: var(--agora); bottom: -150px; left: 25%; opacity:0.16; animation-delay: -8s; }
+  .orb4 { width: 400px; height: 400px; background: var(--bts); top: 60%; left: -100px; opacity:0.12; animation-delay: -6s; }
+  .orb5 { width: 350px; height: 350px; background: var(--mbbe); top: 10%; right: 20%; opacity:0.10; animation-delay: -2s; }
 
   @keyframes drift {
-    0%, 100% { transform: translate(0,0) scale(1); }
-    33% { transform: translate(30px,-30px) scale(1.05); }
-    66% { transform: translate(-20px,20px) scale(0.95); }
+    0%   { transform: translate(0,0) scale(1); }
+    25%  { transform: translate(40px,-40px) scale(1.08); }
+    50%  { transform: translate(-20px,30px) scale(0.95); }
+    75%  { transform: translate(30px,20px) scale(1.05); }
+    100% { transform: translate(0,0) scale(1); }
   }
 
   /* HERO */
@@ -55,8 +59,14 @@
   /* CLASSES GRID */
   .classes { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
 
-  .class-card { background: var(--card); border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), border-color 0.3s ease; cursor: pointer; animation: fadeUp 0.6s ease both; text-decoration: none; display: block; color: inherit; }
+  .class-card { background: var(--card); border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); cursor: pointer; text-decoration: none; display: block; color: inherit; opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, border-color 0.3s ease; }
+  .class-card.visible { opacity: 1; transform: translateY(0); }
   .class-card:hover { transform: translateY(-8px) scale(1.01); border-color: rgba(255,255,255,0.15); }
+  .cap:hover   { box-shadow: 0 12px 40px rgba(255,107,107,0.25); border-color: rgba(255,107,107,0.4) !important; }
+  .mbbe:hover  { box-shadow: 0 12px 40px rgba(255,179,71,0.25);  border-color: rgba(255,179,71,0.4) !important; }
+  .mrc:hover   { box-shadow: 0 12px 40px rgba(78,205,196,0.25);  border-color: rgba(78,205,196,0.4) !important; }
+  .agora:hover { box-shadow: 0 12px 40px rgba(167,139,250,0.25); border-color: rgba(167,139,250,0.4) !important; }
+  .bts:hover   { box-shadow: 0 12px 40px rgba(52,211,153,0.25);  border-color: rgba(52,211,153,0.4) !important; }
   .class-card:nth-child(1) { animation-delay: 0.1s; }
   .class-card:nth-child(2) { animation-delay: 0.2s; }
   .class-card:nth-child(3) { animation-delay: 0.3s; }
@@ -302,236 +312,10 @@
 
   .mag-ws-name { font-size: 13px; font-weight: 700; flex: 1; }
 
-
-
-  /* WELCOME BOX */
-  .welcome-box {
-    display: inline-flex;
-    align-items: center;
-    gap: 14px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px;
-    padding: 16px 24px;
-    max-width: 500px;
-    margin: 0 auto 48px;
-    animation: fadeDown 0.8s ease 0.3s both;
-    backdrop-filter: blur(10px);
-  }
-
-  .welcome-wave {
-    font-size: 1.8rem;
-    animation: wave 2s ease-in-out infinite;
-    display: inline-block;
-    flex-shrink: 0;
-  }
-
-  @keyframes wave {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(20deg); }
-    75% { transform: rotate(-10deg); }
-  }
-
-  .welcome-box p {
-    color: var(--text);
-    font-size: 15px;
-    line-height: 1.5;
-    text-align: left;
-    opacity: 0.85;
-  }
-
-  .welcome-box strong {
-    color: white;
-    opacity: 1;
-  }
-
-
-  /* RESOURCES BUTTON */
-  .resources-link {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    margin-bottom: 48px;
-  }
-
-  .resources-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 14px;
-    padding: 12px 24px;
-    color: var(--text);
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 14px;
-    transition: background 0.2s, transform 0.2s, border-color 0.2s;
-    backdrop-filter: blur(10px);
-  }
-
-  .resources-btn:hover {
-    background: rgba(255,255,255,0.1);
-    border-color: rgba(255,255,255,0.2);
-    transform: translateY(-2px);
-  }
-
-  .resources-btn span {
-    font-size: 1.2rem;
-  }
-
-  /* BADGE NOUVEAU */
-  .new-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 20px;
-    background: linear-gradient(135deg, #FF6B6B, #FFB347);
-    color: white;
-    margin-left: 8px;
-    animation: pulse-new 2s ease-in-out infinite;
-    vertical-align: middle;
-  }
-
-  @keyframes pulse-new {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,107,0.4); }
-    50% { box-shadow: 0 0 0 6px rgba(255,107,107,0); }
-  }
-
-  .mag-new-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 10px;
-    font-weight: 800;
-    padding: 4px 10px;
-    border-radius: 20px;
-    background: linear-gradient(135deg, #FF6B6B, #FFB347);
-    color: white;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    animation: pulse-new 2s ease-in-out infinite;
-    z-index: 2;
-  }
-
-  .seq-magazine-item { position: relative; overflow: hidden; }
-
-
-  /* STATUS BADGES */
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 20px;
-    margin-left: auto;
-    flex-shrink: 0;
-  }
-
-  .status-upcoming {
-    background: rgba(136,136,170,0.15);
-    color: var(--muted);
-    border: 1px solid rgba(136,136,170,0.2);
-  }
-
-  .status-ongoing {
-    background: rgba(255,179,71,0.15);
-    color: #FFB347;
-    border: 1px solid rgba(255,179,71,0.3);
-    animation: pulse-ongoing 2s ease-in-out infinite;
-  }
-
-  .status-done {
-    background: rgba(52,211,153,0.15);
-    color: #34D399;
-    border: 1px solid rgba(52,211,153,0.3);
-  }
-
-  @keyframes pulse-ongoing {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(255,179,71,0.3); }
-    50% { box-shadow: 0 0 0 5px rgba(255,179,71,0); }
-  }
-
-  .mag-status {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    font-size: 10px;
-    font-weight: 800;
-    padding: 3px 10px;
-    border-radius: 20px;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    z-index: 2;
-  }
-
-  /* MOBILE NAV */
-  .mobile-nav {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 200;
-    background: rgba(13,13,26,0.95);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255,255,255,0.08);
-    padding: 8px 4px 16px;
-  }
-
-  .mobile-nav-inner {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-  }
-
-  .mobile-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 6px 10px;
-    border-radius: 12px;
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    transition: background 0.2s, transform 0.2s;
-    flex: 1;
-  }
-
-  .mobile-nav-item:active { transform: scale(0.92); }
-
-  .mobile-nav-item .nav-emoji { font-size: 1.4rem; }
-
-  .mobile-nav-item .nav-label {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    transition: color 0.2s;
-  }
-
-  .mobile-nav-item.active .nav-label { color: white; }
-  .mobile-nav-item.active { background: rgba(255,255,255,0.07); }
-
   @media (max-width: 640px) {
-    .mobile-nav { display: block; }
-    body { padding-bottom: 80px; }
     .classes { grid-template-columns: 1fr; }
     .hero h1 { font-size: 3rem; }
   }
-
-
 </style>
 </head>
 <body>
@@ -540,6 +324,8 @@
   <div class="orb orb1"></div>
   <div class="orb orb2"></div>
   <div class="orb orb3"></div>
+  <div class="orb orb4"></div>
+  <div class="orb orb5"></div>
 </div>
 
 <div class="hero">
@@ -550,13 +336,7 @@
     <span class="english">English</span>
     <span class="hub">Hub</span>
   </h1>
-  <div class="welcome-box">
-    <span class="welcome-wave">👋</span>
-    <p>Hey ! Tout ce dont tu as besoin pour ton anglais est ici. Clique sur ta classe et <strong>let's go !</strong> 🚀</p>
-  </div>
-  <div class="resources-link">
-    <a href="resources.html" class="resources-btn"><span>📚</span> Ressources utiles</a>
-  </div>
+  <p class="hero-sub">Retrouve ici tous tes cours d'anglais. Clique sur ta classe pour accéder à tes séquences. 🚀</p>
 </div>
 
 <div class="classes">
@@ -690,39 +470,11 @@
       sub: "Equipier polyvalent du commerce",
       color: "#FF6B6B",
       bg: "linear-gradient(135deg, #FF6B6B, #c0392b)",
-      type: "magazine",
+      type: "standard",
       sequences: [
-        {
-          num: "S1",
-          title: "UNIT 1 — Healthy ME!",
-          desc: "Parler de santé (sport et alimentation) et produire une affiche en anglais simple pour promouvoir un mode de vie sain.",
-          img: "https://nuage08.apps.education.fr/index.php/s/bRmFoSbJKEKnfsQ/preview",
-          emoji: "🥗",
-          date: "2026-02-19",
-          status: "ongoing",
-          worksheets: [
-            { name: "Worksheet 1", url: "https://nuage08.apps.education.fr/index.php/s/nij2XPcFLncJokR" },
-            { name: "Worksheet 2", url: "https://nuage08.apps.education.fr/index.php/s/FFpnRtE744djkCs" },
-            { name: "Worksheet 3", url: "https://nuage08.apps.education.fr/index.php/s/zQSzM46zyRLDwc9" },
-            { name: "Worksheet 4", url: "https://nuage08.apps.education.fr/index.php/s/H6P5EccAcYib4FY" },
-            { name: "Eat a Rainbow", url: "https://nuage08.apps.education.fr/index.php/s/ATw3ynYyMADTs9d" }
-          ],
-          video: "https://nuage08.apps.education.fr/index.php/s/rDqERmNR2KdndNj"
-        },
-        {
-          num: "S2",
-          title: "UNIT 2 — What I Did",
-          desc: "À venir — le contenu sera bientôt disponible.",
-          emoji: "📖",
-          status: "upcoming"
-        },
-        {
-          num: "S3",
-          title: "UNIT 3 — Let's GO Shopping",
-          desc: "À venir — le contenu sera bientôt disponible.",
-          emoji: "🛍️",
-          status: "upcoming"
-        }
+        { num: "S1", title: "Unit 1 — Healthy ME!", desc: "À venir — le contenu sera bientôt disponible." },
+        { num: "S2", title: "Unit 2 — What I did", desc: "À venir — le contenu sera bientôt disponible." },
+        { num: "S3", title: "UNIT 3 — Let's GO Shopping", desc: "À venir — le contenu sera bientôt disponible." }
       ]
     },
     mbbe: {
@@ -732,9 +484,9 @@
       bg: "linear-gradient(135deg, #FFB347, #e67e22)",
       type: "standard",
       sequences: [
-        { num: "S1", title: "Séquence 1", desc: "À venir — le contenu sera bientôt disponible.", status: "upcoming" },
-        { num: "S2", title: "Séquence 2", desc: "À venir — le contenu sera bientôt disponible.", status: "upcoming" },
-        { num: "S3", title: "Séquence 3", desc: "À venir — le contenu sera bientôt disponible.", status: "upcoming" }
+        { num: "S1", title: "Séquence 1", desc: "À venir — le contenu sera bientôt disponible." },
+        { num: "S2", title: "Séquence 2", desc: "À venir — le contenu sera bientôt disponible." },
+        { num: "S3", title: "Séquence 3", desc: "À venir — le contenu sera bientôt disponible." }
       ]
     },
     mrc: {
@@ -753,20 +505,8 @@
           status: "ongoing",
           canva: "https://www.canva.com/design/DAGyGMvp9wQ/gxwbYRbXWvREbeVqJCfcoA/view?embed"
         },
-        {
-          num: "S2",
-          title: "UNIT 2",
-          desc: "À venir — le contenu sera bientôt disponible.",
-          emoji: "📋",
-          status: "upcoming"
-        },
-        {
-          num: "S3",
-          title: "UNIT 3",
-          desc: "À venir — le contenu sera bientôt disponible.",
-          emoji: "📋",
-          status: "upcoming"
-        }
+        { num: "S2", title: "UNIT 2", desc: "À venir.", emoji: "📋", status: "upcoming" },
+        { num: "S3", title: "UNIT 3", desc: "À venir.", emoji: "📋", status: "upcoming" }
       ]
     },
     agora: {
@@ -781,40 +521,28 @@
           title: "UNIT 1 — Schools Around the World",
           desc: "Découvrir et comparer les systèmes scolaires à travers le monde et comprendre les enjeux liés à l'accès à l'éducation.",
           img: "https://nuage08.apps.education.fr/index.php/s/bDp6mT9LaPPq7Cd/preview",
-          emoji: "🏫",
-          date: "2026-02-19",
-          status: "done"
+          emoji: "🏫"
         },
         {
           num: "S2",
           title: "UNIT 2 — From Bombay to L.A.",
           desc: "Comprendre comment le rap, de Los Angeles à l'Inde, exprime l'identité, les valeurs et l'authenticité à travers des voix engagées.",
           img: "https://nuage08.apps.education.fr/index.php/s/AP5LzonDZQdpqZr/preview",
-          emoji: "🎵",
-          worksheets: [
-            { name: "Worksheet 1", url: "https://nuage08.apps.education.fr/index.php/s/B5tLrDz6j3bZMxB" }
-          ],
-          canva: "https://www.canva.com/design/DAG2mL2zBvw/lEcdkTGOLXhEM9A8xX7kUw/view?embed",
-          date: "2026-02-19",
-          status: "done"
+          emoji: "🎵"
         },
         {
           num: "S3",
           title: "UNIT 3 — My Internship",
           desc: "Apprendre à raconter son stage de façon claire, structurée et professionnelle à l'oral.",
           img: "https://nuage08.apps.education.fr/index.php/s/e53ZAT6LEL5okNf/preview",
-          emoji: "💼",
-          date: "2026-02-19",
-          status: "done"
+          emoji: "💼"
         },
         {
           num: "S4",
           title: "UNIT 4 — Make It Public!",
           desc: "Rédiger un post professionnel clair et adapté à une organisation.",
           img: "https://nuage08.apps.education.fr/index.php/s/7SNEK6YRSiLFZWw/preview",
-          emoji: "📢",
-          date: "2026-02-19",
-          status: "done"
+          emoji: "📢"
         },
         {
           num: "S5",
@@ -822,8 +550,6 @@
           desc: "Comprendre comment la street food reflète l'histoire, la culture et l'économie d'un pays afin de réinvestir ces connaissances dans la création d'un projet de food truck inspiré de différentes traditions.",
           img: "https://nuage08.apps.education.fr/index.php/s/kwQbZ3dX5T46fQH/preview",
           emoji: "🍜",
-          date: "2026-02-19",
-          status: "ongoing",
           worksheets: [
             { name: "Worksheet 1", url: "https://nuage08.apps.education.fr/index.php/s/QRmtRnKS5fwmWtg" },
             { name: "Worksheet 2", url: "https://nuage08.apps.education.fr/index.php/s/pSrXAdiGy7WwSdZ" },
@@ -876,29 +602,6 @@
     }
   };
 
-
-
-  function statusBadge(status) {
-    if (status === 'done') return '<span class="status-badge status-done">✅ Terminé</span>';
-    if (status === 'ongoing') return '<span class="status-badge status-ongoing">🟡 En cours</span>';
-    return '<span class="status-badge status-upcoming">⏳ À venir</span>';
-  }
-
-  function statusBadgeMag(status) {
-    if (status === 'done') return '<div class="mag-status status-done">✅ Terminé</div>';
-    if (status === 'ongoing') return '<div class="mag-status status-ongoing">🟡 En cours</div>';
-    return '';
-  }
-
-  // Badge NOUVEAU — apparaît 7 jours après la date d'ajout
-  function isNew(dateStr) {
-    if (!dateStr) return false;
-    const added = new Date(dateStr);
-    const now = new Date();
-    const diff = (now - added) / (1000 * 60 * 60 * 24);
-    return diff <= 7;
-  }
-
   // ---- STANDARD MODE ----
   function renderStandard(d) {
     return d.sequences.map(function(s) {
@@ -917,8 +620,8 @@
       return '<div class="seq-full-item">' +
         '<div class="seq-full-header">' +
         '<div class="seq-full-num" style="background:' + d.color + '">' + s.num + '</div>' +
-        '<div class="seq-full-title">' + s.title + (isNew(s.date) ? ' <span class="new-badge">🆕 Nouveau</span>' : '') + '</div>' +
-        statusBadge(s.status) +
+        '<div class="seq-full-title">' + s.title + '</div>' +
+        (!hasWs ? '<span class="coming-soon">À venir</span>' : '') +
         '</div>' +
         '<div class="seq-full-desc">' + s.desc + '</div>' +
         wsHtml + '</div>';
@@ -935,8 +638,6 @@
             '<div class="mag-img-placeholder" style="display:none">' + s.emoji + '</div>'
           : '<div class="mag-img-placeholder">' + s.emoji + '</div>';
         return '<div class="seq-magazine-item" onclick="openMagDetail(\'' + d.title.replace(/'/g,"\\'") + '\',' + i + ')">' +
-          (isNew(s.date) ? '<div class="mag-new-badge">🆕 Nouveau</div>' : '') +
-          statusBadgeMag(s.status) +
           imgHtml +
           '<div class="mag-body">' +
           '<div class="mag-badge">' + s.num + '</div>' +
@@ -955,25 +656,6 @@
     const d = data[key];
     const s = d.sequences[idx];
     const hasWs = s.worksheets && s.worksheets.length > 0;
-
-    // Video
-    const videoHtml = s.video ?
-      '<div class="mag-detail-ws-title" style="margin-top:20px">🎬 Vidéo</div>' +
-      '<video controls style="width:100%;border-radius:12px;margin-bottom:16px;background:#000;max-height:300px">' +
-      '<source src="' + (s.video ? s.video + '/download' : '') + '" type="video/mp4">' +
-      '</video>' : '';
-
-    // Canva presentation
-    const canvaHtml = s.canva ? 
-      '<div class="mag-detail-ws-title" style="margin-top:20px">🎨 Présentation</div>' +
-      '<div style="position:relative;width:100%;height:0;padding-top:56.25%;border-radius:12px;overflow:hidden;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,0.3)">' +
-      '<iframe loading="lazy" style="position:absolute;width:100%;height:100%;top:0;left:0;border:none" src="' + s.canva + '" allowfullscreen></iframe>' +
-      '</div>' : '';
-
-    // Folder link
-    const folderHtml = s.folder ?
-      '<div class="mag-detail-ws-title" style="margin-top:20px">📁 Documents</div>' +
-      '<a href="' + s.folder + '" target="_blank" class="ws-btn" style="background:' + d.color + ';margin-bottom:16px;display:inline-flex">📁 Accéder à tous les documents</a>' : '';
 
     const wsHtml = hasWs ? '<div class="mag-detail-ws-title">📄 Documents</div>' +
       '<div class="mag-ws-list">' +
@@ -996,9 +678,6 @@
       '</div>' +
       imgHtml +
       '<div class="mag-detail-desc">' + s.desc + '</div>' +
-      videoHtml +
-      canvaHtml +
-      folderHtml +
       wsHtml;
     grid.style.display = 'none';
     detail.classList.add('open');
@@ -1032,47 +711,50 @@
     document.body.style.overflow = '';
   }
 
-
-  function setActiveNav(el) {
-    document.querySelectorAll('.mobile-nav-item').forEach(function(btn) {
-      btn.classList.remove('active');
-    });
-    el.classList.add('active');
-  }
-
   function closeModalOutside(e) {
     if (e.target === document.getElementById('modal-overlay')) closeModal();
   }
 
+
+  function setActiveNav(el) {
+    document.querySelectorAll('.mobile-nav-item').forEach(function(btn) { btn.classList.remove('active'); });
+    el.classList.add('active');
+  }
+
+  // ---- TYPING EFFECT ----
+  window.addEventListener('load', function() {
+    const welcomeP = document.querySelector('.welcome-box p');
+    if (welcomeP) {
+      const fullText = "Hey ! Tout ce dont tu as besoin pour ton anglais est ici. Clique sur ta classe et ";
+      let i = 0;
+      welcomeP.innerHTML = '';
+      function type() {
+        if (i < fullText.length) {
+          welcomeP.innerHTML = fullText.substring(0, i + 1);
+          i++;
+          setTimeout(type, 28);
+        } else {
+          welcomeP.innerHTML += '<strong>let\'s go !</strong> 🚀';
+        }
+      }
+      setTimeout(type, 600);
+    }
+
+    // ---- SCROLL REVEAL ----
+    function revealCards() {
+      document.querySelectorAll('.class-card').forEach(function(card, i) {
+        const rect = card.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 60) {
+          setTimeout(function() { card.classList.add('visible'); }, i * 130);
+        }
+      });
+    }
+    window.addEventListener('scroll', revealCards);
+    setTimeout(revealCards, 400);
+  });
+
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
 </script>
-
-
-<!-- MOBILE NAV -->
-<nav class="mobile-nav">
-  <div class="mobile-nav-inner">
-    <button class="mobile-nav-item" onclick="openModal('cap'); setActiveNav(this)">
-      <span class="nav-emoji">🛍️</span>
-      <span class="nav-label">CAP</span>
-    </button>
-    <button class="mobile-nav-item" onclick="openModal('mbbe'); setActiveNav(this)">
-      <span class="nav-emoji">🧴</span>
-      <span class="nav-label">MBBE</span>
-    </button>
-    <button class="mobile-nav-item" onclick="openModal('mrc'); setActiveNav(this)">
-      <span class="nav-emoji">🛒</span>
-      <span class="nav-label">MRC</span>
-    </button>
-    <button class="mobile-nav-item" onclick="openModal('agora'); setActiveNav(this)">
-      <span class="nav-emoji">🎙️</span>
-      <span class="nav-label">AGORA</span>
-    </button>
-    <button class="mobile-nav-item" onclick="openModal('bts'); setActiveNav(this)">
-      <span class="nav-emoji">🎓</span>
-      <span class="nav-label">BTS</span>
-    </button>
-  </div>
-</nav>
 
 </body>
 </html>
