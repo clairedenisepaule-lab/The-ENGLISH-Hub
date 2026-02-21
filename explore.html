@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore — The English Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dark: #0d0d1a;
+    --card: #16162a;
+    --card2: #1e1e35;
+    --text: #eeeef5;
+    --muted: #8888aa;
+    --play:   #FF6B6B;
+    --watch:  #A78BFA;
+    --listen: #34D399;
+    --world:  #4ECDC4;
+    --tools:  #FFB347;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Nunito', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; }
+
+  /* BG ORBS */
+  .bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(80px); animation: drift 14s ease-in-out infinite; }
+  .orb1 { width: 600px; height: 600px; background: var(--play);   top: -200px; left: -200px; opacity:0.12; }
+  .orb2 { width: 500px; height: 500px; background: var(--watch);  bottom: 10%; right: -150px; opacity:0.10; animation-delay:-5s; }
+  .orb3 { width: 400px; height: 400px; background: var(--listen); top: 40%; left: 30%; opacity:0.08; animation-delay:-9s; }
+  @keyframes drift {
+    0%,100% { transform: translate(0,0) scale(1); }
+    33%  { transform: translate(30px,-30px) scale(1.06); }
+    66%  { transform: translate(-20px,25px) scale(0.96); }
+  }
+
+  /* HEADER */
+  .page-header { position: relative; z-index: 1; text-align: center; padding: 60px 20px 40px; }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 30px; padding: 8px 18px; color: var(--muted);
+    text-decoration: none; font-size: 13px; font-weight: 700;
+    transition: all 0.2s; margin-bottom: 32px;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.12); color: var(--text); }
+  .page-eyebrow { font-size: 12px; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .page-title { font-family: 'Syne', sans-serif; font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 900; line-height: 1; margin-bottom: 16px; }
+  .page-title .gradient { background: linear-gradient(135deg, #FF6B6B, #FFB347, #34D399, #4ECDC4, #A78BFA); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 300%; animation: shimmer 5s linear infinite; }
+  @keyframes shimmer { 0%{background-position:0%} 100%{background-position:300%} }
+  .page-sub { color: var(--muted); font-size: 15px; max-width: 440px; margin: 0 auto; line-height: 1.6; }
+
+  /* CONTENT */
+  .content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 20px 24px 80px; }
+
+  /* SECTION */
+  .section { margin-bottom: 56px; opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .section.visible { opacity: 1; transform: translateY(0); }
+
+  .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .section-icon { font-size: 1.8rem; }
+  .section-title { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; }
+  .section-desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  /* CARDS GRID */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+
+  .resource-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .resource-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 16px 16px 0 0;
+    transition: opacity 0.2s;
+    opacity: 0;
+  }
+  .resource-card:hover { transform: translateY(-5px); }
+  .resource-card:hover::before { opacity: 1; }
+
+  .play-card:hover   { box-shadow: 0 8px 30px rgba(255,107,107,0.2);  border-color: rgba(255,107,107,0.3); }
+  .play-card::before   { background: var(--play); }
+  .watch-card:hover  { box-shadow: 0 8px 30px rgba(167,139,250,0.2); border-color: rgba(167,139,250,0.3); }
+  .watch-card::before  { background: var(--watch); }
+  .listen-card:hover { box-shadow: 0 8px 30px rgba(52,211,153,0.2);  border-color: rgba(52,211,153,0.3); }
+  .listen-card::before { background: var(--listen); }
+  .world-card:hover  { box-shadow: 0 8px 30px rgba(78,205,196,0.2);  border-color: rgba(78,205,196,0.3); }
+  .world-card::before  { background: var(--world); }
+  .tools-card:hover  { box-shadow: 0 8px 30px rgba(255,179,71,0.2);  border-color: rgba(255,179,71,0.3); }
+  .tools-card::before  { background: var(--tools); }
+
+  .card-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; margin-bottom: 6px; }
+  .card-desc { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+  .card-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 800; letter-spacing: 1px;
+    text-transform: uppercase; padding: 5px 12px;
+    border-radius: 20px; transition: opacity 0.2s;
+  }
+  .card-link:hover { opacity: 0.8; }
+  .card-coming { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: var(--muted); padding: 5px 12px; background: rgba(255,255,255,0.05); border-radius: 20px; }
+
+  .play-link   { background: rgba(255,107,107,0.15);  color: var(--play);   }
+  .watch-link  { background: rgba(167,139,250,0.15); color: var(--watch);  }
+  .listen-link { background: rgba(52,211,153,0.15);  color: var(--listen); }
+  .world-link  { background: rgba(78,205,196,0.15);  color: var(--world);  }
+  .tools-link  { background: rgba(255,179,71,0.15);  color: var(--tools);  }
+
+  /* SPOTIFY SPECIAL CARD */
+  .spotify-card {
+    background: linear-gradient(135deg, rgba(52,211,153,0.12), rgba(30,30,53,0.8));
+    border: 1px solid rgba(52,211,153,0.2);
+    grid-column: 1 / -1;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  }
+  .spotify-logo { font-size: 2.5rem; flex-shrink: 0; }
+  .spotify-info { flex: 1; min-width: 200px; }
+  .spotify-info .card-name { color: var(--listen); }
+
+  /* FOOTER */
+  footer { position: relative; z-index: 1; text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.05); }
+  footer span { background: linear-gradient(90deg, #FF6B6B, #A78BFA); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
+
+  @media (max-width: 600px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    .spotify-card { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<div class="page-header">
+  <a href="index.html" class="back-btn">← Retour au Hub</a>
+  <div class="page-eyebrow">Lycée des métiers Florian</div>
+  <h1 class="page-title"><span class="gradient">Explore</span></h1>
+  <p class="page-sub">Joue, regarde, écoute et découvre le monde en anglais. 🌍</p>
+</div>
+
+<div class="content">
+
+  <!-- PLAY -->
+  <div class="section" id="s-play">
+    <div class="section-header">
+      <span class="section-icon">🎮</span>
+      <div>
+        <div class="section-title" style="color:var(--play)">PLAY</div>
+        <div class="section-desc">Learn naturally through play.</div>
+      </div>
+    </div>
+    <div class="cards-grid">
+      <a href="https://www.nytimes.com/games/wordle/" target="_blank" class="resource-card play-card">
+        <div class="card-name">Wordle</div>
+        <div class="card-desc">Daily word challenge to improve vocabulary and spelling in a fun way.</div>
+        <span class="card-link play-link">↗ Jouer</span>
+      </a>
+      <a href="https://skribbl.io/" target="_blank" class="resource-card play-card">
+        <div class="card-name">Skribbl.io</div>
+        <div class="card-desc">Online drawing and guessing game. Great for vocabulary and quick thinking.</div>
+        <span class="card-link play-link">↗ Jouer</span>
+      </a>
+      <a href="https://www.geoguessr.com/" target="_blank" class="resource-card play-card">
+        <div class="card-name">GeoGuessr</div>
+        <div class="card-desc">Explore the world using Google Street View and guess the country.</div>
+        <span class="card-link play-link">↗ Jouer</span>
+      </a>
+      <a href="https://www.thewikigame.com/" target="_blank" class="resource-card play-card">
+        <div class="card-name">The Wiki Game</div>
+        <div class="card-desc">Navigate from one Wikipedia page to another. Improves reading speed and cultural knowledge.</div>
+        <span class="card-link play-link">↗ Jouer</span>
+      </a>
+      <a href="https://www.sporcle.com/" target="_blank" class="resource-card play-card">
+        <div class="card-name">Sporcle</div>
+        <div class="card-desc">Fun quizzes on culture, geography, history, and English language.</div>
+        <span class="card-link play-link">↗ Jouer</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- WATCH -->
+  <div class="section" id="s-watch">
+    <div class="section-header">
+      <span class="section-icon">🎬</span>
+      <div>
+        <div class="section-title" style="color:var(--watch)">WATCH</div>
+        <div class="section-desc">Short, smart and inspiring content.</div>
+      </div>
+    </div>
+    <div class="cards-grid">
+      <a href="https://ed.ted.com/" target="_blank" class="resource-card watch-card">
+        <div class="card-name">TED-Ed</div>
+        <div class="card-desc">Animated educational videos on science, culture and global issues.</div>
+        <span class="card-link watch-link">↗ Regarder</span>
+      </a>
+      <a href="https://www.bbc.com/ideas" target="_blank" class="resource-card watch-card">
+        <div class="card-name">BBC Ideas</div>
+        <div class="card-desc">Short videos exploring modern society, culture and identity.</div>
+        <span class="card-link watch-link">↗ Regarder</span>
+      </a>
+      <a href="https://www.youtube.com/@EasyEnglishVideos" target="_blank" class="resource-card watch-card">
+        <div class="card-name">Easy English</div>
+        <div class="card-desc">Street interviews with subtitles. Real English, real people.</div>
+        <span class="card-link watch-link">↗ Regarder</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- LISTEN -->
+  <div class="section" id="s-listen">
+    <div class="section-header">
+      <span class="section-icon">🎵</span>
+      <div>
+        <div class="section-title" style="color:var(--listen)">LISTEN</div>
+        <div class="section-desc">Improve your ear, discover cultures.</div>
+      </div>
+    </div>
+    <div class="cards-grid">
+      <div class="resource-card listen-card spotify-card">
+        <div class="spotify-logo">🎧</div>
+        <div class="spotify-info">
+          <div class="card-name">The English Hub Playlist</div>
+          <div class="card-desc">Sélection curatée par votre professeur — chansons en anglais à travers les styles et les cultures. Disponible bientôt sur Spotify !</div>
+          <span class="card-coming">⏳ Bientôt disponible</span>
+        </div>
+      </div>
+      <a href="https://www.bbc.co.uk/radio1" target="_blank" class="resource-card listen-card">
+        <div class="card-name">BBC Radio 1</div>
+        <div class="card-desc">Contemporary British music and culture. Stream live anytime.</div>
+        <span class="card-link listen-link">↗ Écouter</span>
+      </a>
+      <a href="https://www.npr.org/series/tiny-desk-concerts/" target="_blank" class="resource-card listen-card">
+        <div class="card-name">NPR Tiny Desk</div>
+        <div class="card-desc">Live performances in intimate settings. Cultural diversity and authentic English.</div>
+        <span class="card-link listen-link">↗ Écouter</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- INTERNATIONAL -->
+  <div class="section" id="s-world">
+    <div class="section-header">
+      <span class="section-icon">🌍</span>
+      <div>
+        <div class="section-title" style="color:var(--world)">INTERNATIONAL</div>
+        <div class="section-desc">English beyond borders.</div>
+      </div>
+    </div>
+    <div class="cards-grid">
+      <a href="https://erasmus-plus.ec.europa.eu/" target="_blank" class="resource-card world-card">
+        <div class="card-name">Erasmus+</div>
+        <div class="card-desc">European mobility programmes and opportunities for students and apprentices.</div>
+        <span class="card-link world-link">↗ Découvrir</span>
+      </a>
+      <div class="resource-card world-card">
+        <div class="card-name">Student Mobility</div>
+        <div class="card-desc">Coming soon — testimonials and international perspectives from students like you.</div>
+        <span class="card-coming">⏳ Bientôt</span>
+      </div>
+      <div class="resource-card world-card">
+        <div class="card-name">English-Speaking World</div>
+        <div class="card-desc">Discover how English connects cultures worldwide — 1.5 billion speakers across 6 continents.</div>
+        <span class="card-coming">⏳ Bientôt</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SMART TOOLS -->
+  <div class="section" id="s-tools">
+    <div class="section-header">
+      <span class="section-icon">🧰</span>
+      <div>
+        <div class="section-title" style="color:var(--tools)">SMART TOOLS</div>
+        <div class="section-desc">Use technology responsibly.</div>
+      </div>
+    </div>
+    <div class="cards-grid">
+      <a href="https://dictionary.cambridge.org/" target="_blank" class="resource-card tools-card">
+        <div class="card-name">Cambridge Dictionary</div>
+        <div class="card-desc">Reliable definitions and pronunciation from the world's leading dictionary.</div>
+        <span class="card-link tools-link">↗ Ouvrir</span>
+      </a>
+      <a href="https://youglish.com/" target="_blank" class="resource-card tools-card">
+        <div class="card-name">YouGlish</div>
+        <div class="card-desc">Hear real pronunciation in authentic YouTube clips. Perfect for tricky words.</div>
+        <span class="card-link tools-link">↗ Ouvrir</span>
+      </a>
+      <a href="https://www.deepl.com/" target="_blank" class="resource-card tools-card">
+        <div class="card-name">DeepL</div>
+        <div class="card-desc">Translation tool — use critically and intelligently, not as a shortcut.</div>
+        <span class="card-link tools-link">↗ Ouvrir</span>
+      </a>
+      <a href="https://www.grammarly.com/" target="_blank" class="resource-card tools-card">
+        <div class="card-name">Grammarly</div>
+        <div class="card-desc">Writing assistant for checking clarity and grammar. Free version available.</div>
+        <span class="card-link tools-link">↗ Ouvrir</span>
+      </a>
+      <a href="https://www.canva.com/" target="_blank" class="resource-card tools-card">
+        <div class="card-name">Canva</div>
+        <div class="card-desc">Create professional presentations and visuals for your projects.</div>
+        <span class="card-link tools-link">↗ Ouvrir</span>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>✨ <span>The English Hub</span> — Lycée des métiers Florian · Votre professeur d'anglais</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  window.addEventListener('load', function() {
+    function reveal() {
+      document.querySelectorAll('.section').forEach(function(s, i) {
+        const rect = s.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 80) {
+          setTimeout(function() { s.classList.add('visible'); }, i * 100);
+        }
+      });
+    }
+    window.addEventListener('scroll', reveal);
+    setTimeout(reveal, 300);
+  });
+</script>
+
+</body>
+</html>
