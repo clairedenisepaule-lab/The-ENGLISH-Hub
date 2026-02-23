@@ -77,6 +77,7 @@
 
   @media (max-width:600px) { .cards-grid { grid-template-columns:1fr; } .spotify-card { flex-direction:column; } }
 </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -94,11 +95,11 @@
 </div>
 
 <div class="tab-nav">
-  <a href="#play" class="tab-btn">🎮 Play</a>
-  <a href="#watch" class="tab-btn">🎬 Watch</a>
-  <a href="#listen" class="tab-btn">🎵 Listen</a>
-  <a href="#international" class="tab-btn">🌍 International</a>
-  <a href="#smart" class="tab-btn">🧰 Smart Tools</a>
+  <a href="#play" class="tab-btn" style="border-color:rgba(255,107,107,0.3);color:#FF6B6B;">🎮 Play</a>
+  <a href="#watch" class="tab-btn" style="border-color:rgba(167,139,250,0.3);color:#A78BFA;">🎬 Watch</a>
+  <a href="#listen" class="tab-btn" style="border-color:rgba(52,211,153,0.3);color:#34D399;">🎵 Listen</a>
+  <a href="#international" class="tab-btn" style="border-color:rgba(78,205,196,0.3);color:#4ECDC4;">🌍 International</a>
+  <a href="#smart" class="tab-btn" style="border-color:rgba(255,179,71,0.3);color:#FFB347;">🧰 Smart Tools</a>
 </div>
 
 <div class="content">
@@ -260,6 +261,11 @@
     }
     window.addEventListener('scroll', reveal);
     setTimeout(reveal, 300);
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
   });
 </script>
 </body>
