@@ -354,6 +354,7 @@
   .resources-btn span { font-size: 1rem; }
 
 </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -976,5 +977,10 @@
     <button class="mobile-nav-item" onclick="openModal('bts');setActiveNav(this)"><span class="nav-emoji">🎓</span><span class="nav-label">BTS</span></button>
   </div>
 </nav>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
+  });
+</script>
 </body>
 </html>
