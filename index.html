@@ -156,13 +156,22 @@
 
   /* ══ HOVER EFFECTS ══ */
 
-  /* MBBE - Sparkles */
-  .mbbe { overflow: visible !important; }
-  .sparkle { position: absolute; pointer-events: none; border-radius: 50%; animation: sparkleFade 0.8s ease forwards; z-index: 10; }
-  @keyframes sparkleFade {
-    0%   { transform: scale(0) rotate(0deg); opacity: 1; }
-    40%  { transform: scale(1.4) rotate(180deg); opacity: 1; }
-    100% { transform: scale(0) rotate(540deg) translate(var(--tx), var(--ty)); opacity: 0; }
+  /* MBBE - Highlighter shimmer */
+  .mbbe { overflow: hidden !important; }
+  .mbbe::before { content:''; position:absolute; inset:0; background:linear-gradient(105deg, transparent 35%, rgba(255,220,100,0.13) 48%, rgba(255,255,255,0.18) 52%, rgba(255,215,80,0.10) 56%, transparent 65%); opacity:0; pointer-events:none; z-index:5; transition:none; }
+  .mbbe:hover::before { animation: highlightSlide 1.2s ease forwards; }
+  @keyframes highlightSlide {
+    0%   { opacity:0; transform:translateX(-100%); }
+    10%  { opacity:1; }
+    90%  { opacity:1; }
+    100% { opacity:0; transform:translateX(200%); }
+  }
+  .glitter { position:absolute; pointer-events:none; border-radius:50%; animation:glitterBlink 1.0s ease forwards; z-index:10; }
+  @keyframes glitterBlink {
+    0%   { transform:scale(0); opacity:0; }
+    30%  { transform:scale(1); opacity:1; }
+    70%  { transform:scale(0.8); opacity:0.8; }
+    100% { transform:scale(0); opacity:0; }
   }
 
   /* MRC - Pulse ring */
@@ -183,13 +192,11 @@
     100% { transform: translateY(-100px) scale(0.2); opacity: 0; }
   }
 
-  /* AGORA - Sound waves */
-  .agora::after { content: ''; position: absolute; inset: 0; border-radius: 10px; pointer-events: none; }
-  .wave-ring { position: absolute; border-radius: 10px; border: 2px solid rgba(185,79,255,0.6); inset: 0; pointer-events: none; animation: waveExpand 1.2s ease-out forwards; z-index: 10; }
-  @keyframes waveExpand {
-    0%   { inset: 0; opacity: 0.9; }
-    60%  { opacity: 0.4; }
-    100% { inset: -28px; opacity: 0; }
+  /* AGORA - Equalizer bars */
+  .eq-bar { position:absolute; bottom:12px; width:3px; border-radius:2px; background:var(--agora); pointer-events:none; z-index:10; animation:eqBounce var(--dur) ease-in-out infinite alternate; opacity:0.85; }
+  @keyframes eqBounce {
+    0%   { transform:scaleY(0.2); }
+    100% { transform:scaleY(1); }
   }
 
   /* BTS - Shimmer */
@@ -350,29 +357,29 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal()
 </nav>
 
 <script>
-// MBBE - Sparkles
+// MBBE - Delicate glitter highlight
 document.querySelectorAll('.mbbe').forEach(function(card) {
   card.addEventListener('mouseenter', function() {
-    for (var i = 0; i < 18; i++) {
+    for (var i = 0; i < 12; i++) {
       (function(i) {
         setTimeout(function() {
-          var s = document.createElement('div');
-          s.className = 'sparkle';
-          var size = Math.random() * 8 + 4;
-          var colors = ['#ffb800','#ff3b3b','#fff','#ffd700','#ff9500'];
-          s.style.cssText = [
+          var g = document.createElement('div');
+          g.className = 'glitter';
+          var size = Math.random() * 3 + 2;
+          var colors = ['#fff9c4','#fffde7','#ffffff','#ffd700','#ffe082'];
+          g.style.cssText = [
             'width:' + size + 'px',
             'height:' + size + 'px',
-            'left:' + (Math.random() * 100) + '%',
-            'top:' + (Math.random() * 100) + '%',
+            'left:' + (5 + Math.random() * 90) + '%',
+            'top:' + (5 + Math.random() * 90) + '%',
             'background:' + colors[Math.floor(Math.random()*colors.length)],
-            '--tx:' + (Math.random()*60-30) + 'px',
-            '--ty:' + (Math.random()*60-30) + 'px',
-            'animation-delay:' + (Math.random()*0.3) + 's'
+            'box-shadow:0 0 ' + (size*2) + 'px ' + colors[Math.floor(Math.random()*colors.length)],
+            'animation-delay:' + (Math.random()*0.5) + 's',
+            'animation-duration:' + (0.8 + Math.random()*0.6) + 's'
           ].join(';');
-          card.appendChild(s);
-          setTimeout(function() { s.remove(); }, 1600);
-        }, i * 60);
+          card.appendChild(g);
+          setTimeout(function() { g.remove(); }, 1500);
+        }, i * 70);
       })(i);
     }
   });
@@ -402,20 +409,32 @@ document.querySelectorAll('.cap').forEach(function(card) {
   });
 });
 
-// AGORA - Sound waves
+// AGORA - Equalizer bars
 document.querySelectorAll('.agora').forEach(function(card) {
+  var bars = [];
   card.addEventListener('mouseenter', function() {
-    for (var i = 0; i < 5; i++) {
-      (function(i) {
-        setTimeout(function() {
-          var w = document.createElement('div');
-          w.className = 'wave-ring';
-          w.style.animationDelay = (i * 0.3) + 's'; w.style.animationDuration = '1.4s';
-          card.appendChild(w);
-          setTimeout(function() { w.remove(); }, 2200);
-        }, i * 200);
-      })(i);
+    var cardW = card.offsetWidth;
+    var barCount = 7;
+    var spacing = 18;
+    var startX = cardW - (barCount * spacing) - 16;
+    for (var i = 0; i < barCount; i++) {
+      var b = document.createElement('div');
+      b.className = 'eq-bar';
+      var maxH = 10 + Math.random() * 20;
+      b.style.cssText = [
+        'left:' + (startX + i * spacing) + 'px',
+        'height:' + maxH + 'px',
+        'transform-origin:bottom',
+        '--dur:' + (0.3 + Math.random()*0.4) + 's',
+        'animation-delay:' + (Math.random()*0.3) + 's'
+      ].join(';');
+      card.appendChild(b);
+      bars.push(b);
     }
+  });
+  card.addEventListener('mouseleave', function() {
+    bars.forEach(function(b) { b.remove(); });
+    bars = [];
   });
 });
 </script>
