@@ -76,12 +76,41 @@
   .footer-brand{font-size:14px;font-weight:700;}
   .footer-meta{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
 
+
+  /* ── HEADER GLOW ── */
+  header { position:relative; overflow:hidden; }
+  header::before { content:''; position:absolute; top:-100px; left:-80px; width:500px; height:350px; background:radial-gradient(ellipse,rgba(78,205,196,0.09) 0%,transparent 70%); pointer-events:none; z-index:0; }
+  header::after { content:''; position:fixed; inset:0; z-index:999; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size:180px; opacity:0.028; }
+
+  /* ── STICKY NAV ── */
+  nav { position:sticky; top:0; background:var(--bg); z-index:50; }
+
+  /* ── CARD ENHANCEMENTS ── */
+  .card { transition:border-color 0.2s, background 0.2s, transform 0.15s; }
+  .card:active { transform:scale(0.97); }
+  .card-num { font-size:11px; font-weight:700; letter-spacing:2px; }
+  .card[data-c="news"]   .card-num { color:var(--news); }
+  .card[data-c="tools"]  .card-num { color:var(--tools); }
+  .card[data-c="beauty"] .card-num { color:var(--beauty); }
+  .card-cta { font-size:13px; padding:8px 0; }
+
+  /* ── SCROLL REVEAL ── */
+  .card { opacity:0; transform:translateY(22px); transition:opacity 0.45s ease, transform 0.45s ease, border-color 0.2s, background 0.2s; }
+  .card.visible { opacity:1; transform:translateY(0); }
+
+  /* ── FOOTER BRAND GRADIENT ── */
+  .footer-brand { background:linear-gradient(90deg,#ff3b3b 0%,#ffb800 25%,#00e5d8 50%,#b94fff 75%,#00f0a0 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; font-size:16px; }
+
+  /* ── ACCENT TITLE ── */
+  .page-title .accent { font-family:'Fraunces',serif; font-style:italic; font-weight:700; }
+
   @media(max-width:640px){
     header,nav,main,footer{padding-left:20px;padding-right:20px;}
     .header-hero{flex-direction:column;align-items:flex-start;gap:16px;}
     .header-sub{text-align:left;}
     .cards-grid{grid-template-columns:1fr;}
     .tab{padding:14px 16px 12px;}
+    .card-cta { font-size:14px; }
   }
 </style>
 </head>
@@ -219,6 +248,7 @@
 </footer>
 
 <script>
+  // Scroll reveal for cards
   window.addEventListener('load', function() {
     function reveal() {
       document.querySelectorAll('.section').forEach(function(s, i) {
@@ -226,9 +256,34 @@
           setTimeout(function() { s.classList.add('visible'); }, i * 70);
         }
       });
+      document.querySelectorAll('.card').forEach(function(card, i) {
+        if (card.getBoundingClientRect().top < window.innerHeight - 40) {
+          setTimeout(function() { card.classList.add('visible'); }, i * 60);
+        }
+      });
     }
     window.addEventListener('scroll', reveal);
-    setTimeout(reveal, 100);
+    setTimeout(reveal, 120);
+  });
+
+  // Pop sound on card click
+  function playPop() {
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'sine';
+      o.frequency.setValueAtTime(480, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(260, ctx.currentTime + 0.08);
+      g.gain.setValueAtTime(0.15, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.16);
+      o.start(ctx.currentTime);
+      o.stop(ctx.currentTime + 0.16);
+    } catch(e) {}
+  }
+  document.querySelectorAll('.card').forEach(function(card) {
+    card.addEventListener('click', playPop);
   });
 </script>
 </body>
