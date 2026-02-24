@@ -153,6 +153,55 @@
     .hero-main{flex-direction:column;align-items:flex-start;gap:16px;}
     .hero-aside{text-align:left;}
   }
+
+  /* ══ HOVER EFFECTS ══ */
+
+  /* MBBE - Sparkles */
+  .mbbe { overflow: visible !important; }
+  .sparkle { position: absolute; pointer-events: none; border-radius: 50%; animation: sparkleFade 0.8s ease forwards; z-index: 10; }
+  @keyframes sparkleFade {
+    0%   { transform: scale(0) rotate(0deg); opacity: 1; }
+    40%  { transform: scale(1.4) rotate(180deg); opacity: 1; }
+    100% { transform: scale(0) rotate(540deg) translate(var(--tx), var(--ty)); opacity: 0; }
+  }
+
+  /* MRC - Pulse ring */
+  .mrc { overflow: visible !important; }
+  .mrc::after { content: ''; position: absolute; inset: -2px; border-radius: 12px; border: 2px solid rgba(0,229,216,0); transition: none; pointer-events: none; }
+  .mrc:hover::after { animation: pulseRing 1s ease-out infinite; }
+  @keyframes pulseRing {
+    0%   { box-shadow: 0 0 0 0 rgba(0,229,216,0.5); border-color: rgba(0,229,216,0.6); }
+    70%  { box-shadow: 0 0 0 14px rgba(0,229,216,0); border-color: rgba(0,229,216,0); }
+    100% { box-shadow: 0 0 0 0 rgba(0,229,216,0); }
+  }
+
+  /* CAP - Floating dots */
+  .float-dot { position: absolute; border-radius: 50%; background: var(--cap); pointer-events: none; animation: floatUp 1.2s ease forwards; z-index: 10; opacity: 0.7; }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) scale(1); opacity: 0.8; }
+    60%  { opacity: 0.6; }
+    100% { transform: translateY(-100px) scale(0.2); opacity: 0; }
+  }
+
+  /* AGORA - Sound waves */
+  .agora::after { content: ''; position: absolute; inset: 0; border-radius: 10px; pointer-events: none; }
+  .wave-ring { position: absolute; border-radius: 10px; border: 2px solid rgba(185,79,255,0.6); inset: 0; pointer-events: none; animation: waveExpand 1.2s ease-out forwards; z-index: 10; }
+  @keyframes waveExpand {
+    0%   { inset: 0; opacity: 0.9; }
+    60%  { opacity: 0.4; }
+    100% { inset: -28px; opacity: 0; }
+  }
+
+  /* BTS - Shimmer */
+  .bts { overflow: hidden !important; }
+  .bts::after { content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%; background: linear-gradient(105deg, transparent 40%, rgba(0,240,160,0.12) 50%, rgba(255,255,255,0.08) 55%, rgba(0,240,160,0.08) 60%, transparent 70%); pointer-events: none; transition: none; z-index: 5; }
+  .bts:hover::after { animation: shimmerSlide 1.4s ease forwards; }
+  @keyframes shimmerSlide {
+    0%   { left: -100%; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { left: 200%; opacity: 0; }
+  }
 </style>
 </head>
 <body>
@@ -299,5 +348,99 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal()
     <button class="mobile-nav-item" onclick="openModal('bts');setActiveNav(this)"><span class="nav-emoji">🎓</span><span class="nav-label">BTS</span></button>
   </div>
 </nav>
+
+<script>
+// MBBE - Sparkles
+document.querySelectorAll('.mbbe').forEach(function(card) {
+  card.addEventListener('mouseenter', function() {
+    for (var i = 0; i < 18; i++) {
+      (function(i) {
+        setTimeout(function() {
+          var s = document.createElement('div');
+          s.className = 'sparkle';
+          var size = Math.random() * 8 + 4;
+          var colors = ['#ffb800','#ff3b3b','#fff','#ffd700','#ff9500'];
+          s.style.cssText = [
+            'width:' + size + 'px',
+            'height:' + size + 'px',
+            'left:' + (Math.random() * 100) + '%',
+            'top:' + (Math.random() * 100) + '%',
+            'background:' + colors[Math.floor(Math.random()*colors.length)],
+            '--tx:' + (Math.random()*60-30) + 'px',
+            '--ty:' + (Math.random()*60-30) + 'px',
+            'animation-delay:' + (Math.random()*0.3) + 's'
+          ].join(';');
+          card.appendChild(s);
+          setTimeout(function() { s.remove(); }, 1600);
+        }, i * 60);
+      })(i);
+    }
+  });
+});
+
+// CAP - Floating dots
+document.querySelectorAll('.cap').forEach(function(card) {
+  card.addEventListener('mouseenter', function() {
+    for (var i = 0; i < 14; i++) {
+      (function(i) {
+        setTimeout(function() {
+          var d = document.createElement('div');
+          d.className = 'float-dot';
+          var size = Math.random() * 7 + 3;
+          d.style.cssText = [
+            'width:' + size + 'px',
+            'height:' + size + 'px',
+            'left:' + (10 + Math.random() * 80) + '%',
+            'bottom:' + (Math.random() * 40) + '%',
+            'animation-duration:' + (1.4 + Math.random()*0.8) + 's'
+          ].join(';');
+          card.appendChild(d);
+          setTimeout(function() { d.remove(); }, 2200);
+        }, i * 80);
+      })(i);
+    }
+  });
+});
+
+// AGORA - Sound waves
+document.querySelectorAll('.agora').forEach(function(card) {
+  card.addEventListener('mouseenter', function() {
+    for (var i = 0; i < 5; i++) {
+      (function(i) {
+        setTimeout(function() {
+          var w = document.createElement('div');
+          w.className = 'wave-ring';
+          w.style.animationDelay = (i * 0.3) + 's'; w.style.animationDuration = '1.4s';
+          card.appendChild(w);
+          setTimeout(function() { w.remove(); }, 2200);
+        }, i * 200);
+      })(i);
+    }
+  });
+});
+</script>
+
+<script>
+// POP sound on card click
+function playPop() {
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var o = ctx.createOscillator();
+    var g = ctx.createGain();
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.type = 'sine';
+    o.frequency.setValueAtTime(520, ctx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(280, ctx.currentTime + 0.08);
+    g.gain.setValueAtTime(0.18, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+    o.start(ctx.currentTime);
+    o.stop(ctx.currentTime + 0.18);
+  } catch(e) {}
+}
+document.querySelectorAll('.class-card').forEach(function(card) {
+  card.addEventListener('click', playPop);
+});
+</script>
 </body>
 </html>
