@@ -1,1101 +1,462 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Explore — The English Hub</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=Fraunces:ital,wght@1,700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#0b0c14;
-    --panel:#121427;
-    --card:#161a31;
-    --card2:#1a1f3a;
-    --line:rgba(255,255,255,0.08);
-
-    --text:#f2f3fb;
-    --muted:rgba(242,243,251,0.72);
-
-    --play:#ff6b6b;
-    --watch:#a78bfa;
-    --listen:#34d399;
-    --world:#4ecdc4;
-    --smart:#ffb347;
-
-    /* Filières */
-    --mcv:#60a5fa;
-    --mbbe:#f472b6;
-    --agora:#a3e635;
-    --bts:#f59e0b;
-
-    --radius:18px;
-    --shadow2: 0 10px 28px rgba(0,0,0,0.28);
-    --focus: rgba(255,255,255,0.25);
+  :root {
+    --bg:    #111118;
+    --bg2:   #18181f;
+    --bg3:   #1f1f28;
+    --line:  rgba(255,255,255,0.08);
+    --text:  #f0f0f5;
+    --muted: #8888aa;
+    --play:   #ff5252;
+    --watch:  #5b8fff;
+    --listen: #00d68f;
+    --world:  #ffc947;
+    --smart:  #c77dff;
   }
 
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{
-    font-family:'Nunito',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
     background: var(--bg);
     color: var(--text);
-    min-height:100vh;
+    min-height: 100vh;
   }
 
-  .bg-texture{
-    position:fixed; inset:0; pointer-events:none; z-index:0;
-    background:
-      radial-gradient(1000px 700px at 10% 0%, rgba(255,107,107,0.10), transparent 60%),
-      radial-gradient(900px 650px at 100% 12%, rgba(167,139,250,0.10), transparent 55%),
-      radial-gradient(900px 650px at 52% 100%, rgba(52,211,153,0.07), transparent 55%),
-      linear-gradient(to bottom, rgba(255,255,255,0.03), transparent 35%),
-      repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 18px);
-    opacity:0.9;
+  body::after {
+    content:'';
+    position:fixed; inset:0; z-index:999; pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:180px;
+    opacity:0.028;
   }
 
-  a{color:inherit}
-  .wrap{position:relative; z-index:1;}
+  /* ── HEADER ── */
+  header {
+    padding: 0 40px;
+    border-bottom: 1px solid var(--line);
+  }
 
-  .topbar{
+  .header-top {
     display:flex; align-items:center; justify-content:space-between;
-    gap:14px; padding:22px 20px; max-width:1060px; margin:0 auto;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
   }
 
-  .back-btn{
+  .back-btn {
     display:inline-flex; align-items:center; gap:8px;
-    background:rgba(255,255,255,0.06);
-    border:1px solid var(--line);
-    border-radius:999px; padding:8px 14px;
+    font-size:12px; font-weight:500; letter-spacing:1px;
     color:var(--muted); text-decoration:none;
-    font-size:13px; font-weight:800;
-    transition:transform .15s ease, background .15s ease, color .15s ease;
-  }
-  .back-btn:hover{transform:translateY(-1px); background:rgba(255,255,255,0.09); color:var(--text);}
-  .back-btn:focus-visible{outline:2px solid var(--focus); outline-offset:3px;}
-
-  .school{display:flex; flex-direction:column; gap:2px; text-align:right;}
-  .school .eyebrow{font-size:11px; letter-spacing:2.8px; text-transform:uppercase; color:var(--muted);}
-  .school .mini{font-size:12px; color:var(--muted);}
-
-  header{max-width:1060px; margin:0 auto; padding:10px 20px 18px;}
-  .title{
-    font-family:'Syne',sans-serif;
-    font-size:clamp(2.2rem,6.5vw,4.2rem);
-    line-height:1; font-weight:900; margin-bottom:10px;
-  }
-  .title .grad{
-    background:linear-gradient(135deg,#ff6b6b,#ffb347,#34d399,#4ecdc4,#a78bfa);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  }
-  .subtitle{max-width:720px; color:var(--muted); font-size:15px; line-height:1.65;}
-
-  .hero-grid{
-    max-width:1060px; margin:18px auto 0; padding:0 20px;
-    display:grid; grid-template-columns: 1.2fr 0.8fr; gap:14px;
-  }
-
-  .panel{
-    background:rgba(18,20,39,0.86);
-    border:1px solid var(--line);
-    border-radius: var(--radius);
-    padding:18px;
-    box-shadow: var(--shadow2);
-    backdrop-filter: blur(6px);
-  }
-  .panel h2{
-    font-family:'Syne',sans-serif;
-    font-size:1.05rem; font-weight:900; margin-bottom:10px;
-  }
-  .panel p, .panel li{
-    color:var(--muted);
-    font-size:13px;
-    line-height:1.65;
-  }
-  .panel ul{margin:10px 0 0 18px}
-  .panel li{margin:6px 0}
-
-  .quick-actions{
-    display:flex; flex-wrap:wrap; gap:10px; margin-top:12px;
-  }
-  .chip{
-    display:inline-flex; align-items:center; gap:8px;
-    border:1px solid var(--line);
-    background:rgba(255,255,255,0.05);
-    border-radius:999px; padding:8px 12px;
-    font-size:12px; font-weight:900; text-decoration:none;
-    color:var(--text);
-    transition:transform .15s ease, background .15s ease;
-    cursor:pointer; user-select:none;
-  }
-  .chip:hover{transform:translateY(-1px); background:rgba(255,255,255,0.08);}
-  .chip:focus-visible{outline:2px solid var(--focus); outline-offset:3px;}
-
-  .legend{
-    display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;
-  }
-  .badge{
-    display:inline-flex; align-items:center; gap:6px;
-    border-radius:999px; padding:6px 10px;
-    font-size:11px; font-weight:900;
-    border:1px solid var(--line);
-    background:rgba(255,255,255,0.04);
-    color:var(--muted);
-  }
-
-  /* Outils: recherche + filtres + filière */
-  .tools{
-    max-width:1060px; margin:14px auto 0; padding:0 20px;
-    display:flex; gap:12px; flex-wrap:wrap; align-items:center;
-  }
-  .search{
-    flex:1; min-width:240px; display:flex; gap:10px; align-items:center;
-    background:rgba(18,20,39,0.86);
-    border:1px solid var(--line);
-    border-radius:999px; padding:10px 14px;
-    box-shadow: var(--shadow2);
-  }
-  .search input{
-    width:100%; border:0; outline:none; background:transparent;
-    color:var(--text); font-size:13px;
-  }
-  .search input::placeholder{color:rgba(242,243,251,0.55)}
-  .search:focus-within{outline:2px solid var(--focus); outline-offset:3px;}
-
-  .filter-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
-  select{
-    background:rgba(18,20,39,0.86);
-    border:1px solid var(--line);
-    color:var(--text);
-    border-radius:999px;
-    padding:10px 12px;
-    font-size:13px; font-weight:800;
-    box-shadow: var(--shadow2);
-    outline:none;
-  }
-  select:focus-visible{outline:2px solid var(--focus); outline-offset:3px;}
-
-  .toggle{
-    display:inline-flex; align-items:center; gap:8px;
-    border:1px solid var(--line);
-    background:rgba(18,20,39,0.86);
-    border-radius:999px;
-    padding:10px 12px;
-    box-shadow: var(--shadow2);
-    font-size:13px;
-    font-weight:800;
-    color:var(--muted);
-    cursor:pointer;
-    user-select:none;
-  }
-  .toggle input{accent-color: rgba(255,255,255,0.8);}
-
-  .content{max-width:1060px; margin:18px auto 0; padding:0 20px 70px;}
-
-  /* Blocs narratifs */
-  .story-grid{
-    display:grid; grid-template-columns: 1fr 1fr 1fr;
-    gap:14px; margin:18px 0 22px;
-  }
-  .story{
-    border:1px solid var(--line);
-    border-radius: var(--radius);
-    padding:16px;
-    background:rgba(18,20,39,0.86);
-    box-shadow: var(--shadow2);
-  }
-  .story .kicker{
-    font-size:11px; font-weight:900; letter-spacing:2px;
-    text-transform:uppercase; color:var(--muted); margin-bottom:8px;
-  }
-  .story .headline{
-    font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:900; margin-bottom:8px;
-  }
-  .story .text{color:var(--muted); font-size:13px; line-height:1.6; margin-bottom:10px;}
-  .story .cta{
-    display:inline-flex; align-items:center; gap:8px;
-    font-size:12px; font-weight:900;
-    text-decoration:none;
-    border-radius:999px; padding:8px 12px;
-    border:1px solid var(--line);
-    background:rgba(255,255,255,0.05);
-  }
-  .story .cta:hover{background:rgba(255,255,255,0.08)}
-  .story .cta:focus-visible{outline:2px solid var(--focus); outline-offset:3px;}
-
-  .story.featured{
-    background: linear-gradient(135deg, rgba(255,107,107,0.12), rgba(18,20,39,0.80));
-    border-color: rgba(255,107,107,0.22);
-  }
-  .story.challenge{
-    background: linear-gradient(135deg, rgba(78,205,196,0.12), rgba(18,20,39,0.80));
-    border-color: rgba(78,205,196,0.22);
-  }
-  .story.tip{
-    background: linear-gradient(135deg, rgba(255,179,71,0.12), rgba(18,20,39,0.80));
-    border-color: rgba(255,179,71,0.22);
-  }
-
-  /* Sections */
-  .section{
-    margin-top:18px; padding-top:18px;
-    border-top:1px solid rgba(255,255,255,0.06);
-    opacity:0; transform:translateY(18px);
-    transition:opacity 0.55s ease, transform 0.55s ease;
-  }
-  .section.visible{opacity:1; transform:translateY(0);}
-  .section-header{
-    display:flex; align-items:flex-end; justify-content:space-between;
-    gap:12px; margin-bottom:12px;
-  }
-  .section-left{display:flex; align-items:center; gap:10px;}
-  .icon{
-    width:38px; height:38px; border-radius:12px;
-    display:grid; place-items:center;
-    border:1px solid var(--line);
-    background:rgba(255,255,255,0.04);
-    font-size:18px;
-  }
-  .section-title{font-family:'Syne',sans-serif; font-size:1.25rem; font-weight:900; line-height:1.1;}
-  .section-desc{color:var(--muted); font-size:13px; margin-top:3px; line-height:1.55;}
-
-  .pill-row{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
-  .pill{
-    border-radius:999px; padding:6px 10px;
-    font-size:11px; font-weight:900;
-    border:1px solid var(--line);
-    background:rgba(255,255,255,0.04);
-    color:var(--muted);
-  }
-
-  /* Cartes ressources */
-  .cards-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px;}
-  .card{
-    display:block; text-decoration:none;
-    background:var(--card);
-    border:1px solid rgba(255,255,255,0.08);
-    border-radius: var(--radius);
-    padding:16px;
-    box-shadow: 0 10px 26px rgba(0,0,0,0.22);
-    transition:transform .18s ease, border-color .18s ease, background .18s ease, opacity .18s ease, filter .18s ease;
-    position:relative; overflow:hidden;
-  }
-  .card:hover{transform:translateY(-2px); border-color:rgba(255,255,255,0.14); background:var(--card2);}
-  .card:focus-visible{outline:2px solid var(--focus); outline-offset:3px;}
-
-  .card .name{font-family:'Syne',sans-serif; font-weight:900; font-size:1.02rem; margin-bottom:6px;}
-  .card .desc{color:var(--muted); font-size:12.5px; line-height:1.6; margin-bottom:12px;}
-  .meta{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;}
-  .tag{
-    display:inline-flex; align-items:center; gap:6px;
-    border-radius:999px; padding:6px 10px;
-    font-size:11px; font-weight:900;
-    border:1px solid rgba(255,255,255,0.10);
-    background:rgba(255,255,255,0.04);
-    color:var(--muted);
-  }
-  .tag.mcv{border-color: rgba(96,165,250,0.25); background: rgba(96,165,250,0.10); color: rgba(191,219,254,0.95);}
-  .tag.mbbe{border-color: rgba(244,114,182,0.25); background: rgba(244,114,182,0.10); color: rgba(252,231,243,0.95);}
-  .tag.agora{border-color: rgba(163,230,53,0.22); background: rgba(163,230,53,0.10); color: rgba(236,252,203,0.95);}
-  .tag.bts{border-color: rgba(245,158,11,0.22); background: rgba(245,158,11,0.10); color: rgba(254,243,199,0.95);}
-
-  .actions{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:6px;}
-  .go{
-    display:inline-flex; align-items:center; gap:8px;
-    border-radius:999px; padding:8px 12px;
-    font-size:12px; font-weight:900;
-    border:1px solid rgba(255,255,255,0.10);
-    background:rgba(255,255,255,0.05);
-  }
-  .go:hover{background:rgba(255,255,255,0.08)}
-  .smallnote{font-size:11px; font-weight:800; color:rgba(242,243,251,0.55);}
-
-  /* Accent catégorie */
-  .play{border-left:4px solid rgba(255,107,107,0.70);}
-  .watch{border-left:4px solid rgba(167,139,250,0.70);}
-  .listen{border-left:4px solid rgba(52,211,153,0.70);}
-  .world{border-left:4px solid rgba(78,205,196,0.70);}
-  .smart{border-left:4px solid rgba(255,179,71,0.70);}
-
-  /* Mode filière: mise en valeur */
-  .faded{
-    opacity:0.35;
-    filter:saturate(0.8);
-  }
-  .highlight{
-    border-color: rgba(255,255,255,0.18);
-    box-shadow: 0 14px 40px rgba(0,0,0,0.35);
-  }
-  .highlight::after{
-    content:"Recommandé";
-    position:absolute;
-    top:12px; right:12px;
-    font-size:10px; font-weight:900;
-    letter-spacing:1px;
     text-transform:uppercase;
-    padding:6px 10px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,0.12);
-    background:rgba(255,255,255,0.06);
-    color:rgba(242,243,251,0.85);
+    transition:color 0.2s;
+  }
+  .back-btn:hover { color:var(--text); }
+  .back-btn svg { transition:transform 0.2s; }
+  .back-btn:hover svg { transform:translateX(-3px); }
+
+  .header-tag {
+    font-size:11px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--muted);
   }
 
-  /* Spotify */
-  .spotify{
-    grid-column:1/-1;
-    display:flex; gap:14px; flex-wrap:wrap;
-    align-items:flex-start;
-    background: linear-gradient(135deg, rgba(52,211,153,0.12), rgba(18,20,39,0.80));
-    border-color: rgba(52,211,153,0.22);
-  }
-  .spotify .name{color: var(--listen)}
-  iframe{border-radius:14px; display:block;}
-
-  footer{
-    max-width:1060px; margin:0 auto;
-    padding:28px 20px 44px;
-    color:rgba(242,243,251,0.62);
-    font-size:13px;
-    border-top:1px solid rgba(255,255,255,0.06);
-    text-align:center;
+  .header-hero {
+    padding: 44px 0 36px;
+    display:flex; align-items:flex-end; justify-content:space-between; gap:32px;
+    flex-wrap:wrap;
   }
 
-  @media (max-width: 900px){
-    .hero-grid{grid-template-columns:1fr}
-    .school{text-align:left}
-    .topbar{flex-wrap:wrap}
-    .story-grid{grid-template-columns:1fr}
+  .page-title {
+    font-family:'Outfit', sans-serif;
+    font-size: clamp(4rem, 12vw, 8.5rem);
+    font-weight:900;
+    letter-spacing:-3px;
+    line-height:0.9;
+    color:var(--text);
   }
-  @media (max-width: 620px){
-    .cards-grid{grid-template-columns:1fr}
+
+  .page-title .accent {
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:700;
+    color:var(--play);
+    letter-spacing:-2px;
+  }
+
+  .header-sub {
+    font-size:14px;
+    color:var(--muted);
+    line-height:1.7;
+    max-width:240px;
+    text-align:right;
+    padding-bottom:6px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display:flex; gap:0;
+    padding: 0 40px;
+    border-bottom: 1px solid var(--line);
+    overflow-x:auto;
+  }
+  nav::-webkit-scrollbar { display:none; }
+
+  .tab {
+    font-size:12px; font-weight:700; letter-spacing:1.5px;
+    text-transform:uppercase;
+    padding:14px 22px 12px;
+    color:var(--muted);
+    text-decoration:none;
+    border-bottom:2px solid transparent;
+    margin-bottom:-1px;
+    white-space:nowrap;
+    transition:color 0.2s, border-color 0.2s;
+  }
+  .tab:hover { color:var(--text); }
+  .tab[data-c="play"]:hover   { color:var(--play);   border-bottom-color:var(--play);   }
+  .tab[data-c="watch"]:hover  { color:var(--watch);  border-bottom-color:var(--watch);  }
+  .tab[data-c="listen"]:hover { color:var(--listen); border-bottom-color:var(--listen); }
+  .tab[data-c="world"]:hover  { color:var(--world);  border-bottom-color:var(--world);  }
+  .tab[data-c="smart"]:hover  { color:var(--smart);  border-bottom-color:var(--smart);  }
+
+  /* ── MAIN ── */
+  main { max-width:1100px; margin:0 auto; padding:0 40px 80px; }
+
+  /* ── SECTION ── */
+  .section {
+    padding-top:60px;
+    opacity:0; transform:translateY(24px);
+    transition:opacity 0.5s ease, transform 0.5s ease;
+  }
+  .section.visible { opacity:1; transform:translateY(0); }
+
+  .section-head {
+    display:flex; align-items:center; gap:16px;
+    margin-bottom:24px;
+  }
+
+  .section-label {
+    font-size:10px; letter-spacing:3px; text-transform:uppercase;
+    color:var(--muted); flex-shrink:0;
+  }
+
+  .section-title {
+    font-family:'Outfit', sans-serif;
+    font-size:1.6rem; font-weight:900;
+    letter-spacing:-0.5px;
+  }
+
+  .section-line { flex:1; height:1px; background:var(--line); }
+
+  .section-desc {
+    font-size:12px; color:var(--muted); font-style:italic;
+  }
+
+  /* ── GRID ── */
+  .cards-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
+    gap:10px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background:var(--bg2);
+    border-radius:10px;
+    border:1px solid var(--line);
+    padding:22px 20px 18px;
+    text-decoration:none;
+    color:inherit;
+    display:flex; flex-direction:column; gap:8px;
+    position:relative;
+    overflow:hidden;
+    transition:border-color 0.2s, background 0.2s;
+  }
+
+  .card::before {
+    content:'';
+    position:absolute;
+    left:0; top:16px; bottom:16px;
+    width:2px; border-radius:2px;
+    opacity:0; transition:opacity 0.2s;
+  }
+
+  .card:hover { background:var(--bg3); }
+  .card:hover::before { opacity:1; }
+
+  .card[data-c="play"]:hover   { border-color:rgba(255,82,82,0.25);   }
+  .card[data-c="watch"]:hover  { border-color:rgba(91,143,255,0.25);  }
+  .card[data-c="listen"]:hover { border-color:rgba(0,214,143,0.25);   }
+  .card[data-c="world"]:hover  { border-color:rgba(255,201,71,0.25);  }
+  .card[data-c="smart"]:hover  { border-color:rgba(199,125,255,0.25); }
+
+  .card[data-c="play"]::before   { background:var(--play);   }
+  .card[data-c="watch"]::before  { background:var(--watch);  }
+  .card[data-c="listen"]::before { background:var(--listen); }
+  .card[data-c="world"]::before  { background:var(--world);  }
+  .card[data-c="smart"]::before  { background:var(--smart);  }
+
+  .card-num { font-size:10px; letter-spacing:2px; color:var(--muted); font-weight:500; }
+
+  .card-name { font-size:1.1rem; font-weight:700; letter-spacing:-0.2px; }
+
+  .card-desc { font-size:12.5px; color:var(--muted); line-height:1.6; flex:1; }
+
+  .card-cta {
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:11px; font-weight:700; letter-spacing:1.5px;
+    text-transform:uppercase; margin-top:6px;
+    transition:gap 0.2s;
+  }
+  .card:hover .card-cta { gap:10px; }
+
+  .card-cta[data-c="play"]   { color:var(--play);   }
+  .card-cta[data-c="watch"]  { color:var(--watch);  }
+  .card-cta[data-c="listen"] { color:var(--listen); }
+  .card-cta[data-c="world"]  { color:var(--world);  }
+  .card-cta[data-c="smart"]  { color:var(--smart);  }
+
+  .card-coming {
+    font-size:11px; font-weight:600; letter-spacing:1px;
+    color:var(--muted); margin-top:6px; text-transform:uppercase;
+  }
+
+  .spotify-card { grid-column:1/-1; }
+  .spotify-card .card-name { color:var(--listen); margin-bottom:4px; }
+  .spotify-card iframe { border-radius:6px; display:block; margin-top:14px; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top:1px solid var(--line);
+    padding:24px 40px;
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:12px;
+  }
+  .footer-brand { font-size:14px; font-weight:700; color:var(--text); }
+  .footer-meta  { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+
+  @media (max-width:600px) {
+    header, nav, main, footer { padding-left:20px; padding-right:20px; }
+    .header-hero { flex-direction:column; align-items:flex-start; gap:16px; }
+    .header-sub { text-align:left; }
+    .cards-grid { grid-template-columns:1fr; }
   }
 </style>
 </head>
-
 <body>
-<div class="bg-texture" aria-hidden="true"></div>
 
-<div class="wrap">
-
-  <div class="topbar">
-    <a href="index.html" class="back-btn" aria-label="Retour au Hub">← Retour au Hub</a>
-    <div class="school">
-      <div class="eyebrow">Lycée des métiers Florian</div>
-      <div class="mini">Explore pour progresser en autonomie</div>
-    </div>
+<header>
+  <div class="header-top">
+    <a href="index.html" class="back-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M8.5 2.5L4 7l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      The English Hub
+    </a>
+    <span class="header-tag">Lycée des métiers Florian</span>
   </div>
+  <div class="header-hero">
+    <h1 class="page-title">Ex<span class="accent">plore</span></h1>
+    <p class="header-sub">Joue, regarde, écoute et découvre le monde en anglais.</p>
+  </div>
+</header>
 
-  <header>
-    <h1 class="title"><span class="grad">Explore</span></h1>
-    <p class="subtitle">
-      Un espace simple pour s’entraîner en anglais. Choisis une filière, prends un objectif, puis reviens en classe avec une trace (3 mots + 1 phrase).
-    </p>
-  </header>
+<nav>
+  <a href="#play"          class="tab" data-c="play">Play</a>
+  <a href="#watch"         class="tab" data-c="watch">Watch</a>
+  <a href="#listen"        class="tab" data-c="listen">Listen</a>
+  <a href="#international" class="tab" data-c="world">International</a>
+  <a href="#smart"         class="tab" data-c="smart">Smart Tools</a>
+</nav>
 
-  <section class="hero-grid" aria-label="Repères et objectifs">
-    <div class="panel">
-      <h2>Pourquoi explorer ?</h2>
-      <p>Ici, tu progresses par petites sessions. L’idée est de pratiquer souvent, pas longtemps.</p>
-      <ul>
-        <li><strong>Vocabulaire</strong> : apprendre des mots utiles pour ta filière.</li>
-        <li><strong>Compréhension</strong> : t’habituer à différents accents.</li>
-        <li><strong>Culture</strong> : comprendre le monde pro et la société.</li>
-      </ul>
+<main>
 
-      <div class="quick-actions" role="group" aria-label="Raccourcis rapides">
-        <button class="chip" type="button" data-jump="#play">🎮 Démarrer par un jeu</button>
-        <button class="chip" type="button" data-jump="#watch">🎬 Une vidéo courte</button>
-        <button class="chip" type="button" data-jump="#listen">🎵 Écoute et musique</button>
-        <button class="chip" type="button" data-jump="#smart">🧰 Outils utiles</button>
-      </div>
-
-      <div class="legend" aria-label="Repères niveau et durée">
-        <span class="badge">🟢 Facile</span>
-        <span class="badge">🟡 Intermédiaire</span>
-        <span class="badge">🔴 Challenge</span>
-        <span class="badge">⏱ 5, 15 ou 30 min</span>
-      </div>
+  <!-- PLAY -->
+  <section class="section" id="play">
+    <div class="section-head">
+      <span class="section-label">01</span>
+      <span class="section-title" style="color:var(--play)">Play</span>
+      <div class="section-line"></div>
+      <span class="section-desc">Learn through play.</span>
     </div>
-
-    <div class="panel">
-      <h2>Règles d’usage</h2>
-      <ul>
-        <li>Choisis <strong>un objectif</strong> avant de cliquer.</li>
-        <li>Note <strong>3 mots</strong> + <strong>1 phrase</strong> après l’activité.</li>
-        <li>Si un contenu te met mal à l’aise, tu fermes et tu me le signales.</li>
-      </ul>
-
-      <div class="quick-actions">
-        <button class="chip" type="button" id="resetBtn">↺ Réinitialiser</button>
-      </div>
-
-      <p style="margin-top:10px;color:rgba(242,243,251,0.55);font-size:12px;line-height:1.6;">
-        Astuce : commence par 5 minutes. La régularité fait la différence.
-      </p>
+    <div class="cards-grid">
+      <a href="https://www.nytimes.com/games/wordle/" target="_blank" class="card" data-c="play">
+        <span class="card-num">01</span>
+        <div class="card-name">Wordle</div>
+        <div class="card-desc">Daily word challenge to improve vocabulary and spelling in a fun way.</div>
+        <span class="card-cta" data-c="play">Jouer →</span>
+      </a>
+      <a href="https://skribbl.io/" target="_blank" class="card" data-c="play">
+        <span class="card-num">02</span>
+        <div class="card-name">Skribbl.io</div>
+        <div class="card-desc">Online drawing and guessing game. Great for vocabulary and quick thinking.</div>
+        <span class="card-cta" data-c="play">Jouer →</span>
+      </a>
+      <a href="https://www.geoguessr.com/" target="_blank" class="card" data-c="play">
+        <span class="card-num">03</span>
+        <div class="card-name">GeoGuessr</div>
+        <div class="card-desc">Explore the world using Google Street View and guess the country.</div>
+        <span class="card-cta" data-c="play">Jouer →</span>
+      </a>
+      <a href="https://sporcle.com/" target="_blank" class="card" data-c="play">
+        <span class="card-num">04</span>
+        <div class="card-name">Sporcle</div>
+        <div class="card-desc">Trivia and quiz games on culture, geography, and pop culture in English.</div>
+        <span class="card-cta" data-c="play">Jouer →</span>
+      </a>
     </div>
   </section>
 
-  <div class="tools" aria-label="Recherche et filtres">
-    <div class="search" role="search">
-      🔎
-      <label for="q" style="position:absolute;left:-9999px;">Rechercher</label>
-      <input id="q" type="search" placeholder="Rechercher : vocab, accent, jeu, mobilité, etc." autocomplete="off" />
+  <!-- WATCH -->
+  <section class="section" id="watch">
+    <div class="section-head">
+      <span class="section-label">02</span>
+      <span class="section-title" style="color:var(--watch)">Watch</span>
+      <div class="section-line"></div>
+      <span class="section-desc">See the world through a screen.</span>
     </div>
-
-    <div class="filter-row" role="group" aria-label="Filtres">
-      <select id="track" aria-label="Choisir une filière">
-        <option value="all">Toutes filières</option>
-        <option value="mcv">MCV (commerce vente)</option>
-        <option value="mbbe">MBBE (beauté coiffure)</option>
-        <option value="agora">AGORA (administration)</option>
-        <option value="bts">BTS</option>
-      </select>
-
-      <select id="cat">
-        <option value="all">Toutes catégories</option>
-        <option value="play">Play</option>
-        <option value="watch">Watch</option>
-        <option value="listen">Listen</option>
-        <option value="world">International</option>
-        <option value="smart">Smart Tools</option>
-      </select>
-
-      <select id="level">
-        <option value="all">Tous niveaux</option>
-        <option value="easy">🟢 Facile</option>
-        <option value="mid">🟡 Intermédiaire</option>
-        <option value="hard">🔴 Challenge</option>
-      </select>
-
-      <select id="time">
-        <option value="all">Toutes durées</option>
-        <option value="5">⏱ 5 min</option>
-        <option value="15">⏱ 15 min</option>
-        <option value="30">⏱ 30 min</option>
-      </select>
-
-      <label class="toggle" title="N’afficher que les ressources recommandées pour la filière sélectionnée">
-        <input id="onlyReco" type="checkbox" />
-        Uniquement recommandé
-      </label>
+    <div class="cards-grid">
+      <a href="https://ed.ted.com/" target="_blank" class="card" data-c="watch">
+        <span class="card-num">01</span>
+        <div class="card-name">TED-Ed</div>
+        <div class="card-desc">Animated educational videos on science, culture and global issues.</div>
+        <span class="card-cta" data-c="watch">Regarder →</span>
+      </a>
+      <a href="https://www.bbc.com/ideas" target="_blank" class="card" data-c="watch">
+        <span class="card-num">02</span>
+        <div class="card-name">BBC Ideas</div>
+        <div class="card-desc">Short videos exploring modern society, culture and identity.</div>
+        <span class="card-cta" data-c="watch">Regarder →</span>
+      </a>
+      <a href="https://www.youtube.com/@EasyEnglishVideos" target="_blank" class="card" data-c="watch">
+        <span class="card-num">03</span>
+        <div class="card-name">Easy English</div>
+        <div class="card-desc">Street interviews with subtitles. Real English, real people.</div>
+        <span class="card-cta" data-c="watch">Regarder →</span>
+      </a>
     </div>
-  </div>
+  </section>
 
-  <main class="content">
-
-    <section class="story-grid" aria-label="Sélection, défi, conseil">
-      <div class="story featured">
-        <div class="kicker">Sélection du prof</div>
-        <div class="headline">Easy English (street interviews)</div>
-        <div class="text">Anglais réel avec sous-titres. Objectif : repérer 3 expressions et les réutiliser en classe.</div>
-        <a class="cta" href="https://www.youtube.com/@EasyEnglishVideos" target="_blank" rel="noopener">Ouvrir ↗</a>
+  <!-- LISTEN -->
+  <section class="section" id="listen">
+    <div class="section-head">
+      <span class="section-label">03</span>
+      <span class="section-title" style="color:var(--listen)">Listen</span>
+      <div class="section-line"></div>
+      <span class="section-desc">Improve your ear, discover cultures.</span>
+    </div>
+    <div class="cards-grid">
+      <div class="card spotify-card" data-c="listen">
+        <span class="card-num">Playlist</span>
+        <div class="card-name">The English Hub</div>
+        <div class="card-desc">Discover English through music from different countries and cultures.</div>
+        <iframe src="https://open.spotify.com/embed/playlist/7imydAaRUryjd8WVSN30Pw?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
       </div>
+      <a href="https://www.bbc.co.uk/radio1" target="_blank" class="card" data-c="listen">
+        <span class="card-num">01</span>
+        <div class="card-name">BBC Radio 1</div>
+        <div class="card-desc">Contemporary British music and culture. Stream live anytime.</div>
+        <span class="card-cta" data-c="listen">Écouter →</span>
+      </a>
+      <a href="https://www.npr.org/series/tiny-desk-concerts/" target="_blank" class="card" data-c="listen">
+        <span class="card-num">02</span>
+        <div class="card-name">NPR Tiny Desk</div>
+        <div class="card-desc">Live performances in intimate settings. Cultural diversity and authentic English.</div>
+        <span class="card-cta" data-c="listen">Écouter →</span>
+      </a>
+    </div>
+  </section>
 
-      <div class="story challenge">
-        <div class="kicker">Défi de la semaine</div>
-        <div class="headline">3 minutes, 3 mots, 1 phrase</div>
-        <div class="text">Choisis une ressource, note 3 mots nouveaux, puis écris 1 phrase avec un mot.</div>
-        <a class="cta" href="#play">Choisir une ressource</a>
+  <!-- INTERNATIONAL -->
+  <section class="section" id="international">
+    <div class="section-head">
+      <span class="section-label">04</span>
+      <span class="section-title" style="color:var(--world)">International</span>
+      <div class="section-line"></div>
+      <span class="section-desc">English beyond borders.</span>
+    </div>
+    <div class="cards-grid">
+      <a href="https://erasmus-plus.ec.europa.eu/" target="_blank" class="card" data-c="world">
+        <span class="card-num">01</span>
+        <div class="card-name">Erasmus+</div>
+        <div class="card-desc">European mobility programmes and opportunities for students and apprentices.</div>
+        <span class="card-cta" data-c="world">Découvrir →</span>
+      </a>
+      <div class="card" data-c="world">
+        <span class="card-num">02</span>
+        <div class="card-name">Student Mobility</div>
+        <div class="card-desc">Bientôt — témoignages et expériences internationales d'élèves comme toi.</div>
+        <span class="card-coming">Bientôt</span>
       </div>
+      <a href="https://view.genially.com/67d959539020227b44695ea3/interactive-content-english-language-world-map" target="_blank" class="card" data-c="world">
+        <span class="card-num">03</span>
+        <div class="card-name">English-Speaking World</div>
+        <div class="card-desc">1,5 milliard de locuteurs sur 6 continents — comment l'anglais connecte les cultures.</div>
+        <span class="card-cta" data-c="world">Découvrir →</span>
+      </a>
+    </div>
+  </section>
 
-      <div class="story tip">
-        <div class="kicker">Conseil du prof</div>
-        <div class="headline">Une seule cible</div>
-        <div class="text">Aujourd’hui, tu choisis : vocabulaire, écoute ou culture. Un seul objectif et tu le fais bien.</div>
-        <a class="cta" href="#smart">Outils pour t’aider</a>
-      </div>
-    </section>
+  <!-- SMART TOOLS -->
+  <section class="section" id="smart">
+    <div class="section-head">
+      <span class="section-label">05</span>
+      <span class="section-title" style="color:var(--smart)">Smart Tools</span>
+      <div class="section-line"></div>
+      <span class="section-desc">Use technology wisely.</span>
+    </div>
+    <div class="cards-grid">
+      <a href="https://dictionary.cambridge.org/" target="_blank" class="card" data-c="smart">
+        <span class="card-num">01</span>
+        <div class="card-name">Cambridge Dictionary</div>
+        <div class="card-desc">Reliable definitions and pronunciation from the world's leading dictionary.</div>
+        <span class="card-cta" data-c="smart">Ouvrir →</span>
+      </a>
+      <a href="https://youglish.com/" target="_blank" class="card" data-c="smart">
+        <span class="card-num">02</span>
+        <div class="card-name">YouGlish</div>
+        <div class="card-desc">Hear real pronunciation in authentic YouTube clips. Perfect for tricky words.</div>
+        <span class="card-cta" data-c="smart">Ouvrir →</span>
+      </a>
+      <a href="https://www.grammarly.com/" target="_blank" class="card" data-c="smart">
+        <span class="card-num">03</span>
+        <div class="card-name">Grammarly</div>
+        <div class="card-desc">Writing assistant for checking clarity and grammar. Free version available.</div>
+        <span class="card-cta" data-c="smart">Ouvrir →</span>
+      </a>
+      <a href="https://www.canva.com/" target="_blank" class="card" data-c="smart">
+        <span class="card-num">04</span>
+        <div class="card-name">Canva</div>
+        <div class="card-desc">Create professional presentations and visuals for your projects.</div>
+        <span class="card-cta" data-c="smart">Ouvrir →</span>
+      </a>
+    </div>
+  </section>
 
-    <!-- PLAY -->
-    <section class="section" id="play" aria-label="Play">
-      <div class="section-header">
-        <div class="section-left">
-          <div class="icon">🎮</div>
-          <div>
-            <div class="section-title">Play</div>
-            <div class="section-desc">Apprendre en jouant, mais avec une trace.</div>
-          </div>
-        </div>
-        <div class="pill-row">
-          <span class="pill">Objectif : vocab</span>
-          <span class="pill">Trace : 3 mots</span>
-        </div>
-      </div>
+</main>
 
-      <div class="cards-grid">
-        <a href="https://www.nytimes.com/games/wordle/" target="_blank" rel="noopener"
-           class="card play resource"
-           data-cat="play" data-level="mid" data-time="5"
-           data-track="mcv,agora,bts"
-           data-title="Wordle" data-keywords="vocab spelling orthographe">
-          <div class="name">Wordle</div>
-          <div class="meta">
-            <span class="tag">🟡 Intermédiaire</span>
-            <span class="tag">⏱ 5 min</span>
-            <span class="tag">🎯 Vocab + spelling</span>
-            <span class="tag mcv">MCV</span>
-            <span class="tag agora">AGORA</span>
-            <span class="tag bts">BTS</span>
-          </div>
-          <div class="desc">Défi quotidien. Objectif : 5 mots nouveaux sur la semaine.</div>
-          <div class="actions">
-            <span class="go">Jouer ↗</span>
-            <span class="smallnote">Note tes essais</span>
-          </div>
-        </a>
-
-        <a href="https://skribbl.io/" target="_blank" rel="noopener"
-           class="card play resource"
-           data-cat="play" data-level="easy" data-time="15"
-           data-track="mcv,mbbe,agora"
-           data-title="Skribbl.io" data-keywords="drawing guessing vocab rapid">
-          <div class="name">Skribbl.io</div>
-          <div class="meta">
-            <span class="tag">🟢 Facile</span>
-            <span class="tag">⏱ 15 min</span>
-            <span class="tag">🎯 Vocab rapide</span>
-            <span class="tag mcv">MCV</span>
-            <span class="tag mbbe">MBBE</span>
-            <span class="tag agora">AGORA</span>
-          </div>
-          <div class="desc">Dessiner et deviner. Objectif : retenir 10 mots d’objets et d’actions.</div>
-          <div class="actions">
-            <span class="go">Jouer ↗</span>
-            <span class="smallnote">Très motivant</span>
-          </div>
-        </a>
-
-        <a href="https://www.geoguessr.com/" target="_blank" rel="noopener"
-           class="card play resource"
-           data-cat="play" data-level="hard" data-time="15"
-           data-track="mcv,agora,bts"
-           data-title="GeoGuessr" data-keywords="world map culture street view">
-          <div class="name">GeoGuessr</div>
-          <div class="meta">
-            <span class="tag">🔴 Challenge</span>
-            <span class="tag">⏱ 15 min</span>
-            <span class="tag">🎯 Culture monde</span>
-            <span class="tag mcv">MCV</span>
-            <span class="tag agora">AGORA</span>
-            <span class="tag bts">BTS</span>
-          </div>
-          <div class="desc">Explorer et deviner le pays. Objectif : 3 indices en anglais.</div>
-          <div class="actions">
-            <span class="go">Jouer ↗</span>
-            <span class="smallnote">Trace : 3 indices</span>
-          </div>
-        </a>
-
-        <a href="https://www.thewikigame.com/" target="_blank" rel="noopener"
-           class="card play resource"
-           data-cat="play" data-level="mid" data-time="15"
-           data-track="agora,bts"
-           data-title="The Wiki Game" data-keywords="reading culture wikipedia">
-          <div class="name">The Wiki Game</div>
-          <div class="meta">
-            <span class="tag">🟡 Intermédiaire</span>
-            <span class="tag">⏱ 15 min</span>
-            <span class="tag">🎯 Reading</span>
-            <span class="tag agora">AGORA</span>
-            <span class="tag bts">BTS</span>
-          </div>
-          <div class="desc">Aller d’un article à un autre. Objectif : 2 infos utiles.</div>
-          <div class="actions">
-            <span class="go">Jouer ↗</span>
-            <span class="smallnote">Trace : 2 infos</span>
-          </div>
-        </a>
-
-        <a href="https://www.sporcle.com/" target="_blank" rel="noopener"
-           class="card play resource"
-           data-cat="play" data-level="easy" data-time="5"
-           data-track="mcv,mbbe,agora"
-           data-title="Sporcle" data-keywords="quiz culture vocab geography">
-          <div class="name">Sporcle</div>
-          <div class="meta">
-            <span class="tag">🟢 Facile</span>
-            <span class="tag">⏱ 5 min</span>
-            <span class="tag">🎯 Quiz</span>
-            <span class="tag mcv">MCV</span>
-            <span class="tag mbbe">MBBE</span>
-            <span class="tag agora">AGORA</span>
-          </div>
-          <div class="desc">Quizz rapides. Objectif : 1 quiz, 1 score, 1 mot retenu.</div>
-          <div class="actions">
-            <span class="go">Jouer ↗</span>
-            <span class="smallnote">Bats ton score</span>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <!-- WATCH -->
-    <section class="section" id="watch" aria-label="Watch">
-      <div class="section-header">
-        <div class="section-left">
-          <div class="icon">🎬</div>
-          <div>
-            <div class="section-title">Watch</div>
-            <div class="section-desc">Vidéos courtes, compréhension rapide.</div>
-          </div>
-        </div>
-        <div class="pill-row">
-          <span class="pill">Objectif : listening</span>
-          <span class="pill">Trace : 1 idée</span>
-        </div>
-      </div>
-
-      <div class="cards-grid">
-        <a href="https://ed.ted.com/" target="_blank" rel="noopener"
-           class="card watch resource"
-           data-cat="watch" data-level="mid" data-time="15"
-           data-track="mcv,mbbe,agora,bts"
-           data-title="TED-Ed" data-keywords="video learning animated">
-          <div class="name">TED-Ed</div>
-          <div class="meta">
-            <span class="tag">🟡 Intermédiaire</span>
-            <span class="tag">⏱ 15 min</span>
-            <span class="tag">🎯 Idée principale</span>
-            <span class="tag mcv">MCV</span>
-            <span class="tag mbbe">MBBE</span>
-            <span class="tag agora">AGORA</span>
-            <span class="tag bts">BTS</span>
-          </div>
-          <div class="desc">Vidéos animées. Objectif : 1 idée + 3 mots.</div>
-          <div class="actions">
-            <span class="go">Regarder ↗</span>
-            <span class="smallnote">Choisis un thème</span>
-          </div>
-        </a>
-
-        <a href="https://www.bbc.com/ideas" target="_blank" rel="noopener"
-           class="card watch resource"
-           data-cat="watch" data-level="hard" data-time="15"
-           data-track="agora,bts"
-           data-title="BBC Ideas" data-keywords="society culture identity short video">
-          <div class="name">BBC Ideas</div>
-          <div class="meta">
-            <span class="tag">🔴 Challenge</span>
-            <span class="tag">⏱ 15 min</span>
-            <span class="tag">🎯 Résumer</span>
-            <span class="tag agora">AGORA</span>
-            <span class="tag bts">BTS</span>
-          </div>
-          <div class="desc">Culture et société. Objectif : résumer en 1 phrase claire.</div>
-          <div class="actions">
-            <span class="go">Regarder ↗</span>
-            <span class="smallnote">Trace : 1 phrase</span>
-          </div>
-        </a>
-
-        <a href="https://www.youtube.com/@EasyEnglishVideos" target="_blank" rel="noopener"
-           class="card watch resource"
-           data-cat="watch" data-level="easy" data-time="5"
-           data-track="mcv,mbbe,agora,bts"
-           data-title="Easy English" data-keywords="street interview subtitles real english">
-          <div class="name">Easy English</div>
-          <div class="meta">
-            <span class="tag">🟢 Facile</span>
-            <span class="tag">⏱ 5 min</span>
-            <span class="tag">🎯 Expressions utiles</span>
-            <span class="tag mcv">MCV</span>
-            <span class="tag mbbe">MBBE</span>
-            <span class="tag agora">AGORA</span>
-            <span class="tag bts">BTS</span>
-          </div>
-          <div class="desc">Interviews avec sous-titres. Objectif : repérer 3 expressions.</div>
-          <div class="actions">
-            <span class="go">Regarder ↗</span>
-            <span class="smallnote">Très Bac Pro</span>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <!-- LISTEN -->
-    <section class="section" id="listen" aria-label="Listen">
-      <div class="section-header">
-        <div class="section-left">
-          <div class="icon">🎵</div>
-          <div>
-            <div class="section-title">Listen</div>
-            <div class="section-desc">Entraîner l’oreille et les accents.</div>
-          </div>
-        </div>
-        <div class="pill-row">
-          <span class="pill">Objectif : accents</span>
-          <span class="pill">Trace : 3 mots</span>
-        </div>
-      </div>
-
-      <div class="cards-grid">
-        <div class="card listen spotify resource"
-             data-cat="listen" data-level="easy" data-time="15"
-             data-track="mcv,mbbe,agora,bts"
-             data-title="The English Hub Playlist" data-keywords="music playlist accents culture">
-          <div class="name">🎧 The English Hub Playlist</div>
-          <div class="meta">
-            <span class="tag">🟢 Facile</span>
-            <span class="tag">⏱ 15 min</span>
-            <span class="tag">🎯 Accents</span>
-            <span class="tag mcv">MCV</span>
-            <span class="tag mbbe">MBBE</span>
-            <span class="tag agora">AGORA</span>
-            <span class="tag bts">BTS</span>
-          </div>
-          <div class="desc">Choisis un titre. Objectif : 3 mots + 1 phrase sur l’ambiance.</div>
-          <iframe
-            src="https://open.spotify.com/embed/playlist/7imydAaRUryjd8WVSN30Pw?utm_source=generator"
-            width="100%" height="352"
-            frameborder="0"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"
-            title="Spotify playlist The English Hub"></iframe>
-        </div>
-
-        <a href="https://www.bbc.co.uk/radio1" target="_blank" rel="noopener"
-           class="card listen resource"
-           data-cat="listen" data-level="mid" data-time="15"
-           data-track="mcv,mbbe"
-           data-title="BBC Radio 1" data-keywords="radio british music culture">
-          <div class="name">BBC Radio 1</div>
-          <div class="meta">
-            <span class="tag">🟡 Intermédiaire</span>
-            <span class="tag">⏱ 15 min</span>
-            <span class="tag">🎯 Culture UK</span>
-            <span class="tag mcv">MCV</span>
-            <span class="tag mbbe">MBBE</span>
-          </div>
-          <div class="desc">Musique et culture. Objectif : repérer 1 info dans un talk.</div>
-          <div class="actions">
-            <span class="go">Écouter ↗</span>
-            <span class="smallnote">Trace : 1 info</span>
-          </div>
-        </a>
-
-        <a href="https://www.npr.org/series/tiny-desk-concerts/" target="_blank" rel="noopener"
-           class="card listen resource"
-           data-cat="listen" data-level="hard" data-time="30"
-           data-track="bts,agora"
-           data-title="NPR Tiny Desk" data-keywords="live performance culture interview">
-          <div class="name">NPR Tiny Desk</div>
-          <div class="meta">
-            <span class="tag">🔴 Challenge</span>
-            <span class="tag">⏱ 30 min</span>
-            <span class="tag">🎯 Comprendre contexte</span>
-            <span class="tag agora">AGORA</span>
-            <span class="tag bts">BTS</span>
-          </div>
-          <div class="desc">Concerts live. Objectif : résumer en 2 phrases.</div>
-          <div class="actions">
-            <span class="go">Écouter ↗</span>
-            <span class="smallnote">Trace : 2 phrases</span>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <!-- INTERNATIONAL -->
-    <section class="section" id="international" aria-label="International">
-      <div class="section-header">
-        <div class="section-left">
-          <div class="icon">🌍</div>
-          <div>
-            <div class="section-title">International</div>
-            <div class="section-desc">Se projeter, bouger, comprendre le monde.</div>
-          </div>
-        </div>
-        <div class="pill-row">
-          <span class="pill">Objectif : projet</span>
-          <span class="pill">Trace : 1 idée</span>
-        </div>
-      </div>
-
-      <div class="cards-grid">
-        <a href="https://erasmus-plus.ec.europa.eu/" target="_blank" rel="noopener"
-           class="card world resource"
-           data-cat="world" data-level="mid" data-time="15"
-           data-track="mcv,mbbe,agora,bts"
-           data-title="Erasmus+" data-keywords="mobility europe internship apprenticeship">
-          <div class="name">Erasmus+</div>
-          <div class="meta">
-            <span class="tag">🟡 Intermédiaire</span>
-            <span class="tag">⏱ 15 min</span>
-            <span class="tag">🎯 Mobilité</span>
-            <span class="tag mcv">MCV</span>
-            <span class="tag mbbe">MBBE</span>
-            <span class="tag agora">AGORA</span>
-            <span class="tag bts">BTS</span>
-          </div>
-          <div class="desc">Objectif : repérer 1 opportunité et 1 condition.</div>
-          <div class="actions">
-            <span class="go">Découvrir ↗</span>
-            <span class="smallnote">Trace : 2 infos</span>
-          </div>
-        </a>
-
-        <div class="card world resource"
-             data-cat="world" data-level="easy" data-time="5"
-             data-track="mcv,mbbe,agora"
-             data-title="Student Mobility" data-keywords="experience témoignage">
-          <div class="name">Student Mobility</div>
-          <div class="meta">
-            <span class="tag">🟢 Facile</span>
-            <span class="tag">⏱ 5 min</span>
-            <span class="tag">🎯 Témoignages</span>
-            <span class="tag mcv">MCV</span>
-            <span class="tag mbbe">MBBE</span>
-            <span class="tag agora">AGORA</span>
-          </div>
-          <div class="desc">Bientôt. Témoignages d’élèves comme toi.</div>
-          <div class="actions">
-            <span class="go" aria-disabled="true">Bientôt</span>
-            <span class="smallnote">En construction</span>
-          </div>
-        </div>
-
-        <a href="https://view.genially.com/67d959539020227b44695ea3/interactive-content-english-language-world-map" target="_blank" rel="noopener"
-           class="card world resource"
-           data-cat="world" data-level="easy" data-time="15"
-           data-track="mcv,mbbe,agora,bts"
-           data-title="English-Speaking World" data-keywords="map culture countries english">
-          <div class="name">English-Speaking World</div>
-          <div class="meta">
-            <span class="tag">🟢 Facile</span>
-            <span class="tag">⏱ 15 min</span>
-            <span class="tag">🎯 Monde</span>
-            <span class="tag mcv">MCV</span>
-            <span class="tag mbbe">MBBE</span>
-            <span class="tag agora">AGORA</span>
-            <span class="tag bts">BTS</span>
-          </div>
-          <div class="desc">Objectif : choisir 1 pays et relever 3 infos simples.</div>
-          <div class="actions">
-            <span class="go">Découvrir ↗</span>
-            <span class="smallnote">Trace : 3 infos</span>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <!-- SMART TOOLS -->
-    <section class="section" id="smart" aria-label="Smart tools">
-      <div class="section-header">
-        <div class="section-left">
-          <div class="icon">🧰</div>
-          <div>
-            <div class="section-title">Smart Tools</div>
-            <div class="section-desc">Travailler proprement et en autonomie.</div>
-          </div>
-        </div>
-        <div class="pill-row">
-          <span class="pill">Objectif : autonomie</span>
-          <span class="pill">Trace : 1 phrase</span>
-        </div>
-      </div>
-
-      <div class="cards-grid">
-        <a href="https://dictionary.cambridge.org/" target="_blank" rel="noopener"
-           class="card smart resource"
-           data-cat="smart" data-level="easy" data-time="5"
-           data-track="mcv,mbbe,agora,bts"
-           data-title="Cambridge Dictionary" data-keywords="dictionary pronunciation definition">
-          <div class="name">Cambridge Dictionary</div>
-          <div class="meta">
-            <span class="tag">🟢 Facile</span>
-            <span class="tag">⏱ 5 min</span>
-            <span class="tag">🎯 Vérifier</span>
-            <span class="tag mcv">MCV</span>
-            <span class="tag mbbe">MBBE</span>
-            <span class="tag agora">AGORA</span>
-            <span class="tag bts">BTS</span>
-          </div>
-          <div class="desc">Objectif : vérifier 3 mots et écouter la prononciation.</div>
-          <div class="actions">
-            <span class="go">Ouvrir ↗</span>
-            <span class="smallnote">Fiable</span>
-          </div>
-        </a>
-
-        <a href="https://youglish.com/" target="_blank" rel="noopener"
-           class="card smart resource"
-           data-cat="smart" data-level="mid" data-time="5"
-           data-track="mcv,mbbe,agora,bts"
-           data-title="YouGlish" data-keywords="pronunciation accent clips youtube">
-          <div class="name">YouGlish</div>
-          <div class="meta">
-            <span class="tag">🟡 Intermédiaire</span>
-            <span class="tag">⏱ 5 min</span>
-            <span class="tag">🎯 Prononcer</span>
-            <span class="tag mcv">MCV</span>
-            <span class="tag mbbe">MBBE</span>
-            <span class="tag agora">AGORA</span>
-            <span class="tag bts">BTS</span>
-          </div>
-          <div class="desc">Objectif : entendre 1 mot dans 3 clips et le répéter.</div>
-          <div class="actions">
-            <span class="go">Ouvrir ↗</span>
-            <span class="smallnote">Très utile</span>
-          </div>
-        </a>
-
-        <a href="https://www.grammarly.com/" target="_blank" rel="noopener"
-           class="card smart resource"
-           data-cat="smart" data-level="mid" data-time="15"
-           data-track="agora,bts"
-           data-title="Grammarly" data-keywords="writing grammar clarity">
-          <div class="name">Grammarly</div>
-          <div class="meta">
-            <span class="tag">🟡 Intermédiaire</span>
-            <span class="tag">⏱ 15 min</span>
-            <span class="tag">🎯 Writing</span>
-            <span class="tag agora">AGORA</span>
-            <span class="tag bts">BTS</span>
-          </div>
-          <div class="desc">Objectif : améliorer 5 phrases. À utiliser avec recul.</div>
-          <div class="actions">
-            <span class="go">Ouvrir ↗</span>
-            <span class="smallnote">Version gratuite</span>
-          </div>
-        </a>
-
-        <a href="https://www.canva.com/" target="_blank" rel="noopener"
-           class="card smart resource"
-           data-cat="smart" data-level="easy" data-time="30"
-           data-track="mcv,mbbe,agora,bts"
-           data-title="Canva" data-keywords="visual presentation poster">
-          <div class="name">Canva</div>
-          <div class="meta">
-            <span class="tag">🟢 Facile</span>
-            <span class="tag">⏱ 30 min</span>
-            <span class="tag">🎯 Présenter</span>
-            <span class="tag mcv">MCV</span>
-            <span class="tag mbbe">MBBE</span>
-            <span class="tag agora">AGORA</span>
-            <span class="tag bts">BTS</span>
-          </div>
-          <div class="desc">Objectif : 1 slide propre, 1 message clair, 0 surcharge.</div>
-          <div class="actions">
-            <span class="go">Ouvrir ↗</span>
-            <span class="smallnote">Qualité visuelle</span>
-          </div>
-        </a>
-      </div>
-    </section>
-
-  </main>
-
-  <footer>
-    <p>✨ <strong>The English Hub</strong> · Lycée des métiers Florian · Anglais</p>
-  </footer>
-
-</div>
+<footer>
+  <span class="footer-brand">The English Hub</span>
+  <span class="footer-meta">Lycée des métiers Florian</span>
+</footer>
 
 <script>
-  // Scroll reveal sobre
-  function revealSections(){
-    document.querySelectorAll('.section').forEach(function(s){
-      var top = s.getBoundingClientRect().top;
-      if(top < window.innerHeight - 90){ s.classList.add('visible'); }
-    });
-  }
-  window.addEventListener('load', function(){
-    revealSections();
-    window.addEventListener('scroll', revealSections, { passive:true });
-  });
-
-  // Quick jumps
-  document.querySelectorAll('[data-jump]').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var target = btn.getAttribute('data-jump');
-      var el = document.querySelector(target);
-      if(el){ el.scrollIntoView({ behavior:'smooth', block:'start' }); }
-    });
-  });
-
-  // Filtering + mode filière (mise en valeur)
-  var q = document.getElementById('q');
-  var track = document.getElementById('track');
-  var cat = document.getElementById('cat');
-  var level = document.getElementById('level');
-  var time = document.getElementById('time');
-  var onlyReco = document.getElementById('onlyReco');
-  var resetBtn = document.getElementById('resetBtn');
-
-  function norm(s){ return (s || '').toLowerCase().trim(); }
-
-  function hasTrack(card, tr){
-    if(tr === 'all') return true;
-    var list = norm(card.getAttribute('data-track') || '');
-    if(!list) return false;
-    // match exact token in a comma list
-    return list.split(',').map(function(x){return x.trim();}).indexOf(tr) !== -1;
-  }
-
-  function applyFilters(){
-    var qv = norm(q.value);
-    var tv = time.value;
-    var lv = level.value;
-    var cv = cat.value;
-    var tr = track.value;
-    var only = !!onlyReco.checked;
-
-    document.querySelectorAll('.resource').forEach(function(card){
-      var ok = true;
-
-      var c = card.getAttribute('data-cat') || '';
-      var l = card.getAttribute('data-level') || '';
-      var t = card.getAttribute('data-time') || '';
-      var title = card.getAttribute('data-title') || '';
-      var keywords = card.getAttribute('data-keywords') || '';
-      var hay = norm(title + ' ' + keywords);
-
-      if(cv !== 'all' && c !== cv) ok = false;
-      if(lv !== 'all' && l !== lv) ok = false;
-      if(tv !== 'all' && t !== tv) ok = false;
-      if(qv && hay.indexOf(qv) === -1) ok = false;
-
-      // mode filière: recommandé ou non
-      var reco = hasTrack(card, tr);
-
-      // reset classes
-      card.classList.remove('highlight');
-      card.classList.remove('faded');
-
-      // if a filière is selected, highlight matching
-      if(tr !== 'all'){
-        if(reco){
-          card.classList.add('highlight');
-        }else{
-          card.classList.add('faded');
+  window.addEventListener('load', function() {
+    function reveal() {
+      document.querySelectorAll('.section').forEach(function(s, i) {
+        if (s.getBoundingClientRect().top < window.innerHeight - 60) {
+          setTimeout(function() { s.classList.add('visible'); }, i * 70);
         }
-      }
-
-      // option: only show recommended for filière
-      if(tr !== 'all' && only && !reco) ok = false;
-
-      card.style.display = ok ? '' : 'none';
-    });
-  }
-
-  [q, track, cat, level, time].forEach(function(el){
-    el.addEventListener('input', applyFilters);
-    el.addEventListener('change', applyFilters);
+      });
+    }
+    window.addEventListener('scroll', reveal);
+    setTimeout(reveal, 100);
   });
-  onlyReco.addEventListener('change', applyFilters);
-
-  resetBtn.addEventListener('click', function(){
-    q.value = '';
-    track.value = 'all';
-    cat.value = 'all';
-    level.value = 'all';
-    time.value = 'all';
-    onlyReco.checked = false;
-    applyFilters();
-  });
-
-  // Initial
-  applyFilters();
 </script>
 </body>
 </html>
