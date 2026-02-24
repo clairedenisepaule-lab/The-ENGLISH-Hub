@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore — The English Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=Fraunces:ital,wght@1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:    #111118;
+    --bg2:   #18181f;
+    --bg3:   #1f1f28;
+    --line:  rgba(255,255,255,0.08);
+    --text:  #f0f0f5;
+    --muted: #8888aa;
+    --play:   #ff5252;
+    --watch:  #5b8fff;
+    --listen: #00d68f;
+    --world:  #ffc947;
+    --smart:  #c77dff;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  body::after {
+    content:'';
+    position:fixed; inset:0; z-index:999; pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:180px;
+    opacity:0.028;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 0 40px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .header-top {
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .back-btn {
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12px; font-weight:500; letter-spacing:1px;
+    color:var(--muted); text-decoration:none;
+    text-transform:uppercase;
+    transition:color 0.2s;
+  }
+  .back-btn:hover { color:var(--text); }
+  .back-btn svg { transition:transform 0.2s; }
+  .back-btn:hover svg { transform:translateX(-3px); }
+
+  .header-tag {
+    font-size:11px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  .header-hero {
+    padding: 44px 0 36px;
+    display:flex; align-items:flex-end; justify-content:space-between; gap:32px;
+    flex-wrap:wrap;
+  }
+
+  .page-title {
+    font-family:'Outfit', sans-serif;
+    font-size: clamp(4rem, 12vw, 8.5rem);
+    font-weight:900;
+    letter-spacing:-3px;
+    line-height:0.9;
+    color:var(--text);
+  }
+
+  .page-title .accent {
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:700;
+    color:var(--play);
+    letter-spacing:-2px;
+  }
+
+  .header-sub {
+    font-size:14px;
+    color:var(--muted);
+    line-height:1.7;
+    max-width:240px;
+    text-align:right;
+    padding-bottom:6px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display:flex; gap:0;
+    padding: 0 40px;
+    border-bottom: 1px solid var(--line);
+    overflow-x:auto;
+  }
+  nav::-webkit-scrollbar { display:none; }
+
+  .tab {
+    font-size:12px; font-weight:700; letter-spacing:1.5px;
+    text-transform:uppercase;
+    padding:14px 22px 12px;
+    color:var(--muted);
+    text-decoration:none;
+    border-bottom:2px solid transparent;
+    margin-bottom:-1px;
+    white-space:nowrap;
+    transition:color 0.2s, border-color 0.2s;
+  }
+  .tab:hover { color:var(--text); }
+  .tab[data-c="play"]:hover   { color:var(--play);   border-bottom-color:var(--play);   }
+  .tab[data-c="watch"]:hover  { color:var(--watch);  border-bottom-color:var(--watch);  }
+  .tab[data-c="listen"]:hover { color:var(--listen); border-bottom-color:var(--listen); }
+  .tab[data-c="world"]:hover  { color:var(--world);  border-bottom-color:var(--world);  }
+  .tab[data-c="smart"]:hover  { color:var(--smart);  border-bottom-color:var(--smart);  }
+
+  /* ── MAIN ── */
+  main { max-width:1100px; margin:0 auto; padding:0 40px 80px; }
+
+  /* ── SECTION ── */
+  .section {
+    padding-top:60px;
+    opacity:0; transform:translateY(24px);
+    transition:opacity 0.5s ease, transform 0.5s ease;
+  }
+  .section.visible { opacity:1; transform:translateY(0); }
+
+  .section-head {
+    display:flex; align-items:center; gap:16px;
+    margin-bottom:24px;
+  }
+
+  .section-label {
+    font-size:10px; letter-spacing:3px; text-transform:uppercase;
+    color:var(--muted); flex-shrink:0;
+  }
+
+  .section-title {
+    font-family:'Outfit', sans-serif;
+    font-size:1.6rem; font-weight:900;
+    letter-spacing:-0.5px;
+  }
+
+  .section-line { flex:1; height:1px; background:var(--line); }
+
+  .section-desc {
+    font-size:12px; color:var(--muted); font-style:italic;
+  }
+
+  /* ── GRID ── */
+  .cards-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
+    gap:10px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background:var(--bg2);
+    border-radius:10px;
+    border:1px solid var(--line);
+    padding:22px 20px 18px;
+    text-decoration:none;
+    color:inherit;
+    display:flex; flex-direction:column; gap:8px;
+    position:relative;
+    overflow:hidden;
+    transition:border-color 0.2s, background 0.2s;
+  }
+
+  .card::before {
+    content:'';
+    position:absolute;
+    left:0; top:16px; bottom:16px;
+    width:2px; border-radius:2px;
+    opacity:0; transition:opacity 0.2s;
+  }
+
+  .card:hover { background:var(--bg3); }
+  .card:hover::before { opacity:1; }
+
+  .card[data-c="play"]:hover   { border-color:rgba(255,82,82,0.25);   }
+  .card[data-c="watch"]:hover  { border-color:rgba(91,143,255,0.25);  }
+  .card[data-c="listen"]:hover { border-color:rgba(0,214,143,0.25);   }
+  .card[data-c="world"]:hover  { border-color:rgba(255,201,71,0.25);  }
+  .card[data-c="smart"]:hover  { border-color:rgba(199,125,255,0.25); }
+
+  .card[data-c="play"]::before   { background:var(--play);   }
+  .card[data-c="watch"]::before  { background:var(--watch);  }
+  .card[data-c="listen"]::before { background:var(--listen); }
+  .card[data-c="world"]::before  { background:var(--world);  }
+  .card[data-c="smart"]::before  { background:var(--smart);  }
+
+  .card-num { font-size:10px; letter-spacing:2px; color:var(--muted); font-weight:500; }
+
+  .card-name { font-size:1.1rem; font-weight:700; letter-spacing:-0.2px; }
+
+  .card-desc { font-size:12.5px; color:var(--muted); line-height:1.6; flex:1; }
+
+  .card-cta {
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:11px; font-weight:700; letter-spacing:1.5px;
+    text-transform:uppercase; margin-top:6px;
+    transition:gap 0.2s;
+  }
+  .card:hover .card-cta { gap:10px; }
+
+  .card-cta[data-c="play"]   { color:var(--play);   }
+  .card-cta[data-c="watch"]  { color:var(--watch);  }
+  .card-cta[data-c="listen"] { color:var(--listen); }
+  .card-cta[data-c="world"]  { color:var(--world);  }
+  .card-cta[data-c="smart"]  { color:var(--smart);  }
+
+  .card-coming {
+    font-size:11px; font-weight:600; letter-spacing:1px;
+    color:var(--muted); margin-top:6px; text-transform:uppercase;
+  }
+
+  .spotify-card { grid-column:1/-1; }
+  .spotify-card .card-name { color:var(--listen); margin-bottom:4px; }
+  .spotify-card iframe { border-radius:6px; display:block; margin-top:14px; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top:1px solid var(--line);
+    padding:24px 40px;
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:12px;
+  }
+  .footer-brand { font-size:14px; font-weight:700; color:var(--text); }
+  .footer-meta  { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+
+  @media (max-width:600px) {
+    header, nav, main, footer { padding-left:20px; padding-right:20px; }
+    .header-hero { flex-direction:column; align-items:flex-start; gap:16px; }
+    .header-sub { text-align:left; }
+    .cards-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <a href="index.html" class="back-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M8.5 2.5L4 7l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      The English Hub
+    </a>
+    <span class="header-tag">Lycée des métiers Florian</span>
+  </div>
+  <div class="header-hero">
+    <h1 class="page-title">Ex<span class="accent">plore</span></h1>
+    <p class="header-sub">Joue, regarde, écoute et découvre le monde en anglais.</p>
+  </div>
+</header>
+
+<nav>
+  <a href="#play"          class="tab" data-c="play">Play</a>
+  <a href="#watch"         class="tab" data-c="watch">Watch</a>
+  <a href="#listen"        class="tab" data-c="listen">Listen</a>
+  <a href="#international" class="tab" data-c="world">International</a>
+  <a href="#smart"         class="tab" data-c="smart">Smart Tools</a>
+</nav>
+
+<main>
+
+  <!-- PLAY -->
+  <section class="section" id="play">
+    <div class="section-head">
+      <span class="section-label">01</span>
+      <span class="section-title" style="color:var(--play)">Play</span>
+      <div class="section-line"></div>
+      <span class="section-desc">Learn through play.</span>
+    </div>
+    <div class="cards-grid">
+      <a href="https://www.nytimes.com/games/wordle/" target="_blank" class="card" data-c="play">
+        <span class="card-num">01</span>
+        <div class="card-name">Wordle</div>
+        <div class="card-desc">Daily word challenge to improve vocabulary and spelling in a fun way.</div>
+        <span class="card-cta" data-c="play">Jouer →</span>
+      </a>
+      <a href="https://skribbl.io/" target="_blank" class="card" data-c="play">
+        <span class="card-num">02</span>
+        <div class="card-name">Skribbl.io</div>
+        <div class="card-desc">Online drawing and guessing game. Great for vocabulary and quick thinking.</div>
+        <span class="card-cta" data-c="play">Jouer →</span>
+      </a>
+      <a href="https://www.geoguessr.com/" target="_blank" class="card" data-c="play">
+        <span class="card-num">03</span>
+        <div class="card-name">GeoGuessr</div>
+        <div class="card-desc">Explore the world using Google Street View and guess the country.</div>
+        <span class="card-cta" data-c="play">Jouer →</span>
+      </a>
+      <a href="https://sporcle.com/" target="_blank" class="card" data-c="play">
+        <span class="card-num">04</span>
+        <div class="card-name">Sporcle</div>
+        <div class="card-desc">Trivia and quiz games on culture, geography, and pop culture in English.</div>
+        <span class="card-cta" data-c="play">Jouer →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- WATCH -->
+  <section class="section" id="watch">
+    <div class="section-head">
+      <span class="section-label">02</span>
+      <span class="section-title" style="color:var(--watch)">Watch</span>
+      <div class="section-line"></div>
+      <span class="section-desc">See the world through a screen.</span>
+    </div>
+    <div class="cards-grid">
+      <a href="https://ed.ted.com/" target="_blank" class="card" data-c="watch">
+        <span class="card-num">01</span>
+        <div class="card-name">TED-Ed</div>
+        <div class="card-desc">Animated educational videos on science, culture and global issues.</div>
+        <span class="card-cta" data-c="watch">Regarder →</span>
+      </a>
+      <a href="https://www.bbc.com/ideas" target="_blank" class="card" data-c="watch">
+        <span class="card-num">02</span>
+        <div class="card-name">BBC Ideas</div>
+        <div class="card-desc">Short videos exploring modern society, culture and identity.</div>
+        <span class="card-cta" data-c="watch">Regarder →</span>
+      </a>
+      <a href="https://www.youtube.com/@EasyEnglishVideos" target="_blank" class="card" data-c="watch">
+        <span class="card-num">03</span>
+        <div class="card-name">Easy English</div>
+        <div class="card-desc">Street interviews with subtitles. Real English, real people.</div>
+        <span class="card-cta" data-c="watch">Regarder →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- LISTEN -->
+  <section class="section" id="listen">
+    <div class="section-head">
+      <span class="section-label">03</span>
+      <span class="section-title" style="color:var(--listen)">Listen</span>
+      <div class="section-line"></div>
+      <span class="section-desc">Improve your ear, discover cultures.</span>
+    </div>
+    <div class="cards-grid">
+      <div class="card spotify-card" data-c="listen">
+        <span class="card-num">Playlist</span>
+        <div class="card-name">The English Hub</div>
+        <div class="card-desc">Discover English through music from different countries and cultures.</div>
+        <iframe src="https://open.spotify.com/embed/playlist/7imydAaRUryjd8WVSN30Pw?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      </div>
+      <a href="https://www.bbc.co.uk/radio1" target="_blank" class="card" data-c="listen">
+        <span class="card-num">01</span>
+        <div class="card-name">BBC Radio 1</div>
+        <div class="card-desc">Contemporary British music and culture. Stream live anytime.</div>
+        <span class="card-cta" data-c="listen">Écouter →</span>
+      </a>
+      <a href="https://www.npr.org/series/tiny-desk-concerts/" target="_blank" class="card" data-c="listen">
+        <span class="card-num">02</span>
+        <div class="card-name">NPR Tiny Desk</div>
+        <div class="card-desc">Live performances in intimate settings. Cultural diversity and authentic English.</div>
+        <span class="card-cta" data-c="listen">Écouter →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- INTERNATIONAL -->
+  <section class="section" id="international">
+    <div class="section-head">
+      <span class="section-label">04</span>
+      <span class="section-title" style="color:var(--world)">International</span>
+      <div class="section-line"></div>
+      <span class="section-desc">English beyond borders.</span>
+    </div>
+    <div class="cards-grid">
+      <a href="https://erasmus-plus.ec.europa.eu/" target="_blank" class="card" data-c="world">
+        <span class="card-num">01</span>
+        <div class="card-name">Erasmus+</div>
+        <div class="card-desc">European mobility programmes and opportunities for students and apprentices.</div>
+        <span class="card-cta" data-c="world">Découvrir →</span>
+      </a>
+      <div class="card" data-c="world">
+        <span class="card-num">02</span>
+        <div class="card-name">Student Mobility</div>
+        <div class="card-desc">Bientôt — témoignages et expériences internationales d'élèves comme toi.</div>
+        <span class="card-coming">Bientôt</span>
+      </div>
+      <a href="https://view.genially.com/67d959539020227b44695ea3/interactive-content-english-language-world-map" target="_blank" class="card" data-c="world">
+        <span class="card-num">03</span>
+        <div class="card-name">English-Speaking World</div>
+        <div class="card-desc">1,5 milliard de locuteurs sur 6 continents — comment l'anglais connecte les cultures.</div>
+        <span class="card-cta" data-c="world">Découvrir →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- SMART TOOLS -->
+  <section class="section" id="smart">
+    <div class="section-head">
+      <span class="section-label">05</span>
+      <span class="section-title" style="color:var(--smart)">Smart Tools</span>
+      <div class="section-line"></div>
+      <span class="section-desc">Use technology wisely.</span>
+    </div>
+    <div class="cards-grid">
+      <a href="https://dictionary.cambridge.org/" target="_blank" class="card" data-c="smart">
+        <span class="card-num">01</span>
+        <div class="card-name">Cambridge Dictionary</div>
+        <div class="card-desc">Reliable definitions and pronunciation from the world's leading dictionary.</div>
+        <span class="card-cta" data-c="smart">Ouvrir →</span>
+      </a>
+      <a href="https://youglish.com/" target="_blank" class="card" data-c="smart">
+        <span class="card-num">02</span>
+        <div class="card-name">YouGlish</div>
+        <div class="card-desc">Hear real pronunciation in authentic YouTube clips. Perfect for tricky words.</div>
+        <span class="card-cta" data-c="smart">Ouvrir →</span>
+      </a>
+      <a href="https://www.grammarly.com/" target="_blank" class="card" data-c="smart">
+        <span class="card-num">03</span>
+        <div class="card-name">Grammarly</div>
+        <div class="card-desc">Writing assistant for checking clarity and grammar. Free version available.</div>
+        <span class="card-cta" data-c="smart">Ouvrir →</span>
+      </a>
+      <a href="https://www.canva.com/" target="_blank" class="card" data-c="smart">
+        <span class="card-num">04</span>
+        <div class="card-name">Canva</div>
+        <div class="card-desc">Create professional presentations and visuals for your projects.</div>
+        <span class="card-cta" data-c="smart">Ouvrir →</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="footer-brand">The English Hub</span>
+  <span class="footer-meta">Lycée des métiers Florian</span>
+</footer>
+
+<script>
+  window.addEventListener('load', function() {
+    function reveal() {
+      document.querySelectorAll('.section').forEach(function(s, i) {
+        if (s.getBoundingClientRect().top < window.innerHeight - 60) {
+          setTimeout(function() { s.classList.add('visible'); }, i * 70);
+        }
+      });
+    }
+    window.addEventListener('scroll', reveal);
+    setTimeout(reveal, 100);
+  });
+</script>
+</body>
+</html>
