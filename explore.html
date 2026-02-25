@@ -246,6 +246,105 @@
     .header-sub { text-align:left; }
     .cards-grid { grid-template-columns:1fr; }
   }
+
+  .back-brand {
+    color: #00e5d8;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    animation: brandPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes brandPulse {
+    0%   { color: #00e5d8; text-shadow: 0 0 6px rgba(0,229,216,0.3); }
+    50%  { color: #7ffff4; text-shadow: 0 0 18px rgba(0,229,216,0.7); }
+    100% { color: #00e5d8; text-shadow: 0 0 6px rgba(0,229,216,0.3); }
+  }
+  .back-btn svg { color: #00e5d8; }
+
+  /* ── OPTION B: colored top border on cards ── */
+  .card[data-c="play"] {
+    border-top: 3px solid var(--play);
+    background: linear-gradient(180deg, rgba(255,82,82,0.06) 0%, var(--bg2) 40%);
+  }
+  .card[data-c="watch"] {
+    border-top: 3px solid var(--watch);
+    background: linear-gradient(180deg, rgba(91,143,255,0.06) 0%, var(--bg2) 40%);
+  }
+  .card[data-c="listen"] {
+    border-top: 3px solid var(--listen);
+    background: linear-gradient(180deg, rgba(0,214,143,0.06) 0%, var(--bg2) 40%);
+  }
+  .card[data-c="world"] {
+    border-top: 3px solid var(--world);
+    background: linear-gradient(180deg, rgba(255,201,71,0.06) 0%, var(--bg2) 40%);
+  }
+  .card[data-c="smart"] {
+    border-top: 3px solid var(--smart);
+    background: linear-gradient(180deg, rgba(199,125,255,0.06) 0%, var(--bg2) 40%);
+  }
+  .card[data-c="play"]:hover   { background: linear-gradient(180deg, rgba(255,82,82,0.11) 0%, var(--bg3) 40%); }
+  .card[data-c="watch"]:hover  { background: linear-gradient(180deg, rgba(91,143,255,0.11) 0%, var(--bg3) 40%); }
+  .card[data-c="listen"]:hover { background: linear-gradient(180deg, rgba(0,214,143,0.11) 0%, var(--bg3) 40%); }
+  .card[data-c="world"]:hover  { background: linear-gradient(180deg, rgba(255,201,71,0.11) 0%, var(--bg3) 40%); }
+  .card[data-c="smart"]:hover  { background: linear-gradient(180deg, rgba(199,125,255,0.11) 0%, var(--bg3) 40%); }
+
+  /* Pop on tap mobile */
+  .card { transition: border-color 0.2s, background 0.2s, transform 0.15s; }
+  .card:active { transform: scale(0.97); }
+
+  /* Colored card numbers */
+  .card[data-c="play"]   .card-num { color: var(--play); }
+  .card[data-c="watch"]  .card-num { color: var(--watch); }
+  .card[data-c="listen"] .card-num { color: var(--listen); }
+  .card[data-c="world"]  .card-num { color: var(--world); }
+  .card[data-c="smart"]  .card-num { color: var(--smart); }
+
+  /* Scroll reveal */
+  .card { opacity: 0; transform: translateY(22px); }
+  .card.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── ANIMATED TITLE GRADIENT ── */
+  .page-title .accent {
+    background: linear-gradient(90deg, #ff3b3b, #ff8c00, #ffd700, #ff5500, #ff3b3b);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titleFlow 3s linear infinite;
+  }
+  @keyframes titleFlow {
+    0%   { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+
+
+  /* ── CASCADE REVEAL ── */
+  .card {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.2s, background 0.2s;
+  }
+  .card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── CONFETTI ── */
+  .confetti-piece {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: confettiFall var(--dur) ease forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+    80%  { opacity: 0.8; }
+    100% { transform: translateY(var(--fy)) translateX(var(--fx)) rotate(720deg) scale(0.3); opacity: 0; }
+  }
 </style>
 </head>
 <body>
@@ -256,7 +355,7 @@
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
         <path d="M8.5 2.5L4 7l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      The English Hub
+      <span class="back-brand">The English Hub</span>
     </a>
     <span class="header-tag">Lycée des métiers Florian · Votre Professeur d'Anglais</span>
   </div>
@@ -441,11 +540,12 @@
 </main>
 
 <footer>
-  <span class="footer-brand">The English Hub</span>
+  <span class="footer-brand" style="background:linear-gradient(90deg,#ff3b3b 0%,#ffb800 25%,#00e5d8 50%,#b94fff 75%,#00f0a0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:16px;font-weight:800;">The English Hub</span>
   <span class="footer-meta">Lycée des métiers Florian · Votre Professeur d'Anglais</span>
 </footer>
 
 <script>
+  // CASCADE REVEAL
   window.addEventListener('load', function() {
     function reveal() {
       document.querySelectorAll('.section').forEach(function(s, i) {
@@ -453,9 +553,69 @@
           setTimeout(function() { s.classList.add('visible'); }, i * 70);
         }
       });
+      var cards = document.querySelectorAll('.card');
+      var delay = 0;
+      cards.forEach(function(card) {
+        if (card.getBoundingClientRect().top < window.innerHeight - 20) {
+          setTimeout(function() { card.classList.add('visible'); }, delay);
+          delay += 80;
+        }
+      });
     }
     window.addEventListener('scroll', reveal);
-    setTimeout(reveal, 100);
+    setTimeout(reveal, 120);
+  });
+
+  // POP SOUND
+  function playPop() {
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'sine';
+      o.frequency.setValueAtTime(480, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(260, ctx.currentTime + 0.08);
+      g.gain.setValueAtTime(0.15, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.16);
+      o.start(ctx.currentTime);
+      o.stop(ctx.currentTime + 0.16);
+    } catch(e) {}
+  }
+
+  // CONFETTI on Play cards only
+  function launchConfetti(e) {
+    var colors = ['#ff3b3b','#ff8c00','#ffd700','#ff5500','#fff','#ffb347'];
+    var x = e.clientX || window.innerWidth / 2;
+    var y = e.clientY || window.innerHeight / 2;
+    for (var i = 0; i < 22; i++) {
+      (function(i) {
+        setTimeout(function() {
+          var c = document.createElement('div');
+          c.className = 'confetti-piece';
+          c.style.cssText = [
+            'left:' + x + 'px',
+            'top:' + y + 'px',
+            'background:' + colors[Math.floor(Math.random()*colors.length)],
+            '--fx:' + (Math.random()*160-80) + 'px',
+            '--fy:' + (80 + Math.random()*120) + 'px',
+            '--dur:' + (0.7 + Math.random()*0.6) + 's',
+            'border-radius:' + (Math.random() > 0.5 ? '50%' : '2px'),
+            'width:' + (5 + Math.random()*6) + 'px',
+            'height:' + (5 + Math.random()*6) + 'px'
+          ].join(';');
+          document.body.appendChild(c);
+          setTimeout(function() { c.remove(); }, 1400);
+        }, i * 30);
+      })(i);
+    }
+  }
+
+  document.querySelectorAll('.card').forEach(function(card) {
+    card.addEventListener('click', playPop);
+    if (card.getAttribute('data-c') === 'play') {
+      card.addEventListener('click', launchConfetti);
+    }
   });
 </script>
 </body>

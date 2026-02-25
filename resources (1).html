@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ressources — The English Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=Fraunces:ital,wght@1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0e0e16; --bg2:#18181f; --bg3:#1f1f28;
+    --line:rgba(255,255,255,0.08);
+    --text:#f0f0f5; --muted:#9494bb;
+    --news:#4ecdc4; --tools:#ffc947; --beauty:#ff5252;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  body::after{content:'';position:fixed;inset:0;z-index:999;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px;opacity:0.028;}
+
+  /* ── HEADER ── */
+  header{padding:0 40px;border-bottom:1px solid var(--line);}
+  .header-top{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--line);}
+  .back-btn{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.2s;}
+  .back-btn:hover{color:var(--text);}
+  .back-btn svg{transition:transform 0.2s;}
+  .back-btn:hover svg{transform:translateX(-3px);}
+  .header-tag{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+  .header-hero{padding:44px 0 36px;display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap;}
+  .page-title{font-family:'Outfit',sans-serif;font-size:clamp(3rem,10vw,7rem);font-weight:900;letter-spacing:-3px;line-height:0.9;}
+  .page-title .accent{font-family:'Fraunces',serif;font-style:italic;font-weight:700;color:var(--news);letter-spacing:-2px;}
+  .header-sub{font-size:14px;color:var(--muted);line-height:1.7;max-width:240px;text-align:right;padding-bottom:6px;}
+
+  /* ── NAV ── */
+  nav{display:flex;gap:0;padding:0 40px;border-bottom:1px solid var(--line);overflow-x:auto;}
+  nav::-webkit-scrollbar{display:none;}
+  .tab{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:14px 22px 12px;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:color 0.2s,border-color 0.2s;}
+  .tab[data-c="news"]:hover  {color:var(--news);  border-bottom-color:var(--news);}
+  .tab[data-c="tools"]:hover {color:var(--tools); border-bottom-color:var(--tools);}
+  .tab[data-c="beauty"]:hover{color:var(--beauty);border-bottom-color:var(--beauty);}
+
+  /* ── MAIN ── */
+  main{max-width:1100px;margin:0 auto;padding:0 40px 80px;}
+
+  /* ── SECTION ── */
+  .section{padding-top:56px;opacity:0;transform:translateY(24px);transition:opacity 0.5s ease,transform 0.5s ease;}
+  .section.visible{opacity:1;transform:translateY(0);}
+  .section-head{display:flex;align-items:center;gap:16px;margin-bottom:24px;}
+  .section-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);flex-shrink:0;}
+  .section-title{font-family:'Outfit',sans-serif;font-size:1.6rem;font-weight:900;letter-spacing:-0.5px;}
+  .section-line{flex:1;height:1px;background:var(--line);}
+  .section-desc{font-size:12px;color:var(--muted);font-style:italic;}
+
+  /* ── GRID ── */
+  .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;}
+
+  /* ── CARD ── */
+  .card{background:var(--bg2);border-radius:10px;border:1px solid var(--line);padding:22px 20px 18px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;transition:border-color 0.2s,background 0.2s;}
+  .card::before{content:'';position:absolute;left:0;top:16px;bottom:16px;width:2px;border-radius:2px;opacity:0;transition:opacity 0.2s;}
+  .card:hover{background:var(--bg3);}
+  .card:hover::before{opacity:1;}
+
+  .card[data-c="news"]:hover  {border-color:rgba(78,205,196,0.25);}  .card[data-c="news"]::before  {background:var(--news);}
+  .card[data-c="tools"]:hover {border-color:rgba(255,201,71,0.25);}  .card[data-c="tools"]::before {background:var(--tools);}
+  .card[data-c="beauty"]:hover{border-color:rgba(255,82,82,0.25);}   .card[data-c="beauty"]::before{background:var(--beauty);}
+
+  .card-num{font-size:10px;letter-spacing:2px;color:var(--muted);font-weight:500;}
+  .card-name{font-size:1.05rem;font-weight:700;letter-spacing:-0.2px;}
+  .card-desc{font-size:12.5px;color:var(--muted);line-height:1.6;flex:1;}
+  .card-cta{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-top:6px;transition:gap 0.2s;}
+  .card:hover .card-cta{gap:10px;}
+  .card-cta[data-c="news"]  {color:var(--news);}
+  .card-cta[data-c="tools"] {color:var(--tools);}
+  .card-cta[data-c="beauty"]{color:var(--beauty);}
+
+  /* ── FOOTER ── */
+  footer{border-top:1px solid var(--line);padding:24px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  .footer-brand{font-size:14px;font-weight:700;}
+  .footer-meta{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+
+
+  /* ── HEADER GLOW ── */
+  header { position:relative; overflow:hidden; }
+  header::before { content:''; position:absolute; top:-100px; left:-80px; width:500px; height:350px; background:radial-gradient(ellipse,rgba(78,205,196,0.09) 0%,transparent 70%); pointer-events:none; z-index:0; }
+  header::after { content:''; position:fixed; inset:0; z-index:999; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size:180px; opacity:0.028; }
+
+  /* ── STICKY NAV ── */
+  nav { position:sticky; top:0; background:var(--bg); z-index:50; }
+
+  /* ── CARD ENHANCEMENTS ── */
+  .card { transition:border-color 0.2s, background 0.2s, transform 0.15s; }
+  .card:active { transform:scale(0.97); }
+  .card-num { font-size:11px; font-weight:700; letter-spacing:2px; }
+  .card[data-c="news"]   .card-num { color:var(--news); }
+  .card[data-c="tools"]  .card-num { color:var(--tools); }
+  .card[data-c="beauty"] .card-num { color:var(--beauty); }
+  .card-cta { font-size:13px; padding:8px 0; }
+
+  /* ── SCROLL REVEAL ── */
+  .card { opacity:0; transform:translateY(22px); transition:opacity 0.45s ease, transform 0.45s ease, border-color 0.2s, background 0.2s; }
+  .card.visible { opacity:1; transform:translateY(0); }
+
+  /* ── FOOTER BRAND GRADIENT ── */
+  .footer-brand { background:linear-gradient(90deg,#ff3b3b 0%,#ffb800 25%,#00e5d8 50%,#b94fff 75%,#00f0a0 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; font-size:16px; }
+
+  /* ── ACCENT TITLE ── */
+  .page-title .accent { font-family:'Fraunces',serif; font-style:italic; font-weight:700; }
+
+
+  /* ── BACK BRAND ── */
+  .back-brand {
+    color: #00e5d8;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    animation: brandPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes brandPulse {
+    0%   { color: #00e5d8; text-shadow: 0 0 6px rgba(0,229,216,0.3); }
+    50%  { color: #7ffff4; text-shadow: 0 0 18px rgba(0,229,216,0.7); }
+    100% { color: #00e5d8; text-shadow: 0 0 6px rgba(0,229,216,0.3); }
+  }
+  .back-btn { gap: 10px; }
+  .back-btn svg { color: #00e5d8; }
+
+  /* ── HEADER TAG BLOCK ── */
+  .header-tag-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+  }
+  .header-tag-block .header-tag {
+    display: block;
+    text-align: right;
+  }
+
+  /* ── OPTION B: colored top border on cards ── */
+  .card[data-c="news"] {
+    border-top: 3px solid var(--news);
+    background: linear-gradient(180deg, rgba(78,205,196,0.06) 0%, var(--bg2) 40%);
+  }
+  .card[data-c="tools"] {
+    border-top: 3px solid var(--tools);
+    background: linear-gradient(180deg, rgba(255,201,71,0.06) 0%, var(--bg2) 40%);
+  }
+  .card[data-c="beauty"] {
+    border-top: 3px solid var(--beauty);
+    background: linear-gradient(180deg, rgba(255,82,82,0.06) 0%, var(--bg2) 40%);
+  }
+  .card[data-c="news"]:hover {
+    background: linear-gradient(180deg, rgba(78,205,196,0.10) 0%, var(--bg3) 40%);
+  }
+  .card[data-c="tools"]:hover {
+    background: linear-gradient(180deg, rgba(255,201,71,0.10) 0%, var(--bg3) 40%);
+  }
+  .card[data-c="beauty"]:hover {
+    background: linear-gradient(180deg, rgba(255,82,82,0.10) 0%, var(--bg3) 40%);
+  }
+
+  @media(max-width:640px){
+    header,nav,main,footer{padding-left:20px;padding-right:20px;}
+    .header-hero{flex-direction:column;align-items:flex-start;gap:16px;}
+    .header-sub{text-align:left;}
+    .cards-grid{grid-template-columns:1fr;}
+    .tab{padding:14px 16px 12px;}
+    .card-cta { font-size:14px; }
+    .back-brand { font-size:13px; }
+  }
+
+  /* ── ANIMATED COLD GRADIENT ON TITLE ── */
+  .page-title .accent {
+    background: linear-gradient(90deg, #00e5d8, #5b8fff, #b94fff, #00bcd4, #00e5d8);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titleFlowCold 3s linear infinite;
+  }
+  @keyframes titleFlowCold {
+    0%   { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+  /* ── CASCADE REVEAL ── */
+  .card {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.2s, background 0.2s;
+  }
+  .card.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <a href="index.html" class="back-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M8.5 2.5L4 7l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="back-brand">The English Hub</span>
+    </a>
+    <span class="header-tag">Lycée des métiers Florian · Votre Professeur d'Anglais</span>
+  </div>
+  <div class="header-hero">
+    <h1 class="page-title">Res<span class="accent">sources</span></h1>
+    <p class="header-sub">Tout ce qu'il te faut pour progresser en anglais.</p>
+  </div>
+</header>
+
+<nav>
+  <a href="#actualites" class="tab" data-c="news">Actualités</a>
+  <a href="#outils"     class="tab" data-c="tools">Outils</a>
+  <a href="#beaute"     class="tab" data-c="beauty">Beauté &amp; Mode</a>
+</nav>
+
+<main>
+
+  <!-- ACTUALITÉS -->
+  <section class="section" id="actualites">
+    <div class="section-head">
+      <span class="section-label">01</span>
+      <span class="section-title" style="color:var(--news)">Actualités</span>
+      <div class="section-line"></div>
+      <span class="section-desc">Lire l'anglais au quotidien.</span>
+    </div>
+    <div class="cards-grid">
+      <a href="https://www.newsinlevels.com/" target="_blank" class="card" data-c="news">
+        <span class="card-num">01</span>
+        <div class="card-name">News in Levels</div>
+        <div class="card-desc">Actualités adaptées à ton niveau — du débutant à l'avancé. Parfait pour progresser à ton rythme.</div>
+        <span class="card-cta" data-c="news">Lire →</span>
+      </a>
+      <a href="https://www.bbc.co.uk/learningenglish" target="_blank" class="card" data-c="news">
+        <span class="card-num">02</span>
+        <div class="card-name">BBC Learning English</div>
+        <div class="card-desc">Ressources audio, vidéo et texte pour apprendre l'anglais authentique avec la BBC.</div>
+        <span class="card-cta" data-c="news">Lire →</span>
+      </a>
+      <a href="https://learningenglish.voanews.com/" target="_blank" class="card" data-c="news">
+        <span class="card-num">03</span>
+        <div class="card-name">VOA Learning English</div>
+        <div class="card-desc">Actualités mondiales en anglais simplifié avec audio. Idéal pour l'écoute et la lecture.</div>
+        <span class="card-cta" data-c="news">Lire →</span>
+      </a>
+      <a href="https://www.theguardian.com/international" target="_blank" class="card" data-c="news">
+        <span class="card-num">04</span>
+        <div class="card-name">The Guardian</div>
+        <div class="card-desc">Grand journal britannique — pour les plus avancés qui veulent lire de l'anglais authentique.</div>
+        <span class="card-cta" data-c="news">Lire →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- OUTILS -->
+  <section class="section" id="outils">
+    <div class="section-head">
+      <span class="section-label">02</span>
+      <span class="section-title" style="color:var(--tools)">Outils</span>
+      <div class="section-line"></div>
+      <span class="section-desc">Tes alliés pour comprendre et bien écrire.</span>
+    </div>
+    <div class="cards-grid">
+      <a href="https://www.wordreference.com/" target="_blank" class="card" data-c="tools">
+        <span class="card-num">01</span>
+        <div class="card-name">WordReference</div>
+        <div class="card-desc">Le dictionnaire de référence anglais-français avec exemples et forum de discussion.</div>
+        <span class="card-cta" data-c="tools">Ouvrir →</span>
+      </a>
+      <a href="https://www.deepl.com/" target="_blank" class="card" data-c="tools">
+        <span class="card-num">02</span>
+        <div class="card-name">DeepL</div>
+        <div class="card-desc">Traducteur intelligent — à utiliser avec esprit critique, pas comme raccourci !</div>
+        <span class="card-cta" data-c="tools">Ouvrir →</span>
+      </a>
+      <a href="https://www.linguee.com/" target="_blank" class="card" data-c="tools">
+        <span class="card-num">03</span>
+        <div class="card-name">Linguee</div>
+        <div class="card-desc">Traduction avec exemples en contexte réel. Très utile pour trouver la bonne formulation.</div>
+        <span class="card-cta" data-c="tools">Ouvrir →</span>
+      </a>
+      <a href="https://www.ef.com/wwen/english-resources/english-grammar/" target="_blank" class="card" data-c="tools">
+        <span class="card-num">04</span>
+        <div class="card-name">EF Grammar</div>
+        <div class="card-desc">Guide de grammaire anglaise complet et clair. Fiches pratiques par thème.</div>
+        <span class="card-cta" data-c="tools">Ouvrir →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- BEAUTÉ & MODE -->
+  <section class="section" id="beaute">
+    <div class="section-head">
+      <span class="section-label">03</span>
+      <span class="section-title" style="color:var(--beauty)">Beauté &amp; Mode</span>
+      <div class="section-line"></div>
+      <span class="section-desc">Pour MBBE &amp; BTS — vocabulaire pro en contexte.</span>
+    </div>
+    <div class="cards-grid">
+      <a href="https://www.whowhatwear.com/" target="_blank" class="card" data-c="beauty">
+        <span class="card-num">01</span>
+        <div class="card-name">Who What Wear</div>
+        <div class="card-desc">Magazine beauté et mode américain. Vocabulaire professionnel — soins, maquillage, tendances.</div>
+        <span class="card-cta" data-c="beauty">Lire →</span>
+      </a>
+      <a href="https://www.allure.com/" target="_blank" class="card" data-c="beauty">
+        <span class="card-num">02</span>
+        <div class="card-name">Allure</div>
+        <div class="card-desc">La référence américaine de la beauté. Articles sur les routines et produits en anglais authentique.</div>
+        <span class="card-cta" data-c="beauty">Lire →</span>
+      </a>
+      <a href="https://www.vogue.com/beauty" target="_blank" class="card" data-c="beauty">
+        <span class="card-num">03</span>
+        <div class="card-name">Vogue Beauty</div>
+        <div class="card-desc">Beauté haut de gamme en anglais. Interviews, tendances et conseils professionnels.</div>
+        <span class="card-cta" data-c="beauty">Lire →</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="footer-brand">The English Hub</span>
+  <span class="footer-meta">Lycée des métiers Florian · Votre Professeur d'Anglais</span>
+</footer>
+
+<script>
+  // Scroll reveal for cards
+  window.addEventListener('load', function() {
+    function reveal() {
+      document.querySelectorAll('.section').forEach(function(s, i) {
+        if (s.getBoundingClientRect().top < window.innerHeight - 60) {
+          setTimeout(function() { s.classList.add('visible'); }, i * 70);
+        }
+      });
+      var cards = document.querySelectorAll('.card');
+      var delay = 0;
+      cards.forEach(function(card) {
+        if (card.getBoundingClientRect().top < window.innerHeight - 20) {
+          setTimeout(function() { card.classList.add('visible'); }, delay);
+          delay += 80;
+        }
+      });
+    }
+    window.addEventListener('scroll', reveal);
+    setTimeout(reveal, 120);
+  });
+
+  // Pop sound on card click
+  function playPop() {
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'sine';
+      o.frequency.setValueAtTime(480, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(260, ctx.currentTime + 0.08);
+      g.gain.setValueAtTime(0.15, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.16);
+      o.start(ctx.currentTime);
+      o.stop(ctx.currentTime + 0.16);
+    } catch(e) {}
+  }
+  document.querySelectorAll('.card').forEach(function(card) {
+    card.addEventListener('click', playPop);
+  });
+</script>
+</body>
+</html>
