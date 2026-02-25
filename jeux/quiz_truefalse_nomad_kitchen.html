@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>True or False · Rise of the Food Truck</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c26;
+    --true: #00e676;
+    --false: #ff1744;
+    --neutral: #448aff;
+    --yellow: #ffd600;
+    --text: #f0f0ff;
+    --muted: #6060a0;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(0,230,118,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(255,23,68,0.04) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* ── HEADER ── */
+  header {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .logo h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
+    letter-spacing: 0.06em;
+    background: linear-gradient(90deg, var(--true), var(--neutral));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .logo .sub {
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+
+  .stat-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .stat-chip .val { color: var(--yellow); }
+
+  /* ── TIMER ── */
+  .timer-section {
+    width: 100%;
+    max-width: 640px;
+    padding: 1rem 1.5rem 0;
+  }
+
+  .timer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+  }
+
+  .timer-label {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  .timer-count {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    line-height: 1;
+    transition: color 0.3s;
+    color: var(--text);
+  }
+
+  .timer-count.urgent { color: var(--false); animation: urgentPulse 0.5s ease infinite alternate; }
+  @keyframes urgentPulse { from { opacity: 1; } to { opacity: 0.5; } }
+
+  .timer-bar-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .timer-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.1s linear, background-color 0.5s;
+    background: var(--true);
+    width: 100%;
+  }
+
+  /* ── STAGE ── */
+  .stage {
+    width: 100%;
+    max-width: 640px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    flex: 1;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-row {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .prog-dot {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.1);
+    transition: background 0.3s;
+    max-width: 40px;
+  }
+
+  .prog-dot.done-true  { background: var(--true); }
+  .prog-dot.done-false { background: var(--false); }
+  .prog-dot.current    { background: var(--yellow); }
+
+  /* ── QUESTION CARD ── */
+  .question-card {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem 1.8rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    transition: border-color 0.2s;
+  }
+
+  .question-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(68,138,255,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .question-card.flash-true {
+    border-color: var(--true);
+    animation: flashTrue 0.4s ease;
+  }
+
+  .question-card.flash-false {
+    border-color: var(--false);
+    animation: flashFalse 0.4s ease;
+  }
+
+  .question-card.flash-timeout {
+    animation: flashTimeout 0.4s ease;
+  }
+
+  @keyframes flashTrue {
+    0%, 100% { background: var(--surface); }
+    50% { background: rgba(0,230,118,0.12); }
+  }
+
+  @keyframes flashFalse {
+    0%, 100% { background: var(--surface); }
+    50% { background: rgba(255,23,68,0.1); }
+  }
+
+  @keyframes flashTimeout {
+    0%, 100% { background: var(--surface); }
+    50% { background: rgba(255,214,0,0.08); }
+  }
+
+  .q-number {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .q-text {
+    font-size: clamp(1rem, 2.8vw, 1.25rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.5;
+    max-width: 500px;
+  }
+
+  .q-source {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* ── ANSWER FEEDBACK ── */
+  .answer-feedback {
+    width: 100%;
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 0.9rem 1.2rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--muted);
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.25s, transform 0.25s, border-color 0.2s;
+  }
+
+  .answer-feedback.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .answer-feedback.correct { border-color: rgba(0,230,118,0.3); }
+  .answer-feedback.incorrect { border-color: rgba(255,23,68,0.3); }
+
+  .feedback-icon { font-size: 1.2rem; flex-shrink: 0; }
+  .feedback-text { color: var(--text); font-size: 0.85rem; }
+  .feedback-text strong { color: var(--yellow); }
+
+  /* ── BUTTONS ── */
+  .btn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    width: 100%;
+  }
+
+  .btn-answer {
+    height: 72px;
+    border: 2px solid;
+    border-radius: 14px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.8rem;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    transition: all 0.12s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .btn-answer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity 0.12s;
+  }
+
+  .btn-answer:hover::after { opacity: 0.06; }
+  .btn-answer:active { transform: scale(0.97); }
+
+  .btn-true {
+    background: rgba(0,230,118,0.08);
+    border-color: rgba(0,230,118,0.35);
+    color: var(--true);
+  }
+
+  .btn-true:hover {
+    background: rgba(0,230,118,0.15);
+    border-color: var(--true);
+    box-shadow: 0 4px 20px rgba(0,230,118,0.2);
+  }
+
+  .btn-false {
+    background: rgba(255,23,68,0.08);
+    border-color: rgba(255,23,68,0.35);
+    color: var(--false);
+  }
+
+  .btn-false:hover {
+    background: rgba(255,23,68,0.15);
+    border-color: var(--false);
+    box-shadow: 0 4px 20px rgba(255,23,68,0.2);
+  }
+
+  .btn-answer.selected-correct {
+    background: rgba(0,230,118,0.2);
+    border-color: var(--true);
+  }
+
+  .btn-answer.selected-wrong {
+    background: rgba(255,23,68,0.2);
+    border-color: var(--false);
+  }
+
+  .btn-answer.reveal-correct {
+    background: rgba(0,230,118,0.15);
+    border-color: var(--true);
+    animation: revealPop 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+
+  @keyframes revealPop {
+    from { transform: scale(0.95); }
+    to   { transform: scale(1); }
+  }
+
+  .btn-answer:disabled { cursor: default; opacity: 0.6; }
+  .btn-answer.used { pointer-events: none; }
+
+  /* keyboard hint */
+  .key-hint {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 2px 6px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── SCORE STREAK ── */
+  .streak-display {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    min-height: 1.4rem;
+    text-align: center;
+    transition: color 0.2s;
+  }
+
+  .streak-display.hot { color: var(--yellow); }
+
+  /* ── WAITING ── */
+  .waiting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .waiting h2 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+    color: var(--text);
+  }
+
+  .waiting h2 span { color: var(--true); }
+
+  .waiting p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    max-width: 420px;
+    line-height: 1.6;
+  }
+
+  .ccf-badge {
+    background: rgba(68,138,255,0.1);
+    border: 1px solid rgba(68,138,255,0.3);
+    color: var(--neutral);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+  }
+
+  .how-to {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.2rem 1.5rem;
+    max-width: 400px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .how-to h3 {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--neutral);
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+  }
+
+  .how-step {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+    font-size: 0.86rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+
+  .how-step b { color: var(--text); }
+
+  .btn-start {
+    background: linear-gradient(135deg, var(--true), #00b248);
+    color: #001a0a;
+    border: none;
+    border-radius: 14px;
+    padding: 1rem 3rem;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 0 4px 24px rgba(0,230,118,0.3);
+  }
+
+  .btn-start:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(0,230,118,0.45);
+  }
+
+  /* ── RESULT OVERLAY ── */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(5,5,10,0.93);
+    backdrop-filter: blur(12px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+
+  .overlay.show { display: flex; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .result-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    max-width: 420px;
+    width: 100%;
+  }
+
+  .result-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+
+  .result-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2.2rem;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.3rem;
+  }
+
+  .result-score {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3.5rem;
+    line-height: 1;
+    margin: 0.5rem 0;
+  }
+
+  .result-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.2rem; }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .result-stat {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 0.7rem 0.5rem;
+    font-size: 0.78rem;
+  }
+
+  .result-stat .rs-val {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.6rem;
+    display: block;
+    line-height: 1;
+  }
+
+  .result-stat .rs-label { color: var(--muted); font-size: 0.68rem; }
+
+  .ccf-tip {
+    background: rgba(68,138,255,0.08);
+    border: 1px solid rgba(68,138,255,0.2);
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 1.2rem;
+    text-align: left;
+  }
+
+  .ccf-tip strong { color: var(--neutral); }
+
+  .btn-restart {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 0.8rem 2rem;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-restart:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <h1>⚡ True or False</h1>
+    <div class="sub">Tle AGORA · U5 The Nomad Kitchen · CCF Prep</div>
+  </div>
+  <div class="header-stats">
+    <div class="stat-chip">✅ <span class="val" id="stat-score">0</span> pts</div>
+    <div class="stat-chip">🔥 <span class="val" id="stat-streak">0</span></div>
+    <div class="stat-chip">📋 <span class="val" id="stat-q">0</span>/<span class="val" id="stat-total">0</span></div>
+  </div>
+</header>
+
+<div class="timer-section" id="timer-section" style="display:none">
+  <div class="timer-row">
+    <span class="timer-label">TIME</span>
+    <span class="timer-count" id="timer-count">5</span>
+  </div>
+  <div class="timer-bar-track">
+    <div class="timer-bar-fill" id="timer-bar"></div>
+  </div>
+</div>
+
+<div class="stage" id="stage">
+  <!-- WAITING -->
+  <div class="waiting" id="waiting">
+    <span class="ccf-badge">📋 CCF Preparation — Reading Comprehension</span>
+    <h2>Rise of the<br><span>Food Truck</span></h2>
+    <p>Based on the reading text from Lesson 2. Each statement comes directly from the article — just like in the CCF exam!</p>
+    <div class="how-to">
+      <h3>How to play</h3>
+      <div class="how-step">⏱ <span>You have <b>10 seconds</b> per statement</span></div>
+      <div class="how-step">✅ <span>Press <b>TRUE</b> if the statement is correct</span></div>
+      <div class="how-step">❌ <span>Press <b>FALSE</b> if it is wrong</span></div>
+      <div class="how-step">💡 <span>After each answer, you get <b>the explanation</b> from the text</span></div>
+    </div>
+    <button class="btn-start" onclick="startGame()">Start ▶</button>
+  </div>
+
+  <!-- GAME (hidden) -->
+  <div id="game-area" style="display:none; width:100%; flex-direction:column; align-items:center; gap:1rem;">
+    <div class="progress-row" id="progress-row"></div>
+
+    <div class="question-card" id="q-card">
+      <div class="q-number" id="q-number">QUESTION 1 / 15</div>
+      <div class="q-text" id="q-text">—</div>
+      <div class="q-source" id="q-source"></div>
+    </div>
+
+    <div class="answer-feedback" id="answer-feedback">
+      <span class="feedback-icon" id="fb-icon"></span>
+      <span class="feedback-text" id="fb-text"></span>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-answer btn-true" id="btn-true" onclick="answer(true)">
+        ✓ TRUE <span class="key-hint">T</span>
+      </button>
+      <button class="btn-answer btn-false" id="btn-false" onclick="answer(false)">
+        ✗ FALSE <span class="key-hint">F</span>
+      </button>
+    </div>
+
+    <div class="streak-display" id="streak-display"></div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="overlay" id="overlay">
+  <div class="result-box">
+    <div class="result-emoji" id="res-emoji">🎉</div>
+    <div class="result-title" id="res-title">Well done!</div>
+    <div class="result-score" id="res-score">0 <span style="font-size:1.5rem;color:var(--muted)">pts</span></div>
+    <div class="result-sub" id="res-sub"></div>
+    <div class="result-grid" id="res-grid"></div>
+    <div class="ccf-tip" id="ccf-tip"></div>
+    <button class="btn-restart" onclick="restartGame()">🔄 Play again</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// QUESTIONS — Based strictly on Lesson 2 text
+// "The Unstoppable Rise of the Food Truck"
+// BBC.com / Michelle Gross, February 2024
+// ══════════════════════════════════════════
+const QUESTIONS = [
+  // THE HUMBLE BEGINNINGS
+  {
+    text: 'The concept of mobile food is a recent invention from the 21st century.',
+    answer: false,
+    explanation: 'FALSE — The concept is far from new. It started in the 1860s with the "chuck wagon" in the American West.'
+  },
+  {
+    text: 'The "chuck wagon" followed cattle drives in the 1860s American West.',
+    answer: true,
+    explanation: 'TRUE — In the 1860s, the chuck wagon followed cattle drives, feeding cowboys with beans, coffee, and hardtack.'
+  },
+  {
+    text: 'Cowboys ate beans, coffee and hardtack from the chuck wagon.',
+    answer: true,
+    explanation: 'TRUE — The chuck wagon fed cowboys with beans, coffee, and hardtack — arguably the first mobile kitchen.'
+  },
+  {
+    text: 'The "night lunch wagon" served factory workers during overnight shifts in the late 19th century.',
+    answer: true,
+    explanation: 'TRUE — The night lunch wagon of late-19th century US industrial cities served hot meals to factory workers on overnight shifts.'
+  },
+  {
+    text: 'In the 20th century, food trucks were respected and seen positively by restaurants.',
+    answer: false,
+    explanation: 'FALSE — They were called "roach coaches" and were often viewed with suspicion by brick-and-mortar restaurants and city regulators.'
+  },
+  {
+    text: '"Roach coaches" and "grease trucks" were positive nicknames for food trucks.',
+    answer: false,
+    explanation: 'FALSE — These were old informal names for food trucks with a bad image, associated primarily with construction sites.'
+  },
+  {
+    text: 'For most of the 20th century, food trucks were mainly found near construction sites.',
+    answer: true,
+    explanation: 'TRUE — For much of the 20th century, these vehicles were associated primarily with construction sites. They provided fuel, not fine dining.'
+  },
+  // THE PERFECT STORM
+  {
+    text: 'The 2008 global financial crisis helped food trucks become more popular.',
+    answer: true,
+    explanation: 'TRUE — The 2008 financial crisis was an unexpected catalyst. Aspiring chefs, locked out of expensive restaurant start-ups, saw opportunity on four wheels.'
+  },
+  {
+    text: 'After 2008, chefs chose food trucks because they were more expensive than restaurants.',
+    answer: false,
+    explanation: 'FALSE — A truck required a fraction of the capital of a restaurant start-up. Food trucks were CHEAPER, not more expensive.'
+  },
+  {
+    text: 'The "street food" craze was fuelled by travel and food TV programmes.',
+    answer: true,
+    explanation: 'TRUE — The street food craze, fuelled by travel and food TV, created an audience hungry for authentic, artisanal, and adventurous eats.'
+  },
+  {
+    text: 'Customers in 2008 wanted cheap, industrial food rather than artisanal food.',
+    answer: false,
+    explanation: 'FALSE — The audience was hungry for authentic, artisanal, and adventurous eats — the opposite of cheap, industrial food.'
+  },
+  // THE FUTURE
+  {
+    text: 'Today, the food truck is described as more than just a business model.',
+    answer: true,
+    explanation: 'TRUE — "Today, the food truck is more than a business model; it\'s a cultural force." (The Future paragraph)'
+  },
+  {
+    text: 'Food trucks have made it harder for immigrant chefs to enter the culinary scene.',
+    answer: false,
+    explanation: 'FALSE — Food trucks have LOWERED barriers to entry for immigrant chefs and young entrepreneurs — the opposite.'
+  },
+  {
+    text: 'The story of the food truck is described as a story of adaptation and resilience.',
+    answer: true,
+    explanation: 'TRUE — The text concludes: "The story of the food truck is, ultimately, a story of adaptation and resilience."'
+  },
+  {
+    text: 'Food trucks have increased diversity in the culinary scene.',
+    answer: true,
+    explanation: 'TRUE — "It has increased diversity in the culinary scene and lowered barriers to entry for immigrant chefs and young entrepreneurs."'
+  },
+];
+
+const TIME_LIMIT = 10;
+let queue = [];
+let currentIdx = 0;
+let score = 0;
+let streak = 0;
+let correctCount = 0;
+let timer = null;
+let timeLeft = 0;
+let answered = false;
+let results = [];
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function startGame() {
+  queue = shuffle(QUESTIONS);
+  currentIdx = 0;
+  score = 0;
+  streak = 0;
+  correctCount = 0;
+  results = [];
+  answered = false;
+
+  document.getElementById('stat-total').textContent = queue.length;
+  document.getElementById('waiting').style.display = 'none';
+  const ga = document.getElementById('game-area');
+  ga.style.display = 'flex';
+  document.getElementById('timer-section').style.display = 'block';
+
+  buildProgress();
+  showQuestion();
+}
+
+function buildProgress() {
+  const row = document.getElementById('progress-row');
+  row.innerHTML = '';
+  queue.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'prog-dot' + (i === 0 ? ' current' : '');
+    d.id = `pd-${i}`;
+    row.appendChild(d);
+  });
+}
+
+function showQuestion() {
+  if (currentIdx >= queue.length) { endGame(); return; }
+  answered = false;
+
+  const q = queue[currentIdx];
+  document.getElementById('q-number').textContent = `QUESTION ${currentIdx + 1} / ${queue.length}`;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-source').textContent = '— The Unstoppable Rise of the Food Truck, BBC.com';
+  document.getElementById('stat-q').textContent = currentIdx + 1;
+
+  // Reset card
+  document.getElementById('q-card').className = 'question-card';
+
+  // Reset feedback
+  const fb = document.getElementById('answer-feedback');
+  fb.className = 'answer-feedback';
+
+  // Reset buttons
+  const btnT = document.getElementById('btn-true');
+  const btnF = document.getElementById('btn-false');
+  btnT.className = 'btn-answer btn-true';
+  btnF.className = 'btn-answer btn-false';
+  btnT.disabled = false;
+  btnF.disabled = false;
+
+  // Progress dots
+  if (currentIdx > 0) {
+    const prev = document.getElementById(`pd-${currentIdx - 1}`);
+    if (prev) prev.classList.remove('current');
+  }
+  const cur = document.getElementById(`pd-${currentIdx}`);
+  if (cur) cur.classList.add('current');
+
+  updateStreak();
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(timer);
+  timeLeft = TIME_LIMIT;
+  updateTimerUI();
+
+  timer = setInterval(() => {
+    timeLeft -= 0.05;
+    updateTimerUI();
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      handleTimeout();
+    }
+  }, 50);
+}
+
+function updateTimerUI() {
+  const pct = Math.max(0, timeLeft / TIME_LIMIT) * 100;
+  const fill = document.getElementById('timer-bar');
+  const count = document.getElementById('timer-count');
+  fill.style.width = `${pct}%`;
+  fill.style.backgroundColor = pct > 50 ? 'var(--true)' : pct > 25 ? 'var(--yellow)' : 'var(--false)';
+  const secs = Math.ceil(timeLeft);
+  count.textContent = secs;
+  count.className = 'timer-count' + (secs <= 2 ? ' urgent' : '');
+}
+
+function answer(userAnswer) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timer);
+
+  const q = queue[currentIdx];
+  const isCorrect = userAnswer === q.answer;
+
+  // Button states
+  const btnT = document.getElementById('btn-true');
+  const btnF = document.getElementById('btn-false');
+  btnT.disabled = true;
+  btnF.disabled = true;
+
+  if (userAnswer === true) {
+    btnT.classList.add(isCorrect ? 'selected-correct' : 'selected-wrong');
+  } else {
+    btnF.classList.add(isCorrect ? 'selected-correct' : 'selected-wrong');
+  }
+
+  // Reveal correct
+  if (!isCorrect) {
+    if (q.answer === true) btnT.classList.add('reveal-correct');
+    else btnF.classList.add('reveal-correct');
+  }
+
+  processResult(isCorrect, q);
+}
+
+function handleTimeout() {
+  if (answered) return;
+  answered = true;
+
+  const q = queue[currentIdx];
+  const btnT = document.getElementById('btn-true');
+  const btnF = document.getElementById('btn-false');
+  btnT.disabled = true;
+  btnF.disabled = true;
+  if (q.answer === true) btnT.classList.add('reveal-correct');
+  else btnF.classList.add('reveal-correct');
+
+  document.getElementById('q-card').classList.add('flash-timeout');
+
+  showFeedback(false, '⏰', `Time\'s up! — ${q.explanation}`);
+  streak = 0;
+  results.push(false);
+  markDot(currentIdx, false);
+  updateStats();
+
+  setTimeout(() => { currentIdx++; showQuestion(); }, 2200);
+}
+
+function processResult(isCorrect, q) {
+  if (isCorrect) {
+    streak++;
+    const bonus = streak >= 3 ? Math.floor(streak * 2) : 0;
+    const pts = 10 + bonus + Math.floor(timeLeft * 2);
+    score += pts;
+    correctCount++;
+    results.push(true);
+    markDot(currentIdx, true);
+    document.getElementById('q-card').classList.add('flash-true');
+    showFeedback(true, '✅', q.explanation);
+  } else {
+    streak = 0;
+    results.push(false);
+    markDot(currentIdx, false);
+    document.getElementById('q-card').classList.add('flash-false');
+    showFeedback(false, '❌', q.explanation);
+  }
+  updateStats();
+  setTimeout(() => { currentIdx++; showQuestion(); }, 2400);
+}
+
+function showFeedback(correct, icon, text) {
+  const fb = document.getElementById('answer-feedback');
+  fb.className = 'answer-feedback visible ' + (correct ? 'correct' : 'incorrect');
+  document.getElementById('fb-icon').textContent = icon;
+  document.getElementById('fb-text').innerHTML = text;
+}
+
+function markDot(idx, correct) {
+  const d = document.getElementById(`pd-${idx}`);
+  if (d) {
+    d.classList.remove('current');
+    d.classList.add(correct ? 'done-true' : 'done-false');
+  }
+}
+
+function updateStats() {
+  document.getElementById('stat-score').textContent = score;
+  document.getElementById('stat-streak').textContent = streak;
+}
+
+function updateStreak() {
+  const el = document.getElementById('streak-display');
+  if (streak >= 5) { el.textContent = `🔥 ${streak} streak — on fire!`; el.className = 'streak-display hot'; }
+  else if (streak >= 3) { el.textContent = `🔥 ${streak} streak!`; el.className = 'streak-display hot'; }
+  else { el.textContent = ''; el.className = 'streak-display'; }
+}
+
+function endGame() {
+  clearInterval(timer);
+  document.getElementById('timer-section').style.display = 'none';
+
+  const total = queue.length;
+  const pct = Math.round((correctCount / total) * 100);
+
+  let emoji = '😅', title = 'Keep studying!', tipText = '';
+  if (pct >= 90) {
+    emoji = '🏆'; title = 'Excellent!';
+    tipText = '<strong>CCF Ready!</strong> You have an excellent understanding of the text. Focus on using key vocabulary (resilience, artisanal, catalyst) in your oral summary.';
+  } else if (pct >= 70) {
+    emoji = '🎉'; title = 'Well done!';
+    tipText = '<strong>Almost there!</strong> Re-read the paragraphs about 2008 and "The Future". These are often tested in the CCF comprehension section.';
+  } else if (pct >= 50) {
+    emoji = '👍'; title = 'Good effort!';
+    tipText = '<strong>Keep practising!</strong> Focus on the chronology: 1860s → late 19th c. → 20th c. → after 2008. This timeline is key for the CCF.';
+  } else {
+    emoji = '📖'; title = 'Read again!';
+    tipText = '<strong>Go back to the text!</strong> Re-read Lesson 2 carefully, then try again. Pay attention to dates and key figures.';
+  }
+
+  document.getElementById('res-emoji').textContent = emoji;
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-score').innerHTML = `${score} <span style="font-size:1.5rem;color:var(--muted)">pts</span>`;
+  document.getElementById('res-sub').textContent = `${correctCount} correct out of ${total} — ${pct}%`;
+  document.getElementById('ccf-tip').innerHTML = `💡 ${tipText}`;
+
+  document.getElementById('res-grid').innerHTML = `
+    <div class="result-stat"><span class="rs-val" style="color:var(--true)">${correctCount}</span><span class="rs-label">Correct</span></div>
+    <div class="result-stat"><span class="rs-val" style="color:var(--false)">${total - correctCount}</span><span class="rs-label">Wrong</span></div>
+    <div class="result-stat"><span class="rs-val" style="color:var(--yellow)">${pct}%</span><span class="rs-label">Score</span></div>
+  `;
+
+  document.getElementById('overlay').classList.add('show');
+}
+
+function restartGame() {
+  document.getElementById('overlay').classList.remove('show');
+  startGame();
+}
+
+// Keyboard: T = True, F = False
+document.addEventListener('keydown', e => {
+  if (e.key.toLowerCase() === 't') answer(true);
+  if (e.key.toLowerCase() === 'f') answer(false);
+});
+</script>
+</body>
+</html>

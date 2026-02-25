@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phrase Builder · The Nomad Kitchen</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #21262d;
+    --border: rgba(255,255,255,0.08);
+    --accent: #f78166;
+    --accent2: #79c0ff;
+    --green: #56d364;
+    --yellow: #e3b341;
+    --red: #f85149;
+    --text: #e6edf3;
+    --muted: #8b949e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 10% 30%, rgba(247,129,102,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 70%, rgba(121,192,255,0.04) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* HEADER */
+  header {
+    width: 100%;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .logo h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+
+  .logo .sub {
+    font-size: 0.66rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 1px;
+  }
+
+  .hstats { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+  .chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .chip .v { color: var(--yellow); }
+
+  /* STAGE */
+  .stage {
+    width: 100%;
+    max-width: 680px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    flex: 1;
+  }
+
+  /* PROGRESS */
+  .prog-bar-wrap {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .prog-track {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .prog-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--yellow));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .prog-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* INSTRUCTION CARD */
+  .instr-card {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem 1.8rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .instr-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  .instr-label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .instr-text {
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .instr-hint {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 0.6rem;
+    line-height: 1.4;
+  }
+
+  .instr-hint strong { color: var(--accent2); }
+
+  /* ANSWER ZONE */
+  .answer-zone {
+    width: 100%;
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    min-height: 64px;
+    padding: 0.8rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    transition: border-color 0.2s;
+    position: relative;
+  }
+
+  .answer-zone.correct-zone { border-color: var(--green); background: rgba(86,211,100,0.05); }
+  .answer-zone.wrong-zone   { border-color: var(--red); background: rgba(248,81,73,0.05); }
+  .answer-zone.active-zone  { border-color: rgba(247,129,102,0.4); }
+
+  .answer-placeholder {
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-style: italic;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  /* WORD TOKENS */
+  .token {
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none;
+    border: 1.5px solid;
+    letter-spacing: 0.01em;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .token::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    transition: opacity 0.1s;
+  }
+
+  .token:active::after { opacity: 0.08; }
+
+  /* Bank tokens (to pick) */
+  .token-bank {
+    background: var(--surface2);
+    border-color: rgba(255,255,255,0.15);
+    color: var(--text);
+  }
+
+  .token-bank:hover {
+    background: rgba(247,129,102,0.12);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(247,129,102,0.15);
+  }
+
+  /* Answer tokens (placed) */
+  .token-placed {
+    background: rgba(121,192,255,0.1);
+    border-color: rgba(121,192,255,0.35);
+    color: var(--accent2);
+  }
+
+  .token-placed:hover {
+    background: rgba(248,81,73,0.1);
+    border-color: rgba(248,81,73,0.4);
+    color: var(--red);
+    transform: translateY(-1px);
+  }
+
+  .token-correct {
+    background: rgba(86,211,100,0.15);
+    border-color: var(--green);
+    color: var(--green);
+    cursor: default;
+  }
+
+  .token-wrong-pos {
+    background: rgba(248,81,73,0.12);
+    border-color: var(--red);
+    color: var(--red);
+    cursor: default;
+  }
+
+  .token-reveal {
+    background: rgba(86,211,100,0.1);
+    border-color: rgba(86,211,100,0.4);
+    color: rgba(86,211,100,0.7);
+    cursor: default;
+  }
+
+  /* WORD BANK */
+  .bank-label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .word-bank {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 1.2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    min-height: 60px;
+    align-items: center;
+  }
+
+  /* FEEDBACK */
+  .feedback-row {
+    width: 100%;
+    min-height: 48px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.84rem;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.25s, transform 0.25s, border-color 0.2s;
+  }
+
+  .feedback-row.show { opacity: 1; transform: translateY(0); }
+  .feedback-row.fb-correct { border-color: rgba(86,211,100,0.3); }
+  .feedback-row.fb-wrong   { border-color: rgba(248,81,73,0.3); }
+
+  .fb-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .fb-msg  { color: var(--text); }
+  .fb-msg .correct-sentence { color: var(--green); font-weight: 700; }
+
+  /* ACTION BUTTONS */
+  .action-row {
+    display: flex;
+    gap: 0.6rem;
+    width: 100%;
+  }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.65rem 1.3rem;
+    border-radius: 8px;
+    border: 1.5px solid;
+    cursor: pointer;
+    transition: all 0.12s;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-check {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #1a0800;
+    flex: 1;
+  }
+
+  .btn-check:hover { background: #ff9478; border-color: #ff9478; }
+  .btn-check:disabled { opacity: 0.4; cursor: default; }
+
+  .btn-clear {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--muted);
+  }
+
+  .btn-clear:hover { border-color: var(--muted); color: var(--text); }
+
+  .btn-hint {
+    background: rgba(121,192,255,0.08);
+    border-color: rgba(121,192,255,0.25);
+    color: var(--accent2);
+  }
+
+  .btn-hint:hover { background: rgba(121,192,255,0.15); border-color: var(--accent2); }
+  .btn-hint:disabled { opacity: 0.3; cursor: default; }
+
+  .btn-next {
+    background: var(--green);
+    border-color: var(--green);
+    color: #001a08;
+    flex: 1;
+    display: none;
+    animation: popIn 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+
+  .btn-next.visible { display: block; }
+  .btn-next:hover { background: #70e87e; border-color: #70e87e; }
+
+  @keyframes popIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  /* WAITING */
+  .waiting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .waiting h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .waiting h2 span { color: var(--accent); }
+
+  .waiting p { font-size: 0.9rem; color: var(--muted); max-width: 420px; line-height: 1.6; }
+
+  .badge {
+    background: rgba(121,192,255,0.1);
+    border: 1px solid rgba(121,192,255,0.25);
+    color: var(--accent2);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.9rem;
+    border-radius: 999px;
+  }
+
+  .example-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.2rem 1.5rem;
+    max-width: 440px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .ex-label {
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+  }
+
+  .ex-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .ex-token {
+    background: var(--surface2);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .ex-arrow { color: var(--muted); font-size: 0.85rem; margin: 0.3rem 0; }
+
+  .ex-result {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .btn-start {
+    background: var(--accent);
+    color: #1a0800;
+    border: none;
+    border-radius: 10px;
+    padding: 0.9rem 2.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 0 4px 20px rgba(247,129,102,0.3);
+  }
+
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(247,129,102,0.45); }
+
+  /* OVERLAY */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(8,12,18,0.94);
+    backdrop-filter: blur(12px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+
+  .overlay.show { display: flex; animation: fadeIn 0.35s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+  }
+
+  .res-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+
+  .res-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 800;
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.02em;
+  }
+
+  .res-score {
+    font-family: 'Syne', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    margin: 0.4rem 0;
+  }
+
+  .res-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
+
+  .res-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .res-stat {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 0.65rem 0.5rem;
+  }
+
+  .res-stat .sv {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    display: block;
+    line-height: 1;
+  }
+
+  .res-stat .sl { color: var(--muted); font-size: 0.68rem; font-weight: 600; }
+
+  .ccf-note {
+    background: rgba(121,192,255,0.06);
+    border: 1px solid rgba(121,192,255,0.18);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+    text-align: left;
+    margin-bottom: 1.2rem;
+  }
+
+  .ccf-note strong { color: var(--accent2); }
+
+  .btn-play-again {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 0.75rem 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-play-again:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <h1>🔀 Phrase Builder</h1>
+    <div class="sub">Tle AGORA · U5 The Nomad Kitchen · CCF Writing Prep</div>
+  </div>
+  <div class="hstats">
+    <div class="chip">⭐ <span class="v" id="s-score">0</span> pts</div>
+    <div class="chip">✅ <span class="v" id="s-correct">0</span>/<span class="v" id="s-total">0</span></div>
+    <div class="chip">💡 <span class="v" id="s-hints">3</span> hints</div>
+  </div>
+</header>
+
+<div class="stage" id="stage">
+
+  <!-- WAITING -->
+  <div class="waiting" id="waiting">
+    <span class="badge">✍️ CCF — Written Expression Prep</span>
+    <h2>Build the<br><span>sentence!</span></h2>
+    <p>Rearrange the scrambled words to form a correct English sentence. All sentences come from your Unit 5 content.</p>
+    <div class="example-box">
+      <div class="ex-label">Example</div>
+      <div class="ex-words">
+        <span class="ex-token">trucks</span>
+        <span class="ex-token">food</span>
+        <span class="ex-token">2008</span>
+        <span class="ex-token">after</span>
+        <span class="ex-token">popular</span>
+        <span class="ex-token">became</span>
+      </div>
+      <div class="ex-arrow">↓ rearrange →</div>
+      <div class="ex-result">After 2008, food trucks became popular.</div>
+    </div>
+    <button class="btn-start" onclick="startGame()">Start building! 🔀</button>
+  </div>
+
+  <!-- GAME AREA (hidden) -->
+  <div id="game-area" style="display:none; width:100%; flex-direction:column; gap:1rem; align-items:center;">
+
+    <div class="prog-bar-wrap">
+      <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+      <div class="prog-label" id="prog-label">1 / 14</div>
+    </div>
+
+    <!-- Instruction -->
+    <div class="instr-card">
+      <div class="instr-label">📋 Instruction — Sentence <span id="q-num">1</span></div>
+      <div class="instr-text" id="instr-text">—</div>
+      <div class="instr-hint" id="instr-hint"></div>
+    </div>
+
+    <!-- Answer zone -->
+    <div class="answer-zone" id="answer-zone">
+      <span class="answer-placeholder" id="answer-placeholder">Click words below to build your sentence…</span>
+    </div>
+
+    <!-- Feedback -->
+    <div class="feedback-row" id="feedback-row">
+      <span class="fb-icon" id="fb-icon"></span>
+      <span class="fb-msg" id="fb-msg"></span>
+    </div>
+
+    <!-- Word bank -->
+    <div class="bank-label">🔤 Word bank — click to place</div>
+    <div class="word-bank" id="word-bank"></div>
+
+    <!-- Actions -->
+    <div class="action-row">
+      <button class="btn btn-clear" onclick="clearAnswer()">↺ Clear</button>
+      <button class="btn btn-hint" id="btn-hint" onclick="useHint()">💡 Hint</button>
+      <button class="btn btn-check" id="btn-check" onclick="checkAnswer()">✓ Check</button>
+      <button class="btn btn-next visible" id="btn-next" style="display:none" onclick="nextQuestion()">Next →</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- OVERLAY RESULT -->
+<div class="overlay" id="overlay">
+  <div class="result-card">
+    <div class="res-emoji" id="res-emoji">🎉</div>
+    <div class="res-title" id="res-title">Well done!</div>
+    <div class="res-score" id="res-score">0 pts</div>
+    <div class="res-sub" id="res-sub"></div>
+    <div class="res-grid" id="res-grid"></div>
+    <div class="ccf-note" id="ccf-note"></div>
+    <button class="btn-play-again" onclick="restartGame()">🔄 Play again</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// SENTENCES — Unit 5 The Nomad Kitchen
+// Tirées du texte, des fiches et du vocabulaire cible
+// ══════════════════════════════════════════════════
+const SENTENCES = [
+  // Lesson 1 — Street food vocabulary
+  {
+    words: ['Street', 'food', 'is', 'popular', 'all', 'over', 'the', 'world'],
+    answer: 'Street food is popular all over the world.',
+    hint: 'Start with "Street food is…"',
+    context: 'Lesson 1 — Street Food Around the World'
+  },
+  {
+    words: ['Jerk', 'chicken', 'is', 'a', 'spicy', 'and', 'grilled', 'dish', 'from', 'Jamaica'],
+    answer: 'Jerk chicken is a spicy and grilled dish from Jamaica.',
+    hint: 'Think about the Mystery Dish game — it is spicy and grilled.',
+    context: 'Mystery Dish — Jamaica'
+  },
+  {
+    words: ['Fish', 'and', 'chips', 'is', 'very', 'popular', 'near', 'the', 'sea', 'in', 'the', 'UK'],
+    answer: 'Fish and chips is very popular near the sea in the UK.',
+    hint: 'Start with "Fish and chips is…"',
+    context: 'Mystery Dish — UK'
+  },
+  {
+    words: ['Samosas', 'are', 'small', 'fried', 'snacks', 'from', 'India'],
+    answer: 'Samosas are small fried snacks from India.',
+    hint: 'Samosas are… (plural)',
+    context: 'Mystery Dish — India'
+  },
+  // Lesson 2 — Rise of the Food Truck
+  {
+    words: ['The', 'chuck', 'wagon', 'fed', 'cowboys', 'in', 'the', '1860s'],
+    answer: 'The chuck wagon fed cowboys in the 1860s.',
+    hint: 'Think about the first mobile kitchen in American history.',
+    context: 'Lesson 2 — The Humble Beginnings'
+  },
+  {
+    words: ['Food', 'trucks', 'were', 'called', '"roach', 'coaches"', 'in', 'the', '20th', 'century'],
+    answer: 'Food trucks were called "roach coaches" in the 20th century.',
+    hint: 'They had a bad image and a negative nickname.',
+    context: 'Lesson 2 — The Humble Beginnings'
+  },
+  {
+    words: ['The', '2008', 'financial', 'crisis', 'was', 'an', 'unexpected', 'catalyst'],
+    answer: 'The 2008 financial crisis was an unexpected catalyst.',
+    hint: 'Start with "The 2008…" — it caused a big change.',
+    context: 'Lesson 2 — The Perfect Storm'
+  },
+  {
+    words: ['Aspiring', 'chefs', 'saw', 'opportunity', 'on', 'four', 'wheels'],
+    answer: 'Aspiring chefs saw opportunity on four wheels.',
+    hint: '"Four wheels" refers to a food truck.',
+    context: 'Lesson 2 — The Perfect Storm'
+  },
+  {
+    words: ['A', 'truck', 'required', 'a', 'fraction', 'of', 'the', 'capital'],
+    answer: 'A truck required a fraction of the capital.',
+    hint: 'It means a truck cost much LESS than a restaurant.',
+    context: 'Lesson 2 — The Perfect Storm'
+  },
+  {
+    words: ['The', 'food', 'truck', 'is', 'more', 'than', 'a', 'business', 'model'],
+    answer: 'The food truck is more than a business model.',
+    hint: 'This is from "The Future" paragraph — it is a cultural force.',
+    context: 'Lesson 2 — The Future'
+  },
+  {
+    words: ['Food', 'trucks', 'have', 'lowered', 'barriers', 'for', 'immigrant', 'chefs'],
+    answer: 'Food trucks have lowered barriers for immigrant chefs.',
+    hint: '"Lowered barriers" means it became easier to enter the industry.',
+    context: 'Lesson 2 — The Future'
+  },
+  {
+    words: ['The', 'story', 'of', 'the', 'food', 'truck', 'is', 'one', 'of', 'resilience'],
+    answer: 'The story of the food truck is one of resilience.',
+    hint: 'This is the conclusion of the article.',
+    context: 'Lesson 2 — The Future'
+  },
+  // Lesson 3 — Immigration & New York
+  {
+    words: ['Immigrants', 'brought', 'their', 'food', 'culture', 'to', 'New', 'York', 'City'],
+    answer: 'Immigrants brought their food culture to New York City.',
+    hint: 'Think about Lesson 3 — immigration and street food in NYC.',
+    context: 'Lesson 3 — Immigration in New York'
+  },
+  {
+    words: ['Street', 'food', 'reflects', 'the', 'history', 'of', 'a', 'country'],
+    answer: 'Street food reflects the history of a country.',
+    hint: 'This connects food to culture and identity — Unit 5 main idea.',
+    context: 'Unit 5 — Key idea'
+  },
+];
+
+let queue = [];
+let currentIdx = 0;
+let score = 0;
+let correctCount = 0;
+let hintsLeft = 3;
+let placed = [];   // words placed in answer zone
+let bank = [];     // remaining words in bank
+let answered = false;
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function startGame() {
+  queue = shuffle(SENTENCES);
+  currentIdx = 0;
+  score = 0;
+  correctCount = 0;
+  hintsLeft = 3;
+
+  document.getElementById('s-total').textContent = queue.length;
+  document.getElementById('s-hints').textContent = hintsLeft;
+  document.getElementById('waiting').style.display = 'none';
+  const ga = document.getElementById('game-area');
+  ga.style.display = 'flex';
+
+  loadQuestion();
+}
+
+function loadQuestion() {
+  if (currentIdx >= queue.length) { endGame(); return; }
+  answered = false;
+
+  const q = queue[currentIdx];
+  placed = [];
+  bank = shuffle([...q.words]);
+
+  // UI
+  document.getElementById('q-num').textContent = currentIdx + 1;
+  document.getElementById('prog-label').textContent = `${currentIdx + 1} / ${queue.length}`;
+  document.getElementById('prog-fill').style.width = `${(currentIdx / queue.length) * 100}%`;
+  document.getElementById('instr-text').textContent = 'Rearrange the words to form a correct sentence.';
+  document.getElementById('instr-hint').innerHTML = `<strong>Context:</strong> ${q.context}`;
+  document.getElementById('s-correct').textContent = correctCount;
+  document.getElementById('s-score').textContent = score;
+
+  // Reset feedback
+  const fb = document.getElementById('feedback-row');
+  fb.className = 'feedback-row';
+  document.getElementById('fb-icon').textContent = '';
+  document.getElementById('fb-msg').textContent = '';
+
+  // Reset answer zone
+  const az = document.getElementById('answer-zone');
+  az.className = 'answer-zone active-zone';
+
+  // Reset buttons
+  document.getElementById('btn-check').disabled = false;
+  document.getElementById('btn-hint').disabled = hintsLeft <= 0;
+  document.getElementById('btn-next').style.display = 'none';
+  document.getElementById('btn-check').style.display = '';
+
+  renderAnswerZone();
+  renderBank();
+}
+
+function renderAnswerZone() {
+  const az = document.getElementById('answer-zone');
+  const ph = document.getElementById('answer-placeholder');
+  az.innerHTML = '';
+  az.appendChild(ph);
+  ph.style.display = placed.length === 0 ? 'block' : 'none';
+
+  placed.forEach((word, i) => {
+    const t = document.createElement('div');
+    t.className = 'token token-placed';
+    t.textContent = word;
+    t.onclick = () => returnToBank(i);
+    az.appendChild(t);
+  });
+}
+
+function renderBank() {
+  const wb = document.getElementById('word-bank');
+  wb.innerHTML = '';
+  bank.forEach((word, i) => {
+    const t = document.createElement('div');
+    t.className = 'token token-bank';
+    t.textContent = word;
+    t.onclick = () => placeWord(i);
+    wb.appendChild(t);
+  });
+}
+
+function placeWord(bankIdx) {
+  if (answered) return;
+  placed.push(bank[bankIdx]);
+  bank.splice(bankIdx, 1);
+  renderAnswerZone();
+  renderBank();
+}
+
+function returnToBank(placedIdx) {
+  if (answered) return;
+  bank.push(placed[placedIdx]);
+  placed.splice(placedIdx, 1);
+  renderAnswerZone();
+  renderBank();
+}
+
+function clearAnswer() {
+  if (answered) return;
+  bank = [...bank, ...placed];
+  placed = [];
+  bank = shuffle(bank);
+  renderAnswerZone();
+  renderBank();
+}
+
+function useHint() {
+  if (answered || hintsLeft <= 0) return;
+  const q = queue[currentIdx];
+  const correctWords = q.answer.replace(/[.,!?]/g, '').split(' ');
+
+  // Find next correct word position
+  let nextPos = placed.length;
+  if (nextPos >= correctWords.length) return;
+
+  const neededWord = correctWords[nextPos];
+  const bankIdx = bank.findIndex(w => w.replace(/[.,!?"]/g, '') === neededWord.replace(/[.,!?"]/g, ''));
+
+  if (bankIdx !== -1) {
+    placed.push(bank[bankIdx]);
+    bank.splice(bankIdx, 1);
+    hintsLeft--;
+    document.getElementById('s-hints').textContent = hintsLeft;
+    document.getElementById('btn-hint').disabled = hintsLeft <= 0;
+    renderAnswerZone();
+    renderBank();
+  }
+}
+
+function checkAnswer() {
+  if (placed.length === 0) return;
+  answered = true;
+
+  const q = queue[currentIdx];
+  const userSentence = placed.join(' ');
+  const correctSentence = q.answer.replace(/[.,!?]/g, '').split(' ').join(' ');
+  const userClean = userSentence.replace(/[.,!?"]/g, '').toLowerCase();
+  const correctClean = correctSentence.replace(/[.,!?"]/g, '').toLowerCase();
+
+  const isCorrect = userClean === correctClean;
+
+  document.getElementById('btn-check').style.display = 'none';
+  document.getElementById('btn-next').style.display = 'block';
+  document.getElementById('btn-hint').disabled = true;
+
+  const az = document.getElementById('answer-zone');
+  const fb = document.getElementById('feedback-row');
+
+  if (isCorrect) {
+    score += 15;
+    correctCount++;
+    az.className = 'answer-zone correct-zone';
+    fb.className = 'feedback-row show fb-correct';
+    document.getElementById('fb-icon').textContent = '✅';
+    document.getElementById('fb-msg').innerHTML = `<span class="fb-msg">Correct! <span class="correct-sentence">${q.answer}</span></span>`;
+    highlightTokens('correct');
+  } else {
+    az.className = 'answer-zone wrong-zone';
+    fb.className = 'feedback-row show fb-wrong';
+    document.getElementById('fb-icon').textContent = '❌';
+    document.getElementById('fb-msg').innerHTML = `<span class="fb-msg">Not quite. The correct sentence: <span class="correct-sentence">${q.answer}</span></span>`;
+    highlightTokens('wrong');
+  }
+
+  document.getElementById('s-score').textContent = score;
+  document.getElementById('s-correct').textContent = correctCount;
+}
+
+function highlightTokens(result) {
+  const az = document.getElementById('answer-zone');
+  const tokens = az.querySelectorAll('.token');
+  tokens.forEach(t => {
+    t.className = result === 'correct' ? 'token token-correct' : 'token token-wrong-pos';
+  });
+}
+
+function nextQuestion() {
+  currentIdx++;
+  loadQuestion();
+}
+
+function endGame() {
+  const total = queue.length;
+  const pct = Math.round((correctCount / total) * 100);
+
+  let emoji = '😅', title = 'Keep practising!', note = '';
+  if (pct >= 85) {
+    emoji = '🏆'; title = 'Outstanding!';
+    note = '<strong>CCF Ready!</strong> Your sentence structure is excellent. Now focus on using this vocabulary in your oral presentation and written responses.';
+  } else if (pct >= 65) {
+    emoji = '🎉'; title = 'Well done!';
+    note = '<strong>Good progress!</strong> Review the sentences you missed — pay attention to word order with adverbs (after 2008, today, in the 1860s).';
+  } else {
+    emoji = '📖'; title = 'Keep going!';
+    note = '<strong>Tip for the CCF:</strong> In English, the verb usually comes right after the subject. Re-read Lesson 2 and practise these sentence structures again.';
+  }
+
+  document.getElementById('res-emoji').textContent = emoji;
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-score').textContent = `${score} pts`;
+  document.getElementById('res-sub').textContent = `${correctCount} correct out of ${total} — ${pct}%`;
+  document.getElementById('ccf-note').innerHTML = `💡 ${note}`;
+  document.getElementById('res-grid').innerHTML = `
+    <div class="res-stat"><span class="sv" style="color:var(--green)">${correctCount}</span><span class="sl">Correct</span></div>
+    <div class="res-stat"><span class="sv" style="color:var(--red)">${total - correctCount}</span><span class="sl">Wrong</span></div>
+    <div class="res-stat"><span class="sv" style="color:var(--yellow)">${pct}%</span><span class="sl">Score</span></div>
+  `;
+  document.getElementById('overlay').classList.add('show');
+}
+
+function restartGame() {
+  document.getElementById('overlay').classList.remove('show');
+  hintsLeft = 3;
+  startGame();
+}
+</script>
+</body>
+</html>
