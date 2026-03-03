@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The English Hub</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0e0e16" id="theme-meta">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="English Hub">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=Fraunces:ital,wght@1,700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -185,6 +192,62 @@
   .audio-modal audio{width:100%;border-radius:8px;margin-bottom:16px;accent-color:var(--cap);}
   .audio-modal-dl{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;background:rgba(255,59,59,0.12);color:var(--cap);font-size:12px;font-weight:700;text-decoration:none;transition:background 0.2s;}
   .audio-modal-dl:hover{background:rgba(255,59,59,0.22);}
+
+  /* ── DAY MODE ── */
+  body.day {
+    --bg:#f4f3ee; --bg2:#ffffff; --bg3:#eae9e2;
+    --line:rgba(0,0,0,0.08);
+    --text:#1a1a2e; --muted:#666688;
+  }
+  body.day .seq-item{background:#f9f8f5;}
+  body.day .modal{background:#ffffff;}
+  body.day .modal-header{background:#f4f3ee !important;}
+  body.day .modal-close{background:rgba(0,0,0,0.06);color:#1a1a2e;}
+  body.day .modal-close:hover{background:rgba(0,0,0,0.12);}
+  body.day .mag-detail-desc{background:rgba(185,79,255,0.05);}
+  body.day .seq-magazine-item{background:#f9f8f5;}
+  body.day .seq-magazine-item:hover{background:#ffffff;}
+  body.day .mag-img-placeholder{background:rgba(185,79,255,0.06);}
+  body.day .mag-ws-row{background:#f9f8f5;}
+  body.day .game-row{background:#f9f8f5;}
+  body.day .audio-row{background:#f9f8f5;}
+  body.day .audio-modal{background:#ffffff;}
+  body.day .audio-modal-close{background:rgba(0,0,0,0.06);color:#1a1a2e;}
+  body.day body::after{opacity:0.015;}
+  body.day .mobile-nav{background:rgba(240,239,234,0.97);}
+  body.day .mobile-nav-item{color:#1a1a2e;}
+  body.day .mag-back{background:rgba(0,0,0,0.06);color:#1a1a2e;}
+  body.day .mag-back:hover{background:rgba(0,0,0,0.12);}
+  body.day .ws-view{background:rgba(0,0,0,0.08);}
+  /* ── THEME TOGGLE ── */
+  .theme-btn{
+    display:flex;align-items:center;justify-content:center;
+    width:36px;height:36px;border-radius:50%;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.1);
+    color:var(--text);font-size:1rem;
+    cursor:pointer;transition:background 0.2s,border-color 0.2s,transform 0.3s;
+    flex-shrink:0;
+  }
+  .theme-btn:hover{background:rgba(255,255,255,0.15);transform:rotate(20deg);}
+  body.day .theme-btn{background:rgba(0,0,0,0.06);border-color:rgba(0,0,0,0.1);}
+  body.day .theme-btn:hover{background:rgba(0,0,0,0.12);}
+
+
+  /* ── CARD COUNTER ── */
+  .card-stats{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .stat-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:0.5px;}
+  .stat-seq{background:rgba(255,255,255,0.07);color:var(--muted);}
+  .stat-game{background:rgba(185,79,255,0.15);color:var(--agora);}
+  body.day .stat-seq{background:rgba(0,0,0,0.06);}
+
+
+  body.day .hero-title .hub{color:rgba(26,26,46,0.18);}
+
+  body.day .stat-seq{background:rgba(0,0,0,0.07);color:#555577;border:1px solid rgba(0,0,0,0.08);}
+  body.day .stat-game{background:rgba(185,79,255,0.12);color:#7b2fd4;}
+  body.day .card-arrow{opacity:0.8;}
+
 </style>
 </head>
 <body>
@@ -192,7 +255,7 @@
 <header class="hero">
   <div class="hero-top">
     <span class="hero-tag">Lycée Pro · Anglais LV1</span>
-    <div class="flag-row">🇬🇧 🌍 🇺🇸</div>
+    <div style="display:flex;align-items:center;gap:12px;"><div class="flag-row">🇬🇧 🌍 🇺🇸</div><button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Mode jour/nuit">🌙</button></div>
   </div>
   <div class="hero-main">
     <h1 class="hero-title">
@@ -421,7 +484,59 @@ function closeModal(){document.getElementById('modal-overlay').classList.remove(
 function closeModalOutside(e){if(e.target===document.getElementById('modal-overlay'))closeModal();}
 function setActiveNav(el){document.querySelectorAll('.mobile-nav-item').forEach(function(b){b.classList.remove('active');});el.classList.add('active');}
 window.addEventListener('load',function(){function rev(){document.querySelectorAll('.class-card').forEach(function(c,i){if(c.getBoundingClientRect().top<window.innerHeight-60){setTimeout(function(){c.classList.add('visible');},i*100);}});}window.addEventListener('scroll',rev);setTimeout(rev,200);});
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal();closeAudioModalDirect();}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal();closeAudioModalDirect();}})
+
+// ── THEME ──
+function toggleTheme(){
+  var isDay=document.body.classList.toggle('day');
+  document.getElementById('theme-btn').textContent=isDay?'☀️':'🌙';
+  document.getElementById('theme-meta').content=isDay?'#f4f3ee':'#0e0e16';
+  try{localStorage.setItem('hub-theme',isDay?'day':'night');}catch(e){}
+}
+(function(){
+  try{
+    if(localStorage.getItem('hub-theme')==='day'){
+      document.body.classList.add('day');
+      document.addEventListener('DOMContentLoaded',function(){
+        var btn=document.getElementById('theme-btn');
+        if(btn)btn.textContent='☀️';
+        var meta=document.getElementById('theme-meta');
+        if(meta)meta.content='#f4f3ee';
+      });
+    }
+  }catch(e){}
+})();
+
+// ── CARD COUNTERS ──
+function computeCardStats(){
+  var classKeys=['cap','mbbe','mrc','agora','bts'];
+  classKeys.forEach(function(key){
+    var d=data[key];
+    var seqCount=d.sequences.length;
+    var gameCount=0;
+    d.sequences.forEach(function(s){
+      var cg=gamesData[key];
+      if(cg&&cg[s.num])gameCount+=cg[s.num].length;
+    });
+    // Find the matching card footer
+    var cards=document.querySelectorAll('.class-card.'+key);
+    cards.forEach(function(card){
+      var footer=card.querySelector('.card-footer');
+      if(!footer)return;
+      var statsHtml='<div class="card-stats"><span class="stat-badge stat-seq">📚 '+seqCount+' séq.</span>'+(gameCount>0?'<span class="stat-badge stat-game">🎮 '+gameCount+' jeu'+(gameCount>1?'x':'')+'</span>':'')+'</div>';
+      footer.innerHTML=statsHtml+'<div class="card-arrow">→</div>';
+    });
+  });
+}
+window.addEventListener('load',function(){computeCardStats();});
+
+// ── PWA SERVICE WORKER ──
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
+;
 </script>
 
 <nav class="mobile-nav">
