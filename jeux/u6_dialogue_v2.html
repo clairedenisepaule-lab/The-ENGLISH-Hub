@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dialogue Builder · Don't Lose the Customer!</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e8f0ff;--bg2:#d4e4ff;--card:#fff;
+  --blue:#1a56ff;--blue2:#4a7fff;--blue-pale:#e0eaff;
+  --cyan:#00ccff;--cyan-pale:#d4f8ff;
+  --green:#00b86b;--green-pale:#d4f7e8;
+  --red:#ff2244;--red-pale:#ffe0e5;
+  --text:#050a2a;--text2:#3a4a8a;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);font-family:'Lexend',sans-serif;color:var(--text);min-height:100vh;padding:1rem 1rem 3rem;
+  background-image:radial-gradient(circle at 20% 10%,rgba(26,86,255,.12) 0%,transparent 50%),radial-gradient(circle at 80% 90%,rgba(0,204,255,.12) 0%,transparent 50%);}
+.hdr{text-align:center;margin-bottom:1.2rem;}
+.pill{display:inline-block;background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;font-size:.65rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;padding:.3rem 1rem;border-radius:999px;margin-bottom:.6rem;box-shadow:0 4px 16px rgba(26,86,255,.35);}
+h1{font-size:clamp(1.4rem,4vw,2rem);font-weight:800;background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sub{font-size:.85rem;color:var(--text2);margin-top:.25rem;}
+.stats{display:flex;gap:.8rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap;}
+.chip{background:#fff;border:2px solid var(--bg2);border-radius:999px;padding:.28rem .85rem;font-size:.8rem;font-weight:700;color:var(--text2);box-shadow:0 2px 8px rgba(26,86,255,.1);}
+.instr{background:var(--blue-pale);border:2px solid var(--blue);border-radius:14px;padding:.65rem 1.1rem;margin-bottom:1.2rem;font-size:.83rem;color:var(--blue);font-weight:700;text-align:center;max-width:780px;margin-left:auto;margin-right:auto;}
+.main{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:1.1rem;}
+.dbox{background:#fff;border-radius:20px;padding:1.2rem;box-shadow:0 6px 28px rgba(26,86,255,.12);border:2.5px solid var(--bg2);}
+.dbox-ttl{font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:.9rem;}
+.slot{display:flex;align-items:flex-start;gap:.7rem;margin-bottom:.8rem;padding:.7rem .9rem;border-radius:14px;border:2px dashed var(--bg2);background:var(--bg);min-height:52px;transition:all .2s;}
+.slot.filled{border-style:solid;border-color:var(--blue2);background:#fff;}
+.slot.correct{border-color:var(--green);background:var(--green-pale);}
+.slot.wrong{border-color:var(--red);background:var(--red-pale);animation:shake .28s ease;}
+.savatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;margin-top:2px;}
+.savatar.sp{background:var(--blue-pale);}
+.savatar.cu{background:var(--cyan-pale);}
+.srole{font-size:.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin-bottom:.2rem;}
+.stxt{font-size:.9rem;font-weight:600;min-height:22px;}
+.sempty{font-size:.78rem;color:#a0b0d8;font-style:italic;}
+.srem{margin-left:auto;background:none;border:none;color:#a0b0d8;font-size:1rem;cursor:pointer;flex-shrink:0;padding:.1rem;transition:color .15s;}
+.srem:hover{color:var(--red);}
+.bankbox{background:#fff;border-radius:20px;padding:1rem 1.1rem;box-shadow:0 6px 28px rgba(26,86,255,.12);border:2.5px solid var(--bg2);}
+.bank-ttl{font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:.8rem;}
+.bank{display:flex;flex-wrap:wrap;gap:.5rem;}
+.tok{padding:.48rem .9rem;border-radius:999px;border:2.5px solid var(--blue);background:var(--blue-pale);color:var(--blue);font-size:.83rem;font-weight:700;cursor:pointer;transition:all .18s;}
+.tok:hover{background:var(--blue);color:#fff;transform:translateY(-2px);box-shadow:0 3px 12px rgba(26,86,255,.3);}
+.tok.used{opacity:.3;pointer-events:none;text-decoration:line-through;}
+.tok.picked{background:var(--cyan);color:var(--text);border-color:var(--cyan);box-shadow:0 3px 14px rgba(0,204,255,.35);}
+.acts{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;margin-top:.4rem;}
+.btn{padding:.52rem 1.35rem;border-radius:999px;font-family:'Lexend',sans-serif;font-size:.87rem;font-weight:700;cursor:pointer;border:none;transition:all .18s;}
+.btn-go{background:linear-gradient(135deg,var(--green),#00d980);color:#fff;box-shadow:0 3px 14px rgba(0,184,107,.3);}
+.btn-go:hover{transform:translateY(-2px);}
+.btn-clr{background:#fff;color:var(--text2);border:2px solid var(--bg2);}
+.btn-clr:hover{background:var(--bg2);}
+.fb{text-align:center;font-size:.92rem;font-weight:700;margin-top:.4rem;min-height:1.3em;}
+.fb.ok{color:var(--green);}
+.fb.err{color:var(--red);}
+.win{display:none;text-align:center;padding:2rem 1rem;background:#fff;border-radius:22px;box-shadow:0 10px 40px rgba(26,86,255,.15);animation:wPop .45s cubic-bezier(.175,.885,.32,1.275) both;}
+.win.show{display:block;}
+@keyframes wPop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.wem{font-size:3.2rem;margin-bottom:.4rem;}
+.wttl{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.wsub{font-size:.88rem;color:var(--text2);margin:.2rem 0 1rem;}
+.ragain{padding:.6rem 1.6rem;background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;border:none;border-radius:999px;font-family:'Lexend',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(26,86,255,.35);transition:all .18s;}
+.ragain:hover{transform:translateY(-2px);}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);color:#fff;padding:.6rem 1.4rem;border-radius:999px;font-weight:700;font-size:.9rem;transition:transform .3s cubic-bezier(.175,.885,.32,1.275);z-index:999;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.ok{background:linear-gradient(135deg,var(--green),#00d980);}
+.toast.err{background:linear-gradient(135deg,var(--red),#ff6680);}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="hdr">
+  <div class="pill">🗼 Unit 6 · Don't Lose the Customer!</div>
+  <h1>💬 Dialogue Builder</h1>
+  <p class="sub">Rebuild the conversation in the right order!</p>
+</div>
+<div class="stats">
+  <div class="chip">Round <span id="rnd">1</span> / 3</div>
+  <div class="chip">⭐ Score: <span id="score">0</span></div>
+  <div class="chip">❌ <span id="errs">0</span> mistakes</div>
+</div>
+<div class="instr">🗣️ Click a sentence below to <strong>select</strong> it (turns cyan), then click the correct slot above to place it.</div>
+<div class="main">
+  <div class="dbox">
+    <div class="dbox-ttl">🏪 Complete the dialogue — <span id="ctx-lbl"></span></div>
+    <div id="slots"></div>
+  </div>
+  <div class="bankbox">
+    <div class="bank-ttl">💭 Sentence Bank — click to select, then click a slot</div>
+    <div class="bank" id="bank"></div>
+  </div>
+  <div class="acts">
+    <button class="btn btn-go" onclick="checkAll()">✅ Check my answers</button>
+    <button class="btn btn-clr" onclick="clearAll()">🔄 Clear all</button>
+  </div>
+  <div class="fb" id="fb"></div>
+  <div class="win" id="win">
+    <div class="wem">🎉</div>
+    <div class="wttl" id="wttl">Round Complete!</div>
+    <div class="wsub" id="wsub"></div>
+    <button class="ragain" onclick="nextRound()">➡️ Next Round</button>
+  </div>
+</div>
+<script>
+const ROUNDS=[
+  {ctx:'A tourist enters a gift shop in Paris.',lines:[
+    {role:'Salesperson',av:'🧑‍💼',side:'sp',text:'Hello! Welcome to our shop.'},
+    {role:'Tourist',av:'✈️',side:'cu',text:"Hi! I'm looking for a gift."},
+    {role:'Salesperson',av:'🧑‍💼',side:'sp',text:'What is your budget?'},
+    {role:'Tourist',av:'✈️',side:'cu',text:'About 20 euros.'},
+    {role:'Salesperson',av:'🧑‍💼',side:'sp',text:'I recommend this perfume. It costs 18 euros.'},
+    {role:'Tourist',av:'✈️',side:'cu',text:'Perfect! I will take it. Thank you!'},
+  ]},
+  {ctx:'A tourist needs help choosing a scarf.',lines:[
+    {role:'Salesperson',av:'🧑‍💼',side:'sp',text:'Good morning! Can I help you?'},
+    {role:'Tourist',av:'✈️',side:'cu',text:"Yes, I'm looking for a scarf for my sister."},
+    {role:'Salesperson',av:'🧑‍💼',side:'sp',text:'What colour does she like?'},
+    {role:'Tourist',av:'✈️',side:'cu',text:'She likes blue.'},
+    {role:'Salesperson',av:'🧑‍💼',side:'sp',text:'This one is very popular. It costs 25 euros.'},
+    {role:'Tourist',av:'✈️',side:'cu',text:'It is beautiful! I will take it.'},
+    {role:'Salesperson',av:'🧑‍💼',side:'sp',text:'Thank you for visiting! Have a nice day!'},
+  ]},
+  {ctx:'A tourist has a small budget — managing a problem.',lines:[
+    {role:'Salesperson',av:'🧑‍💼',side:'sp',text:'Hello, welcome! What are you looking for?'},
+    {role:'Tourist',av:'✈️',side:'cu',text:'I want to buy something for my family, but my budget is only 15 euros.'},
+    {role:'Salesperson',av:'🧑‍💼',side:'sp',text:'No problem! I can show you some options.'},
+    {role:'Tourist',av:'✈️',side:'cu',text:"That's great! What do you recommend?"},
+    {role:'Salesperson',av:'🧑‍💼',side:'sp',text:'These keyrings are very popular. They cost 5 euros each.'},
+    {role:'Tourist',av:'✈️',side:'cu',text:"I'll take three please. That's perfect!"},
+    {role:'Salesperson',av:'🧑‍💼',side:'sp',text:'Excellent choice! Thank you and enjoy Paris!'},
+  ]},
+];
+let curR=0,score=0,errors=0,picked=null,slotC=[];
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+function initR(){
+  const r=ROUNDS[curR];slotC=r.lines.map(()=>null);picked=null;
+  document.getElementById('rnd').textContent=curR+1;
+  document.getElementById('score').textContent=score;
+  document.getElementById('errs').textContent=errors;
+  document.getElementById('fb').textContent='';document.getElementById('fb').className='fb';
+  document.getElementById('win').classList.remove('show');
+  document.getElementById('ctx-lbl').textContent=r.ctx;
+  const sEl=document.getElementById('slots');sEl.innerHTML='';
+  r.lines.forEach((l,i)=>{
+    const s=document.createElement('div');s.className='slot';s.dataset.idx=i;
+    s.innerHTML=`<div class="savatar ${l.side}">${l.av}</div><div style="flex:1"><div class="srole">${l.role}</div><div class="stxt" id="st-${i}"><span class="sempty">Click here after selecting a sentence…</span></div></div><button class="srem" id="sr-${i}" style="display:none" onclick="rem(${i})">✕</button>`;
+    s.addEventListener('click',()=>place(i));sEl.appendChild(s);
+  });
+  const bEl=document.getElementById('bank');bEl.innerHTML='';
+  shuffle(r.lines).forEach(l=>{
+    const t=document.createElement('div');t.className='tok';t.textContent=l.text;t.dataset.text=l.text;
+    t.addEventListener('click',()=>selTok(t));bEl.appendChild(t);
+  });
+}
+function selTok(tok){
+  if(tok.classList.contains('used'))return;
+  document.querySelectorAll('.tok.picked').forEach(t=>t.classList.remove('picked'));
+  if(picked===tok){picked=null;return;}
+  tok.classList.add('picked');picked=tok;
+}
+function place(idx){
+  if(!picked)return;
+  const prev=slotC.indexOf(picked.dataset.text);
+  if(prev!==-1){
+    slotC[prev]=null;
+    document.getElementById(`st-${prev}`).innerHTML='<span class="sempty">Click here after selecting a sentence…</span>';
+    document.getElementById(`sr-${prev}`).style.display='none';
+    document.querySelector(`.slot[data-idx="${prev}"]`).className='slot';
+  }
+  slotC[idx]=picked.dataset.text;picked.classList.add('used');picked.classList.remove('picked');
+  document.getElementById(`st-${idx}`).textContent=picked.dataset.text;
+  document.getElementById(`sr-${idx}`).style.display='block';
+  document.querySelector(`.slot[data-idx="${idx}"]`).classList.add('filled');
+  picked=null;document.getElementById('fb').textContent='';
+}
+function rem(idx){
+  const txt=slotC[idx];if(!txt)return;
+  document.querySelectorAll('.tok').forEach(t=>{if(t.dataset.text===txt)t.classList.remove('used');});
+  slotC[idx]=null;
+  document.getElementById(`st-${idx}`).innerHTML='<span class="sempty">Click here after selecting a sentence…</span>';
+  document.getElementById(`sr-${idx}`).style.display='none';
+  document.querySelector(`.slot[data-idx="${idx}"]`).className='slot';
+}
+const AC=new(window.AudioContext||window.webkitAudioContext)();
+document.addEventListener('pointerdown',()=>{if(AC.state==='suspended')AC.resume();},{once:true});
+function playCorrect(){const t=AC.currentTime;const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);o.type='sine';o.frequency.setValueAtTime(300,t);o.frequency.exponentialRampToValueAtTime(900,t+0.12);o.frequency.exponentialRampToValueAtTime(700,t+0.22);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.4,t+0.04);g.gain.exponentialRampToValueAtTime(0.001,t+0.35);o.start(t);o.stop(t+0.36);}
+function playWrong(){const t=AC.currentTime;const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);o.type='sawtooth';o.frequency.setValueAtTime(280,t);o.frequency.exponentialRampToValueAtTime(100,t+0.35);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.28,t+0.04);g.gain.exponentialRampToValueAtTime(0.001,t+0.42);o.start(t);o.stop(t+0.44);}
+function playWin(){[523,659,784,1047,1319].forEach((freq,i)=>{const t=AC.currentTime+i*0.09;const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.3,t+0.03);g.gain.exponentialRampToValueAtTime(0.001,t+0.32);o.start(t);o.stop(t+0.34);});}
+function checkAll(){
+  if(slotC.some(s=>s===null)){document.getElementById('fb').textContent='⚠️ Fill all slots first!';document.getElementById('fb').className='fb err';return;}
+  const r=ROUNDS[curR];let ok=true;
+  r.lines.forEach((l,i)=>{
+    const s=document.querySelector(`.slot[data-idx="${i}"]`);
+    s.classList.remove('correct','wrong');
+    if(slotC[i]===l.text)s.classList.add('correct');
+    else{s.classList.add('wrong');ok=false;}
+  });
+  if(ok){
+    playCorrect();score+=10;document.getElementById('score').textContent=score;
+    toast('🎉 Perfect dialogue!','ok');
+    setTimeout(()=>{
+      const last=curR===2;
+      document.getElementById('wttl').textContent=last?'Champion! 🏆':'Round Complete!';
+      document.getElementById('wsub').textContent=last?`All 3 rounds complete! Score: ${score} · Mistakes: ${errors}`:`Round ${curR+1} done! Score: ${score}`;
+      document.getElementById('win').querySelector('.ragain').textContent=last?'🔄 Play Again':'➡️ Next Round';
+      if(last)playWin();
+      document.getElementById('win').classList.add('show');
+    },700);
+  } else {
+    playWrong();errors++;document.getElementById('errs').textContent=errors;
+    document.getElementById('fb').textContent='❌ Some sentences are wrong — check the red slots!';
+    document.getElementById('fb').className='fb err';
+    toast('❌ Try again!','err');
+  }
+}
+function clearAll(){
+  const r=ROUNDS[curR];slotC=r.lines.map(()=>null);picked=null;
+  document.querySelectorAll('.tok').forEach(t=>t.classList.remove('used','picked'));
+  r.lines.forEach((l,i)=>{
+    document.getElementById(`st-${i}`).innerHTML='<span class="sempty">Click here after selecting a sentence…</span>';
+    document.getElementById(`sr-${i}`).style.display='none';
+    document.querySelector(`.slot[data-idx="${i}"]`).className='slot';
+  });
+  document.getElementById('fb').textContent='';document.getElementById('fb').className='fb';
+}
+function nextRound(){curR=(curR+1)%3;if(curR===0){score=0;errors=0;}initR();}
+let tTO;
+function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;clearTimeout(tTO);tTO=setTimeout(()=>t.classList.remove('show'),2200);}
+initR();
+</script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz · Don't Lose the Customer!</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a1a0a;
+  --bg2:#0f250f;
+  --card:#122012;
+  --green:#00ff66;
+  --green2:#00cc44;
+  --green-dim:#004422;
+  --yellow:#ffe600;
+  --yellow-dim:#332e00;
+  --red:#ff2244;
+  --red-dim:#330a12;
+  --cyan:#00ffcc;
+  --white:#e8ffe8;
+  --text2:#60a860;
+  --border:#1a3a1a;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);font-family:'Lexend',sans-serif;color:var(--white);min-height:100vh;padding:1rem 1rem 3rem;
+  background-image:radial-gradient(circle at 50% 0%,rgba(0,255,102,.06) 0%,transparent 60%);}
+
+/* scanline texture */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.15) 2px,rgba(0,0,0,.15) 4px);pointer-events:none;z-index:0;}
+.hdr,#quiz-area,.win,.stats,.prog-outer,.prog-lbl{position:relative;z-index:1;}
+
+.hdr{text-align:center;margin-bottom:1.3rem;}
+.pill{display:inline-block;background:var(--green-dim);color:var(--green);font-size:.65rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;padding:.3rem 1rem;border-radius:4px;margin-bottom:.6rem;border:1.5px solid var(--green);box-shadow:0 0 14px rgba(0,255,102,.25);}
+h1{font-size:clamp(1.4rem,4vw,2rem);font-weight:800;color:var(--green);text-shadow:0 0 20px rgba(0,255,102,.6);letter-spacing:.03em;}
+h1 em{font-style:normal;color:var(--yellow);text-shadow:0 0 20px rgba(255,230,0,.6);}
+.sub{font-size:.85rem;color:var(--text2);margin-top:.25rem;}
+
+.stats{display:flex;gap:.8rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap;}
+.chip{background:var(--bg2);border:1.5px solid var(--border);border-radius:4px;padding:.28rem .85rem;font-size:.8rem;font-weight:700;color:var(--text2);}
+
+.prog-outer{max-width:600px;margin:0 auto .3rem;background:var(--green-dim);border-radius:2px;height:8px;overflow:hidden;border:1px solid var(--green2);}
+.prog-inner{height:100%;background:linear-gradient(90deg,var(--green2),var(--green));border-radius:2px;transition:width .4s ease;width:0%;box-shadow:0 0 10px rgba(0,255,102,.5);}
+.prog-lbl{text-align:center;font-size:.75rem;color:var(--text2);margin-bottom:1.1rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+
+.qcard{
+  max-width:640px;margin:0 auto;background:var(--card);border-radius:8px;
+  border:2px solid var(--green-dim);padding:1.5rem 1.3rem;
+  box-shadow:0 0 30px rgba(0,255,102,.08);
+  animation:slideIn .3s ease both;position:relative;z-index:1;
+}
+@keyframes slideIn{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+.qnum{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:.55rem;}
+.qctx{background:var(--bg2);border:1.5px solid var(--border);border-radius:6px;padding:.6rem .85rem;margin-bottom:.9rem;font-size:.82rem;color:var(--cyan);font-weight:600;line-height:1.4;}
+.qtxt{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:1rem;line-height:1.4;}
+
+.opts{display:flex;flex-direction:column;gap:.55rem;}
+.opt{padding:.7rem 1rem;border-radius:6px;border:2px solid var(--green-dim);background:var(--bg2);font-size:.9rem;font-weight:600;cursor:pointer;transition:all .15s;text-align:left;display:flex;align-items:center;gap:.6rem;color:var(--white);}
+.opt:hover:not(.disabled){border-color:var(--green);background:rgba(0,255,102,.06);color:var(--green);}
+.oletter{width:26px;height:26px;border-radius:3px;background:var(--green-dim);color:var(--green);font-size:.78rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--green2);}
+.opt.correct{border-color:var(--green);background:rgba(0,255,102,.1);color:var(--green);}
+.opt.correct .oletter{background:var(--green);color:var(--bg);}
+.opt.wrong{border-color:var(--red);background:var(--red-dim);color:var(--red);}
+.opt.wrong .oletter{background:var(--red);color:#fff;}
+.opt.disabled{pointer-events:none;opacity:.55;}
+
+.qfb{margin-top:.9rem;padding:.65rem .9rem;border-radius:6px;font-size:.85rem;font-weight:700;line-height:1.4;display:none;}
+.qfb.ok{background:rgba(0,255,102,.08);color:var(--green);border:1.5px solid var(--green);display:block;}
+.qfb.err{background:var(--red-dim);color:var(--red);border:1.5px solid var(--red);display:block;}
+
+.nextbtn{display:none;margin:1rem auto 0;padding:.58rem 1.6rem;background:var(--green-dim);color:var(--green);border:2px solid var(--green);border-radius:4px;font-family:'Lexend',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:0 0 16px rgba(0,255,102,.25);transition:all .18s;position:relative;z-index:1;}
+.nextbtn.show{display:block;}
+.nextbtn:hover{background:var(--green);color:var(--bg);box-shadow:0 0 24px rgba(0,255,102,.45);}
+
+.win{display:none;max-width:520px;margin:1.5rem auto 0;text-align:center;background:var(--card);border-radius:8px;padding:2rem 1.5rem;border:2px solid var(--green-dim);box-shadow:0 0 40px rgba(0,255,102,.12);animation:wPop .45s cubic-bezier(.175,.885,.32,1.275) both;}
+.win.show{display:block;}
+@keyframes wPop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.wem{font-size:3.2rem;margin-bottom:.4rem;}
+.wttl{font-size:1.5rem;font-weight:800;color:var(--green);text-shadow:0 0 20px rgba(0,255,102,.5);margin-bottom:.3rem;}
+.wsc{font-size:1rem;color:var(--text2);margin-bottom:.3rem;}
+.wbar{display:flex;gap:.3rem;justify-content:center;margin:.7rem 0;}
+.wstar{font-size:1.5rem;}
+.wsub{font-size:.83rem;color:var(--text2);margin-bottom:1rem;}
+.ragain{padding:.6rem 1.6rem;background:var(--green-dim);color:var(--green);border:2px solid var(--green);border-radius:4px;font-family:'Lexend',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:0 0 16px rgba(0,255,102,.25);transition:all .18s;}
+.ragain:hover{background:var(--green);color:var(--bg);box-shadow:0 0 24px rgba(0,255,102,.45);}
+
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);color:#fff;padding:.6rem 1.4rem;border-radius:4px;font-weight:700;font-size:.9rem;transition:transform .3s cubic-bezier(.175,.885,.32,1.275);z-index:999;pointer-events:none;letter-spacing:.02em;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.ok{background:var(--green2);box-shadow:0 0 20px rgba(0,204,68,.5);}
+.toast.err{background:var(--red);box-shadow:0 0 20px rgba(255,34,68,.5);}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="hdr">
+  <div class="pill">🎮 UNIT 6 · DON'T LOSE THE CUSTOMER</div>
+  <h1>🎯 Customer Service <em>Quiz</em></h1>
+  <p class="sub">Test your professional English — 10 questions</p>
+</div>
+<div class="stats">
+  <div class="chip">✅ CORRECT: <span id="correct">0</span></div>
+  <div class="chip">❌ WRONG: <span id="wrong">0</span></div>
+  <div class="chip">⭐ SCORE: <span id="score">0</span></div>
+</div>
+<div class="prog-outer"><div class="prog-inner" id="prog"></div></div>
+<div class="prog-lbl" id="plbl">QUESTION 1 / 10</div>
+<div id="quiz-area">
+  <div class="qcard" id="qcard"></div>
+  <button class="nextbtn" id="nextbtn" onclick="nextQ()">NEXT QUESTION →</button>
+</div>
+<div class="win" id="win">
+  <div class="wem" id="wem"></div>
+  <div class="wttl" id="wttl"></div>
+  <div class="wsc" id="wsc"></div>
+  <div class="wbar" id="wbar"></div>
+  <div class="wsub" id="wsub"></div>
+  <button class="ragain" onclick="reset()">↩ PLAY AGAIN</button>
+</div>
+<script>
+const QS=[
+  {ctx:'🎬 The iRabbit video: Thierry calls a call center.',q:'What is the main problem in the conversation?',
+   opts:['The phone has no signal.','There is a language barrier — they cannot understand each other.','Thierry is angry for no reason.','The agent is very rude.'],ans:1,
+   ex:'There is a language barrier: Thierry speaks French-accented English and the agent cannot understand him. Communication completely fails.'},
+  {ctx:'📱 Mia posts on Instagram about her day in Paris.',q:'Why did Mia leave the shop without buying anything?',
+   opts:['The shop was closed.','The prices were too high.','The salesperson did not speak English — communication was impossible.','Mia changed her mind.'],ans:2,
+   ex:"Mia felt uncomfortable because neither she nor the salesperson could understand the other. She left without buying — a lost customer!"},
+  {ctx:'🏪 A tourist enters a beauty shop in Paris.',q:'Which is the BEST way to greet the customer?',
+   opts:['Ignore the customer and continue working.','Bonjour, vous désirez?','Hello! Welcome to our shop. How can I help you?','Wait for the customer to speak first.'],ans:2,
+   ex:'A professional greeting in English is essential. "Hello! Welcome to our shop. How can I help you?" shows warmth and readiness to help.'},
+  {ctx:'💬 A tourist says: "I am looking for a gift for my mother."',q:'What is the BEST response from the salesperson?',
+   opts:['I do not know.','What is your budget? I can help you find something perfect.','We are closing soon.','Gifts are in aisle 3.'],ans:1,
+   ex:'Asking about the budget is professional and helpful. It shows the salesperson listens and wants to find the right product.'},
+  {ctx:'🏷️ A customer asks: "How much does this cost?"',q:'Which answer is correct and professional?',
+   opts:['It is very expensive.','I do not know the price.','It costs 25 euros. Would you like to try it?','You can check online.'],ans:2,
+   ex:'"It costs 25 euros. Would you like to try it?" gives the price clearly and moves the interaction forward — great customer service!'},
+  {ctx:'😟 A customer seems lost and confused in the shop.',q:'What should the salesperson say?',
+   opts:['Nothing — let them find what they need alone.','Can I help you? Are you looking for something specific?','The shop is organised by colour.','Please be quiet, other customers are here.'],ans:1,
+   ex:'"Can I help you?" is a key phrase. Approaching a confused customer proactively prevents a lost sale.'},
+  {ctx:'⭐ The salesperson wants to suggest the best product.',q:'Which sentence uses "recommend" correctly?',
+   opts:['This product is recommend.','I recommends this perfume.','I recommend this product. It is perfect for your mother.','We recommended that product yesterday.'],ans:2,
+   ex:'"I recommend this product" is grammatically correct. Using "recommend" shows professional confidence.'},
+  {ctx:'😕 A customer cannot understand the salesperson.',q:'What is this communication problem called?',
+   opts:['A bad attitude','A language barrier','An expensive mistake','A customer problem'],ans:1,
+   ex:'A "language barrier" is when two people cannot communicate because they do not share a language — a key concept in Unit 6.'},
+  {ctx:'😤 A customer leaves the shop without buying and looks frustrated.',q:'What are the consequences for the shop?',
+   opts:['Nothing — customers come and go.','Lost customer, lost sale, and potentially bad reputation.','The shop gains a better reputation.','The salesperson gets a bonus.'],ans:1,
+   ex:'When a customer leaves frustrated, the shop loses the sale and may get a negative review. English is essential in Paris!'},
+  {ctx:'👋 The customer is leaving after buying a product.',q:'What is the BEST professional farewell?',
+   opts:['"Bye."','"OK see you."','"Thank you for visiting! Have a wonderful stay in Paris!"','"Do not forget to come back."'],ans:2,
+   ex:'"Thank you for visiting! Have a wonderful stay in Paris!" is warm, professional, and leaves a great impression — the perfect close!'},
+];
+let cur=0,corrects=0,wrongs=0,score=0,shuffled=[];
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+function init(){cur=0;corrects=0;wrongs=0;score=0;shuffled=shuffle(QS);document.getElementById('win').classList.remove('show');document.getElementById('quiz-area').style.display='block';renderQ();}
+function renderQ(){
+  const q=shuffled[cur];
+  document.getElementById('prog').style.width=`${(cur/shuffled.length)*100}%`;
+  document.getElementById('plbl').textContent=`QUESTION ${cur+1} / ${shuffled.length}`;
+  document.getElementById('correct').textContent=corrects;document.getElementById('wrong').textContent=wrongs;document.getElementById('score').textContent=score;
+  const card=document.getElementById('qcard');card.style.animation='none';void card.offsetWidth;card.style.animation='';
+  card.innerHTML=`<div class="qnum">Question ${cur+1} of ${shuffled.length}</div>
+    <div class="qctx">${q.ctx}</div>
+    <div class="qtxt">${q.q}</div>
+    <div class="opts" id="opts">
+      ${q.opts.map((o,i)=>`<button class="opt" data-i="${i}" onclick="answer(${i})"><span class="oletter">${String.fromCharCode(65+i)}</span>${o}</button>`).join('')}
+    </div>
+    <div class="qfb" id="qfb"></div>`;
+  document.getElementById('nextbtn').classList.remove('show');
+}
+function answer(idx){
+  const q=shuffled[cur];
+  document.querySelectorAll('.opt').forEach(o=>o.classList.add('disabled'));
+  const fb=document.getElementById('qfb');
+  if(idx===q.ans){
+    document.querySelectorAll('.opt')[idx].classList.add('correct');
+    corrects++;score+=10;fb.className='qfb ok';fb.textContent='✅ Correct! '+q.ex;toast('✅ Correct!','ok');
+  } else {
+    document.querySelectorAll('.opt')[idx].classList.add('wrong');
+    document.querySelectorAll('.opt')[q.ans].classList.add('correct');
+    wrongs++;fb.className='qfb err';fb.textContent='❌ Not quite. '+q.ex;toast('❌ Wrong answer!','err');
+  }
+  document.getElementById('correct').textContent=corrects;document.getElementById('wrong').textContent=wrongs;document.getElementById('score').textContent=score;
+  if(cur<shuffled.length-1)document.getElementById('nextbtn').classList.add('show');
+  else setTimeout(showW,900);
+}
+function nextQ(){cur++;document.getElementById('nextbtn').classList.remove('show');renderQ();}
+function showW(){
+  document.getElementById('quiz-area').style.display='none';
+  const pct=corrects/shuffled.length;
+  let em,ttl,sub;
+  if(pct===1){em='🏆';ttl='PERFECT SCORE!';sub='Outstanding! You are ready to welcome international customers in Paris!';}
+  else if(pct>=.7){em='🎉';ttl='GREAT JOB!';sub='Well done! Review the questions you missed to improve further.';}
+  else if(pct>=.5){em='👍';ttl='GOOD EFFORT!';sub='Keep practising! Read the feedback and try again.';}
+  else{em='📚';ttl='KEEP STUDYING!';sub='Review the unit vocabulary and try again — you can do it!';}
+  const stars=Math.round(pct*5);
+  document.getElementById('wem').textContent=em;
+  document.getElementById('wttl').textContent=ttl;
+  document.getElementById('wsc').textContent=`SCORE: ${score} / ${shuffled.length*10} · ${corrects}/${shuffled.length} correct`;
+  document.getElementById('wbar').innerHTML='⭐'.repeat(stars)+'☆'.repeat(5-stars);
+  document.getElementById('wsub').textContent=sub;
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('plbl').textContent='QUIZ COMPLETE!';
+  document.getElementById('win').classList.add('show');
+}
+function reset(){document.getElementById('quiz-area').style.display='block';init();}
+let tTO;
+function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;clearTimeout(tTO);tTO=setTimeout(()=>t.classList.remove('show'),1800);}
+init();
+</script>
+</body>
+</html>
