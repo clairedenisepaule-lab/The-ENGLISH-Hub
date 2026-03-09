@@ -233,14 +233,12 @@
   body.day .theme-btn{background:rgba(0,0,0,0.06);border-color:rgba(0,0,0,0.1);}
   body.day .theme-btn:hover{background:rgba(0,0,0,0.12);}
 
-
   /* ── CARD COUNTER ── */
   .card-stats{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
   .stat-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:0.5px;}
   .stat-seq{background:rgba(255,255,255,0.07);color:var(--muted);}
   .stat-game{background:rgba(185,79,255,0.15);color:var(--agora);}
   body.day .stat-seq{background:rgba(0,0,0,0.06);}
-
 
   body.day .hero-title .hub{color:rgba(26,26,46,0.18);}
 
@@ -339,6 +337,7 @@
         <div class="seq-item"><div class="seq-dot"></div> UNIT 1 — Becoming a Beauty Professional <span class="seq-num">U1</span></div>
         <div class="seq-item"><div class="seq-dot"></div> UNIT 2 — Skincare and Product Expertise <span class="seq-num">U2</span></div>
         <div class="seq-item"><div class="seq-dot"></div> UNIT 3 — Digital Beauty <span class="seq-num">U3</span></div>
+        <div class="seq-item"><div class="seq-dot"></div> UNIT 4 — Smell It, Sell It! <span class="seq-num">U4</span></div>
       </div>
     </div>
     <div class="card-footer"><span>Voir les séquences</span><div class="card-arrow">→</div></div>
@@ -409,7 +408,8 @@ const data={
   bts:{title:"BTS MECP",sub:"M\u00e9tiers de l'Esth\u00e9tique-Cosm\u00e9tique-Parfumerie",color:"#00d68f",bg:"linear-gradient(135deg,#00d68f,#059669)",sequences:[
     {num:"U1",title:"UNIT 1 \u2014 Becoming a Beauty Professional",desc:"D\u00e9couvrir les m\u00e9tiers du secteur de la beaut\u00e9 et apprendre \u00e0 pr\u00e9senter son projet professionnel en anglais de mani\u00e8re claire et adapt\u00e9e \u00e0 un contexte d'entretien.",img:"https://nuage08.apps.education.fr/index.php/s/Cg67CrTCNpfNCJk/preview",emoji:"\uD83D\uDC84",canva:"https://www.canva.com/design/DAGzCTCtzBQ/4jHIQbV6ji9kViYevi-KcQ/view?embed",folder:"https://nuage08.apps.education.fr/index.php/s/a5zDe4ZwMQDmMmX"},
     {num:"U2",title:"UNIT 2 \u2014 Skincare and Product Expertise",desc:"Permettre de conseiller une routine de soins adapt\u00e9s \u00e0 un profil client en justifiant leur choix \u00e0 l'oral avec un vocabulaire professionnel pr\u00e9cis.",img:"https://nuage08.apps.education.fr/index.php/s/qbLfWnJfZBQKnGs/preview",emoji:"\uD83E\uDDF4",canva:"https://www.canva.com/design/DAG3R74_HUc/s0W2H2ytziIt4u1Ya6smsQ/view?embed",folder:"https://nuage08.apps.education.fr/index.php/s/gxri5LeKkktPYyB"},
-    {num:"U3",title:"UNIT 3 \u2014 Digital Beauty",desc:"Analyser des campagnes digitales beaut\u00e9 afin de comprendre l'impact du message et de la strat\u00e9gie social media sur l'image et la r\u00e9putation d'une marque.",img:"https://nuage08.apps.education.fr/index.php/s/eEkcsTW5xkoWCdC/preview",emoji:"\uD83D\uDCF1",canva:"https://www.canva.com/design/DAG9pFnfud0/hqccq6FAZVpDiITjjUg8Jg/view?embed",folder:"https://nuage08.apps.education.fr/index.php/s/EmHHtWd98yx3TEK"}
+    {num:"U3",title:"UNIT 3 \u2014 Digital Beauty",desc:"Analyser des campagnes digitales beaut\u00e9 afin de comprendre l'impact du message et de la strat\u00e9gie social media sur l'image et la r\u00e9putation d'une marque.",img:"https://nuage08.apps.education.fr/index.php/s/eEkcsTW5xkoWCdC/preview",emoji:"\uD83D\uDCF1",canva:"https://www.canva.com/design/DAG9pFnfud0/hqccq6FAZVpDiITjjUg8Jg/view?embed",folder:"https://nuage08.apps.education.fr/index.php/s/EmHHtWd98yx3TEK"},
+    {num:"U4",title:"UNIT 4 \u2014 Smell It, Sell It!",desc:"Comprendre et analyser des strat\u00e9gies de vente olfactives dans le secteur de la parfumerie afin de pr\u00e9senter un parfum \u00e0 un client en anglais avec un vocabulaire professionnel adapt\u00e9.",img:"https://nuage08.apps.education.fr/index.php/s/gBK6XMXT6eZJPiE/preview",emoji:"\uD83C\uDF38",worksheets:[{name:"Smell It, Sell It! \u2014 01 VA",url:"https://nuage08.apps.education.fr/index.php/s/goBRdKXSgKJDMaf"},{name:"Smell It, Sell It! \u2014 01 VB",url:"https://nuage08.apps.education.fr/index.php/s/RmpHSxY5GbRDqDa"}],audio:[{name:"Activity 1 \u2014 Store Perfume",url:"https://nuage08.apps.education.fr/index.php/s/gDi246y4C6botXe"}]}
   ]}
 };
 
@@ -441,6 +441,18 @@ const gamesData={
     {name:'Whack-a-Word',emoji:'⚡',meta:'Vocabulaire · The Nomad Kitchen · 12 mots',file:'jeux/whack_a_word_nomad_kitchen.html'},
     {name:'True or False',emoji:'⏱',meta:'Compréhension · Rise of the Food Truck',file:'jeux/quiz_truefalse_nomad_kitchen.html'},
     {name:'Phrase Builder',emoji:'🔀',meta:'Syntaxe & expression · CCF Prep',file:'jeux/phrase_builder_nomad_kitchen.html'}
+  ]},
+  mbbe:{U6:[
+    {name:'Word Search',emoji:'🔍',meta:"Vocabulaire · Don't Lose the Customer!",file:'jeux/u6_wordsearch_v2.html'},
+    {name:'Matching Game',emoji:'🃏',meta:'Expressions · paires · sons',file:'jeux/u6_matching_v2.html'},
+    {name:'Dialogue Builder',emoji:'💬',meta:'Production · 3 rounds · shop dialogues',file:'jeux/u6_dialogue_v2.html'},
+    {name:'Customer Service Quiz',emoji:'🎯',meta:'Compréhension · 10 questions · CCF prep',file:'jeux/u6_quiz_v2.html'}
+  ]},
+  mrc:{U6:[
+    {name:'Word Search',emoji:'🔍',meta:"Vocabulaire · Don't Lose the Customer!",file:'jeux/u6_wordsearch_v2.html'},
+    {name:'Matching Game',emoji:'🃏',meta:'Expressions · paires · sons',file:'jeux/u6_matching_v2.html'},
+    {name:'Dialogue Builder',emoji:'💬',meta:'Production · 3 rounds · shop dialogues',file:'jeux/u6_dialogue_v2.html'},
+    {name:'Customer Service Quiz',emoji:'🎯',meta:'Compréhension · 10 questions · CCF prep',file:'jeux/u6_quiz_v2.html'}
   ]}
 };
 function renderGamesSection(classKey,seqNum){
@@ -455,9 +467,10 @@ function renderMagazine(d,key){
   var grid='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">'+d.sequences.map(function(s,i){
     var wsCount=s.worksheets?s.worksheets.length:0;
     var hasAudio=s.audio&&s.audio.length>0;
+    var hasGames=gamesData[key]&&gamesData[key][s.num]&&gamesData[key][s.num].length>0;
     var imgHtml=s.img?'<img loading="lazy" class="mag-img" src="'+s.img+'" alt="" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'"><div class="mag-img-placeholder" style="display:none">'+s.emoji+'</div>':'<div class="mag-img-placeholder">'+s.emoji+'</div>';
-    var isNew=(key==='agora'&&s.num==='U5')||(key==='mbbe'&&s.num==='U6')||(key==='mrc'&&s.num==='U6');
-    var tags=[];if(wsCount>0)tags.push('📄 '+wsCount);if(hasAudio)tags.push('🔊');
+    var isNew=(key==='agora'&&s.num==='U5')||(key==='mbbe'&&s.num==='U6')||(key==='mrc'&&s.num==='U6')||(key==='bts'&&s.num==='U4');
+    var tags=[];if(wsCount>0)tags.push('📄 '+wsCount);if(hasAudio)tags.push('🔊');if(hasGames)tags.push('🎮 '+gamesData[key][s.num].length);
     return'<div class="seq-magazine-item" onclick="openMagDetail(\''+d.title.replace(/'/g,"\\'")+'\','+i+')">'+imgHtml+(isNew?'<div class="new-badge">✨ New</div>':'')+'<div class="mag-body"><div class="mag-badge">'+s.num+'</div><div class="mag-title">'+s.title+'</div><div class="mag-desc">'+(s.desc?s.desc.substring(0,80)+(s.desc.length>80?'...':''):'')+'</div><div class="mag-footer"><span class="mag-ws-count">'+tags.join(' · ')+'</span><span class="mag-cta">Voir →</span></div></div></div>';
   }).join('')+'</div>';
   return'<div id="mag-grid">'+grid+'</div><div class="mag-detail" id="mag-detail"></div>';
@@ -518,7 +531,6 @@ function computeCardStats(){
       var cg=gamesData[key];
       if(cg&&cg[s.num])gameCount+=cg[s.num].length;
     });
-    // Find the matching card footer
     var cards=document.querySelectorAll('.class-card.'+key);
     cards.forEach(function(card){
       var footer=card.querySelector('.card-footer');
@@ -536,7 +548,6 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(function(){});
   });
 }
-;
 </script>
 
 <nav class="mobile-nav">
